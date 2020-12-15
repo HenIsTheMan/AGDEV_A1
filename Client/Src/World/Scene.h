@@ -147,6 +147,11 @@ private:
 	void UpdateEntities();
 	void RenderEntities(ShaderProg& SP);
 
+	void MainMenuRender();
+	void GameRender();
+	void GameOverRender();
+	void ScoreboardRender();
+
 	glm::mat4 view;
 	glm::mat4 projection;
 	//std::vector<Mesh::BatchRenderParams> params;

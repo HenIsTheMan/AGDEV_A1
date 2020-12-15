@@ -1,8 +1,14 @@
-# Created by Kenney (www.kenney.nl)
-
-newmtl woodBarkDark
-Kd 0.8 0.4627451 0.3686275
-
-newmtl leafsDark
-Kd 0.1686275 0.6509804 0.6666667
-
+newmtl lambert2SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd WoodBrown.png
+Ni 1.00
+newmtl lambert3SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd LeavesGreen.png
+Ni 1.00
