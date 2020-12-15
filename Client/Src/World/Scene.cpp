@@ -81,7 +81,7 @@ Scene::Scene():
 	},
 	playerStates((int)PlayerState::NoMovement | (int)PlayerState::Standing),
 	screen(Screen::MainMenu),
-	entityPool(std::vector<Entity*>(1000)),
+	entityPool(std::vector<Entity*>(50)),
 	timeLeft(0.f),
 	score(0),
 	scores({}),
@@ -241,11 +241,11 @@ bool Scene::Init(){
 	}
 
 	Mesh* const quadMesh = meshes[(int)MeshType::Quad];
-	quadMesh->ReserveModelMats(99999);
-	quadMesh->ReserveColors(99999);
-	quadMesh->ReserveDiffuseTexIndices(99999);
+	quadMesh->ReserveModelMats(9999);
+	quadMesh->ReserveColors(9999);
+	quadMesh->ReserveDiffuseTexIndices(9999);
 
-	for(int i = 0; i < 99999; ++i){
+	for(int i = 0; i < 9999; ++i){
 		PushModel({
 			Translate(glm::vec3(PseudorandMinMax(-2000.f, 2000.f), PseudorandMinMax(-2000.f, 2000.f), -5.f)),
 			Rotate(glm::vec4(0.f, 1.f, 0.f, -45.f)),
