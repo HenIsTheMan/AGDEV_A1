@@ -141,7 +141,7 @@ private:
 	void CreateThickWall(const EntityCreationAttribs& attribs);
 	void UpdateCollisionBetweenEntities(Entity* const& entity1, Entity* const& entity2);
 	void UpdateEntities();
-	void RenderEntities(ShaderProg& SP, const bool& opaque);
+	void RenderEntities(ShaderProg& SP);
 
 	glm::mat4 view;
 	glm::mat4 projection;

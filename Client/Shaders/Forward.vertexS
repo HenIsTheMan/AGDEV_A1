@@ -24,6 +24,7 @@ uniform bool useBumpMap;
 uniform sampler2D bumpMap;
 
 uniform bool instancing;
+uniform bool sky;
 
 uniform bool noNormals;
 
@@ -42,4 +43,9 @@ void main(){
 
 	vsOut.texCoords = texCoords;
 	gl_Position = PV * vec4(vsOut.pos, 1.f);
+
+	if(sky){
+		vsOut.normal = vec3(0.f);
+		gl_Position = gl_Position.xyww; //Resulting NDC after perspective division will have a z value (gl_FragCoord.z) equal to 1.f
+	}
 }

@@ -49,9 +49,6 @@ void main(){
 				? texture(diffuseMaps[useCustomDiffuseTexIndex ? customDiffuseTexIndex : fsIn.diffuseTexIndex], fsIn.texCoords) : vec4(1.f))
 				+ (useEmissionMap && !useCustomDiffuseTexIndex ? texture(emissionMap, fsIn.texCoords) : vec4(0.f)));
 			}
-			if(useEmissionMap){
-				colour.rgb += texture(emissionMap, fsIn.texCoords).rgb;
-			}
 		}
 	}
 
