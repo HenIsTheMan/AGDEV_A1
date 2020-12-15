@@ -7,13 +7,21 @@
 
 class TextChief final{
 public:
+	enum struct TextAlignment: int{
+		Left,
+		Center,
+		Right,
+		Amt
+	};
+
 	struct TextAttribs final{
-		str text;
-		float x;
-		float y;
-		float scaleFactor;
-		glm::vec4 colour;
-		uint texRefID;
+		str text = str();
+		float x = 0.0f;
+		float y = 0.0f;
+		float scaleFactor = 1.0f;
+		glm::vec4 colour = glm::vec4(1.0f);
+		uint texRefID = 0;
+		TextAlignment alignment = TextAlignment::Left;
 	};
 
 	TextChief();
@@ -22,10 +30,10 @@ public:
 	void RenderText(ShaderProg& SP, const TextAttribs& attribs);
 private:
 	struct CharMetrics final{
-		uint texRefID;
-		uint advance;
-		glm::ivec2 bearing;
-		glm::ivec2 size;
+		uint texRefID = (uint)0;
+		uint advance = (uint)0;
+		glm::ivec2 bearing = glm::ivec2();
+		glm::ivec2 size = glm::ivec2();
 	};
 
 	FT_Library ft;

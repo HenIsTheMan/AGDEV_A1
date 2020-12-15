@@ -24,7 +24,7 @@ bool TextChief::Init(){
         (void)puts("Failed to init FreeType!\n");
         return false;
     }
-    if(FT_New_Face(ft, "Fonts/Big.otf", 0, &face)){
+    if(FT_New_Face(ft, "Fonts/Continue.ttf", 0, &face)){
         (void)puts("Failed to load font as face\n");
         return false;
     }
@@ -51,7 +51,7 @@ bool TextChief::Init(){
             uint(face->glyph->advance.x),
             glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
             glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
-        }));
+            }));
 
         glGenVertexArrays(1, &VAO);
         glGenBuffers(1, &VBO);
@@ -78,6 +78,19 @@ void TextChief::RenderText(ShaderProg& SP, const TextAttribs& attribs){
     SP.Set4fv("textColour", attribs.colour);
     SP.SetMat4fv("projection", &glm::ortho(0.0f, (float)winWidth, 0.0f, (float)winHeight)[0][0]);
 
+    ptrdiff_t strLen = (ptrdiff_t)attribs.text.length();
+    float halfTotalWidth = 0.0f;
+    float halfTotalHeight = 0.0f;
+    if(attribs.alignment != TextAlignment::Left){
+        for(ptrdiff_t i = 0; i < strLen; ++i){
+            CharMetrics ch = allChars[attribs.text.at(i)];
+            halfTotalWidth += (ch.advance >> 6) * attribs.scaleFactor;
+        }
+        if(attribs.alignment == TextAlignment::Center){
+            halfTotalWidth /= 2.0f;
+        }
+    }
+
     glBindVertexArray(VAO);
     for(std::string::const_iterator c = attribs.text.begin(); c != attribs.text.end(); ++c){
         CharMetrics ch = allChars[*c];
@@ -87,14 +100,15 @@ void TextChief::RenderText(ShaderProg& SP, const TextAttribs& attribs){
         float w = ch.size.x * attribs.scaleFactor;
         float h = ch.size.y * attribs.scaleFactor;
 
+        ///Origin of each char is top left
         float vertices[6][4] = {
-            { xpos,     ypos + h,   0.0f, 0.0f },            
-            { xpos,     ypos,       0.0f, 1.0f },
-            { xpos + w, ypos,       1.0f, 1.0f },
+            {xpos - halfTotalWidth, ypos + h + halfTotalHeight, 0.0f, 0.0f},            
+            {xpos - halfTotalWidth, ypos + halfTotalHeight, 0.0f, 1.0f},
+            {xpos + w - halfTotalWidth, ypos + halfTotalHeight, 1.0f, 1.0f},
 
-            { xpos,     ypos + h,   0.0f, 0.0f },
-            { xpos + w, ypos,       1.0f, 1.0f },
-            { xpos + w, ypos + h,   1.0f, 0.0f }           
+            {xpos - halfTotalWidth, ypos + h + halfTotalHeight, 0.0f, 0.0f},
+            {xpos + w - halfTotalWidth, ypos + halfTotalHeight, 1.0f, 1.0f},
+            {xpos + w - halfTotalWidth, ypos + h + halfTotalHeight, 1.0f, 0.0f}           
         };
 
         SP.UseTex(attribs.texRefID, "textTex"); //1 for each char??
