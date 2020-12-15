@@ -1454,14 +1454,7 @@ void Scene::ForwardRender(){
 		case Screen::MainMenu: {
 			forwardSP.SetMat4fv("PV", &(projection * view)[0][0]);
 
-			PushModel({
-				Scale(glm::vec3(float(winWidth) / 2.f, float(winHeight) / 2.f, 1.f)),
-			});
-				forwardSP.Set1i("noNormals", 1);
-				meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
-				meshes[(int)MeshType::Quad]->Render(forwardSP);
-				forwardSP.Set1i("noNormals", 0);
-			PopModel();
+
 
 			break;
 		}
@@ -1658,6 +1651,15 @@ void Scene::ForwardRender(){
 	switch(screen){
 		case Screen::MainMenu: {
 			forwardSP.Set1i("nightVision", 0);
+
+			PushModel({
+				Scale(glm::vec3(float(winWidth) / 2.f, float(winHeight) / 2.f, 1.f)),
+			});
+				forwardSP.Set1i("noNormals", 1);
+				meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
+				meshes[(int)MeshType::Quad]->Render(forwardSP);
+				forwardSP.Set1i("noNormals", 0);
+			PopModel();
 
 			glDepthFunc(GL_GREATER);
 			textChief.RenderText(textSP, {
@@ -1936,6 +1938,15 @@ void Scene::ForwardRender(){
 		case Screen::GameOver: {
 			forwardSP.Set1i("nightVision", 0);
 
+			PushModel({
+				Scale(glm::vec3(float(winWidth) / 2.f, float(winHeight) / 2.f, 1.f)),
+			});
+				forwardSP.Set1i("noNormals", 1);
+				meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
+				meshes[(int)MeshType::Quad]->Render(forwardSP);
+				forwardSP.Set1i("noNormals", 0);
+			PopModel();
+
 			glDepthFunc(GL_GREATER);
 			textChief.RenderText(textSP, {
 				"Play Again",
@@ -1993,6 +2004,15 @@ void Scene::ForwardRender(){
 		}
 		case Screen::Scoreboard: {
 			forwardSP.Set1i("nightVision", 0);
+
+			PushModel({
+				Scale(glm::vec3(float(winWidth) / 2.f, float(winHeight) / 2.f, 1.f)),
+			});
+				forwardSP.Set1i("noNormals", 1);
+				meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
+				meshes[(int)MeshType::Quad]->Render(forwardSP);
+				forwardSP.Set1i("noNormals", 0);
+			PopModel();
 
 			glDepthFunc(GL_GREATER);
 			textChief.RenderText(textSP, {
