@@ -12,12 +12,10 @@ public:
 	~Scene();
 	bool Init();
 	void Update(GLFWwindow* const& win);
-	void GeoRenderPass();
-	void LightingRenderPass(const uint& posTexRefID, const uint& coloursTexRefID, const uint& normalsTexRefID, const uint& specTexRefID, const uint& reflectionTexRefID);
+	void ForwardRender();
 	void BlurRender(const uint& brightTexRefID, const bool& horizontal);
 	void DefaultRender(const uint& screenTexRefID, const uint& blurTexRefID, const glm::vec3& translate, const glm::vec3& scale);
 	void MinimapRender();
-	void ForwardRender();
 private:
 	Cam cam;
 	Cam minimapCam;
@@ -52,8 +50,6 @@ private:
 
 	ShaderProg blurSP;
 	ShaderProg forwardSP;
-	ShaderProg geoPassSP;
-	ShaderProg lightingPassSP;
 	ShaderProg normalsSP;
 	ShaderProg screenSP;
 	ShaderProg textSP;

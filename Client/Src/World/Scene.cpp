@@ -63,8 +63,6 @@ Scene::Scene():
 	},
 	blurSP{"Shaders/Quad.vertexS", "Shaders/Blur.fragS"},
 	forwardSP{"Shaders/Forward.vertexS", "Shaders/Forward.fragS"},
-	geoPassSP{"Shaders/GeoPass.vertexS", "Shaders/GeoPass.fragS"},
-	lightingPassSP{"Shaders/Quad.vertexS", "Shaders/LightingPass.fragS"},
 	normalsSP{"Shaders/Normals.vertexS", "Shaders/Normals.fragS", "Shaders/Normals.gs"},
 	screenSP{"Shaders/Quad.vertexS", "Shaders/Screen.fragS"},
 	textSP{"Shaders/Text.vertexS", "Shaders/Text.fragS"},
@@ -1305,214 +1303,6 @@ void Scene::RenderEntities(ShaderProg& SP, const bool& opaque){
 	}
 }
 
-void Scene::GeoRenderPass(){
-	geoPassSP.Use();
-
-	switch(screen){
-		case Screen::Scoreboard:
-		case Screen::GameOver:
-		case Screen::MainMenu: {
-			geoPassSP.SetMat4fv("PV", &(projection * view)[0][0]);
-
-			PushModel({
-				Scale(glm::vec3(float(winWidth) / 2.f, float(winHeight) / 2.f, 1.f)),
-			});
-				geoPassSP.Set1i("noNormals", 1);
-				meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
-				meshes[(int)MeshType::Quad]->Render(geoPassSP);
-				geoPassSP.Set1i("noNormals", 0);
-			PopModel();
-
-			break;
-		}
-		case Screen::Game: {
-			const glm::vec3 OGPos = cam.GetPos();
-			const glm::vec3 OGTarget = cam.GetTarget();
-			const glm::vec3 OGUp = cam.GetUp();
-
-			cam.SetPos(glm::vec3(0.f, 0.f, 5.f));
-			cam.SetTarget(glm::vec3(0.f));
-			cam.SetUp(glm::vec3(0.f, 1.f, 0.f));
-			view = cam.LookAt();
-			projection = glm::ortho(-float(winWidth) / 2.f, float(winWidth) / 2.f, -float(winHeight) / 2.f, float(winHeight) / 2.f, .1f, 9999.f);
-			geoPassSP.SetMat4fv("PV", &(projection * view)[0][0]);
-
-			if(!(RMB && inv[currSlot] == ItemType::Sniper)){
-				///Render healthbar
-				PushModel({
-					Translate(glm::vec3(-float(winWidth) / 2.5f, float(winHeight) / 2.5f, -10.f)),
-					Scale(glm::vec3(float(winWidth) / 15.f, float(winHeight) / 50.f, 1.f)),
-				});
-					geoPassSP.Set1i("noNormals", 1);
-					geoPassSP.Set1i("useCustomColour", 1);
-					geoPassSP.Set4fv("customColour", glm::vec4(glm::vec3(1.f, 0.f, 0.f), 1.f));
-					geoPassSP.Set1i("useCustomDiffuseTexIndex", 1);
-					geoPassSP.Set1i("customDiffuseTexIndex", -1);
-						meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
-						meshes[(int)MeshType::Quad]->Render(geoPassSP);
-					geoPassSP.Set1i("useCustomDiffuseTexIndex", 0);
-					geoPassSP.Set1i("useCustomColour", 0);
-					geoPassSP.Set1i("noNormals", 0);
-
-					PushModel({
-						Translate(glm::vec3(-(playerMaxHealth - playerHealth) / playerMaxHealth, 0.f, 1.f)),
-						Scale(glm::vec3(playerHealth / playerMaxHealth, 1.f, 1.f)),
-					});
-						geoPassSP.Set1i("noNormals", 1);
-						geoPassSP.Set1i("useCustomColour", 1);
-						geoPassSP.Set4fv("customColour", glm::vec4(glm::vec3(0.f, 1.f, 0.f), 1.f));
-						geoPassSP.Set1i("useCustomDiffuseTexIndex", 1);
-						geoPassSP.Set1i("customDiffuseTexIndex", -1);
-							meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
-							meshes[(int)MeshType::Quad]->Render(geoPassSP);
-						geoPassSP.Set1i("useCustomDiffuseTexIndex", 0);
-						geoPassSP.Set1i("useCustomColour", 0);
-						geoPassSP.Set1i("noNormals", 0);
-					PopModel();
-				PopModel();
-
-				///Render items in inv
-				for(short i = 0; i < 5; ++i){
-					geoPassSP.Set1i("noNormals", 1);
-					PushModel({
-						Translate(glm::vec3(float(i) * 100.f - 300.f, -float(winHeight) / 2.3f, -10.f)),
-					});
-					switch(inv[i]){
-						case ItemType::Shotgun:
-							PushModel({
-								Translate(glm::vec3(18.f, -18.f, 0.f)),
-								Rotate(glm::vec4(0.f, 0.f, 1.f, 45.f)),
-								Rotate(glm::vec4(0.f, 1.f, 0.f, 90.f)),
-								Scale(glm::vec3(21.f)),
-							});
-								models[(int)ModelType::Shotgun]->SetModelForAll(GetTopModel());
-								models[(int)ModelType::Shotgun]->Render(geoPassSP);
-							PopModel();
-							break;
-						case ItemType::Scar:
-							PushModel({
-								Rotate(glm::vec4(0.f, 0.f, 1.f, 45.f)),
-								Rotate(glm::vec4(0.f, 1.f, 0.f, 90.f)),
-								Scale(glm::vec3(18.f)),
-							});
-								models[(int)ModelType::Scar]->SetModelForAll(GetTopModel());
-								models[(int)ModelType::Scar]->Render(geoPassSP);
-							PopModel();
-							break;
-						case ItemType::Sniper:
-							PushModel({
-								Translate(glm::vec3(16.f, -15.f, 0.f)),
-								Rotate(glm::vec4(0.f, 0.f, 1.f, 45.f)),
-								Scale(glm::vec3(10.f)),
-							});
-								models[(int)ModelType::Sniper]->SetModelForAll(GetTopModel());
-								models[(int)ModelType::Sniper]->Render(geoPassSP);
-							PopModel();
-							break;
-						case ItemType::ShotgunAmmo:
-							break;
-						case ItemType::ScarAmmo:
-							break;
-						case ItemType::SniperAmmo:
-							break;
-						case ItemType::HealthPack:
-							break;
-					}
-					PopModel();
-					geoPassSP.Set1i("noNormals", 0);
-				}
-			}
-
-			cam.SetPos(OGPos);
-			cam.SetTarget(OGTarget);
-			cam.SetUp(OGUp);
-			view = cam.LookAt();
-			projection = glm::perspective(glm::radians(angularFOV), cam.GetAspectRatio(), .1f, 9999.f);
-
-			geoPassSP.SetMat4fv("PV", &(projection * glm::mat4(glm::mat3(view)))[0][0]);
-
-			glDepthFunc(GL_LEQUAL); //Modify comparison operators used for depth test such that frags with depth <= 1.f are shown
-			glCullFace(GL_FRONT);
-			geoPassSP.Set1i("sky", 1);
-			geoPassSP.Set1i("skybox", 1);
-			geoPassSP.UseTex(cubemapRefID, "cubemapSampler", GL_TEXTURE_CUBE_MAP);
-				meshes[(int)MeshType::Cube]->SetModel(GetTopModel());
-				meshes[(int)MeshType::Cube]->Render(geoPassSP);
-			geoPassSP.Set1i("skybox", 0);
-			geoPassSP.Set1i("sky", 0);
-			glCullFace(GL_BACK);
-			glDepthFunc(GL_LESS);
-
-			geoPassSP.SetMat4fv("PV", &(projection * view)[0][0]);
-
-			///Render item held
-			const glm::vec3 front = cam.CalcFront();
-			const float sign = front.y < 0.f ? -1.f : 1.f;
-			switch(inv[currSlot]){
-				case ItemType::Shotgun: {
-					auto rotationMat = glm::rotate(glm::mat4(1.f), sign * acosf(glm::dot(front, glm::normalize(glm::vec3(front.x, 0.f, front.z)))),
-						glm::normalize(glm::vec3(-front.z, 0.f, front.x)));
-					PushModel({
-						Translate(cam.GetPos() +
-							glm::vec3(rotationMat * glm::vec4(RotateVecIn2D(glm::vec3(5.5f, -7.f, -13.f), atan2(front.x, front.z) + glm::radians(180.f), Axis::y), 1.f))
-						),
-						Rotate(glm::vec4(glm::vec3(-front.z, 0.f, front.x), sign * glm::degrees(acosf(glm::dot(front, glm::normalize(glm::vec3(front.x, 0.f, front.z))))))), 
-						Rotate(glm::vec4(0.f, 1.f, 0.f, glm::degrees(atan2(front.x, front.z)))), 
-						Scale(glm::vec3(3.f)),
-					});
-						models[(int)ModelType::Shotgun]->SetModelForAll(GetTopModel());
-						models[(int)ModelType::Shotgun]->Render(geoPassSP);
-					PopModel();
-					break;
-				}
-				case ItemType::Scar: {
-					auto rotationMat = glm::rotate(glm::mat4(1.f), sign * acosf(glm::dot(front, glm::normalize(glm::vec3(front.x, 0.f, front.z)))),
-						glm::normalize(glm::vec3(-front.z, 0.f, front.x)));
-					PushModel({
-						Translate(cam.GetPos() +
-							glm::vec3(rotationMat * glm::vec4(RotateVecIn2D(glm::vec3(5.f, -4.f, -12.f), atan2(front.x, front.z) + glm::radians(180.f), Axis::y), 1.f))
-						),
-						Rotate(glm::vec4(glm::vec3(-front.z, 0.f, front.x), sign * glm::degrees(acosf(glm::dot(front, glm::normalize(glm::vec3(front.x, 0.f, front.z))))))), 
-						Rotate(glm::vec4(0.f, 1.f, 0.f, glm::degrees(atan2(front.x, front.z)))), 
-						Scale(glm::vec3(3.f)),
-					});
-						models[(int)ModelType::Scar]->SetModelForAll(GetTopModel());
-						models[(int)ModelType::Scar]->Render(geoPassSP);
-					PopModel();
-					break;
-				}
-				case ItemType::Sniper: {
-					auto rotationMat = glm::rotate(glm::mat4(1.f), sign * acosf(glm::dot(front, glm::normalize(glm::vec3(front.x, 0.f, front.z)))),
-						glm::normalize(glm::vec3(-front.z, 0.f, front.x)));
-					PushModel({
-						Translate(cam.GetPos() +
-							glm::vec3(rotationMat * glm::vec4(RotateVecIn2D(glm::vec3(5.f, -6.f, -13.f), atan2(front.x, front.z) + glm::radians(180.f), Axis::y), 1.f))
-						),
-						Rotate(glm::vec4(glm::vec3(-front.z, 0.f, front.x), sign * glm::degrees(acosf(glm::dot(front, glm::normalize(glm::vec3(front.x, 0.f, front.z))))))), 
-						Rotate(glm::vec4(0.f, 1.f, 0.f, glm::degrees(atan2(front.x, front.z)) - 90.f)), 
-						Scale(glm::vec3(2.f)),
-					});
-						models[(int)ModelType::Sniper]->SetModelForAll(GetTopModel());
-						models[(int)ModelType::Sniper]->Render(geoPassSP);
-					PopModel();
-					break;
-				}
-			}
-
-			///Terrain
-			PushModel({
-				Scale(glm::vec3(terrainXScale, terrainYScale, terrainZScale)),
-			});
-				meshes[(int)MeshType::Terrain]->SetModel(GetTopModel());
-				meshes[(int)MeshType::Terrain]->Render(geoPassSP);
-			PopModel();
-
-			RenderEntities(geoPassSP, true);
-			break;
-		}
-	}
-}
-
 constexpr float Divisor = 5.f;
 
 void Scene::MinimapRender(){
@@ -1656,6 +1446,210 @@ void Scene::ForwardRender(){
 		forwardSP.Set3fv(("spotlights[" + std::to_string(i) + "].dir").c_str(), spotlight->dir);
 		forwardSP.Set1f(("spotlights[" + std::to_string(i) + "].cosInnerCutoff").c_str(), spotlight->cosInnerCutoff);
 		forwardSP.Set1f(("spotlights[" + std::to_string(i) + "].cosOuterCutoff").c_str(), spotlight->cosOuterCutoff);
+	}
+
+	switch(screen){
+		case Screen::Scoreboard:
+		case Screen::GameOver:
+		case Screen::MainMenu: {
+			forwardSP.SetMat4fv("PV", &(projection * view)[0][0]);
+
+			PushModel({
+				Scale(glm::vec3(float(winWidth) / 2.f, float(winHeight) / 2.f, 1.f)),
+			});
+				forwardSP.Set1i("noNormals", 1);
+				meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
+				meshes[(int)MeshType::Quad]->Render(forwardSP);
+				forwardSP.Set1i("noNormals", 0);
+			PopModel();
+
+			break;
+		}
+		case Screen::Game: {
+			const glm::vec3 OGPos = cam.GetPos();
+			const glm::vec3 OGTarget = cam.GetTarget();
+			const glm::vec3 OGUp = cam.GetUp();
+
+			cam.SetPos(glm::vec3(0.f, 0.f, 5.f));
+			cam.SetTarget(glm::vec3(0.f));
+			cam.SetUp(glm::vec3(0.f, 1.f, 0.f));
+			view = cam.LookAt();
+			projection = glm::ortho(-float(winWidth) / 2.f, float(winWidth) / 2.f, -float(winHeight) / 2.f, float(winHeight) / 2.f, .1f, 9999.f);
+			forwardSP.SetMat4fv("PV", &(projection * view)[0][0]);
+
+			if(!(RMB && inv[currSlot] == ItemType::Sniper)){
+				///Render healthbar
+				PushModel({
+					Translate(glm::vec3(-float(winWidth) / 2.5f, float(winHeight) / 2.5f, -10.f)),
+					Scale(glm::vec3(float(winWidth) / 15.f, float(winHeight) / 50.f, 1.f)),
+				});
+					forwardSP.Set1i("noNormals", 1);
+					forwardSP.Set1i("useCustomColour", 1);
+					forwardSP.Set4fv("customColour", glm::vec4(glm::vec3(1.f, 0.f, 0.f), 1.f));
+					forwardSP.Set1i("useCustomDiffuseTexIndex", 1);
+					forwardSP.Set1i("customDiffuseTexIndex", -1);
+						meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
+						meshes[(int)MeshType::Quad]->Render(forwardSP);
+					forwardSP.Set1i("useCustomDiffuseTexIndex", 0);
+					forwardSP.Set1i("useCustomColour", 0);
+					forwardSP.Set1i("noNormals", 0);
+
+					PushModel({
+						Translate(glm::vec3(-(playerMaxHealth - playerHealth) / playerMaxHealth, 0.f, 1.f)),
+						Scale(glm::vec3(playerHealth / playerMaxHealth, 1.f, 1.f)),
+					});
+						forwardSP.Set1i("noNormals", 1);
+						forwardSP.Set1i("useCustomColour", 1);
+						forwardSP.Set4fv("customColour", glm::vec4(glm::vec3(0.f, 1.f, 0.f), 1.f));
+						forwardSP.Set1i("useCustomDiffuseTexIndex", 1);
+						forwardSP.Set1i("customDiffuseTexIndex", -1);
+							meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
+							meshes[(int)MeshType::Quad]->Render(forwardSP);
+						forwardSP.Set1i("useCustomDiffuseTexIndex", 0);
+						forwardSP.Set1i("useCustomColour", 0);
+						forwardSP.Set1i("noNormals", 0);
+					PopModel();
+				PopModel();
+
+				///Render items in inv
+				for(short i = 0; i < 5; ++i){
+					forwardSP.Set1i("noNormals", 1);
+					PushModel({
+						Translate(glm::vec3(float(i) * 100.f - 300.f, -float(winHeight) / 2.3f, -10.f)),
+					});
+					switch(inv[i]){
+						case ItemType::Shotgun:
+							PushModel({
+								Translate(glm::vec3(18.f, -18.f, 0.f)),
+								Rotate(glm::vec4(0.f, 0.f, 1.f, 45.f)),
+								Rotate(glm::vec4(0.f, 1.f, 0.f, 90.f)),
+								Scale(glm::vec3(21.f)),
+							});
+								models[(int)ModelType::Shotgun]->SetModelForAll(GetTopModel());
+								models[(int)ModelType::Shotgun]->Render(forwardSP);
+							PopModel();
+							break;
+						case ItemType::Scar:
+							PushModel({
+								Rotate(glm::vec4(0.f, 0.f, 1.f, 45.f)),
+								Rotate(glm::vec4(0.f, 1.f, 0.f, 90.f)),
+								Scale(glm::vec3(18.f)),
+							});
+								models[(int)ModelType::Scar]->SetModelForAll(GetTopModel());
+								models[(int)ModelType::Scar]->Render(forwardSP);
+							PopModel();
+							break;
+						case ItemType::Sniper:
+							PushModel({
+								Translate(glm::vec3(16.f, -15.f, 0.f)),
+								Rotate(glm::vec4(0.f, 0.f, 1.f, 45.f)),
+								Scale(glm::vec3(10.f)),
+							});
+								models[(int)ModelType::Sniper]->SetModelForAll(GetTopModel());
+								models[(int)ModelType::Sniper]->Render(forwardSP);
+							PopModel();
+							break;
+						case ItemType::ShotgunAmmo:
+							break;
+						case ItemType::ScarAmmo:
+							break;
+						case ItemType::SniperAmmo:
+							break;
+						case ItemType::HealthPack:
+							break;
+					}
+					PopModel();
+					forwardSP.Set1i("noNormals", 0);
+				}
+			}
+
+			cam.SetPos(OGPos);
+			cam.SetTarget(OGTarget);
+			cam.SetUp(OGUp);
+			view = cam.LookAt();
+			projection = glm::perspective(glm::radians(angularFOV), cam.GetAspectRatio(), .1f, 9999.f);
+
+			forwardSP.SetMat4fv("PV", &(projection * glm::mat4(glm::mat3(view)))[0][0]);
+
+			glDepthFunc(GL_LEQUAL); //Modify comparison operators used for depth test such that frags with depth <= 1.f are shown
+			glCullFace(GL_FRONT);
+			forwardSP.Set1i("sky", 1);
+			forwardSP.Set1i("skybox", 1);
+			forwardSP.UseTex(cubemapRefID, "cubemapSampler", GL_TEXTURE_CUBE_MAP);
+				meshes[(int)MeshType::Cube]->SetModel(GetTopModel());
+				meshes[(int)MeshType::Cube]->Render(forwardSP);
+			forwardSP.Set1i("skybox", 0);
+			forwardSP.Set1i("sky", 0);
+			glCullFace(GL_BACK);
+			glDepthFunc(GL_LESS);
+
+			forwardSP.SetMat4fv("PV", &(projection * view)[0][0]);
+
+			///Render item held
+			const glm::vec3 front = cam.CalcFront();
+			const float sign = front.y < 0.f ? -1.f : 1.f;
+			switch(inv[currSlot]){
+				case ItemType::Shotgun: {
+					auto rotationMat = glm::rotate(glm::mat4(1.f), sign * acosf(glm::dot(front, glm::normalize(glm::vec3(front.x, 0.f, front.z)))),
+						glm::normalize(glm::vec3(-front.z, 0.f, front.x)));
+					PushModel({
+						Translate(cam.GetPos() +
+							glm::vec3(rotationMat * glm::vec4(RotateVecIn2D(glm::vec3(5.5f, -7.f, -13.f), atan2(front.x, front.z) + glm::radians(180.f), Axis::y), 1.f))
+						),
+						Rotate(glm::vec4(glm::vec3(-front.z, 0.f, front.x), sign * glm::degrees(acosf(glm::dot(front, glm::normalize(glm::vec3(front.x, 0.f, front.z))))))), 
+						Rotate(glm::vec4(0.f, 1.f, 0.f, glm::degrees(atan2(front.x, front.z)))), 
+						Scale(glm::vec3(3.f)),
+					});
+						models[(int)ModelType::Shotgun]->SetModelForAll(GetTopModel());
+						models[(int)ModelType::Shotgun]->Render(forwardSP);
+					PopModel();
+					break;
+				}
+				case ItemType::Scar: {
+					auto rotationMat = glm::rotate(glm::mat4(1.f), sign * acosf(glm::dot(front, glm::normalize(glm::vec3(front.x, 0.f, front.z)))),
+						glm::normalize(glm::vec3(-front.z, 0.f, front.x)));
+					PushModel({
+						Translate(cam.GetPos() +
+							glm::vec3(rotationMat * glm::vec4(RotateVecIn2D(glm::vec3(5.f, -4.f, -12.f), atan2(front.x, front.z) + glm::radians(180.f), Axis::y), 1.f))
+						),
+						Rotate(glm::vec4(glm::vec3(-front.z, 0.f, front.x), sign * glm::degrees(acosf(glm::dot(front, glm::normalize(glm::vec3(front.x, 0.f, front.z))))))), 
+						Rotate(glm::vec4(0.f, 1.f, 0.f, glm::degrees(atan2(front.x, front.z)))), 
+						Scale(glm::vec3(3.f)),
+					});
+						models[(int)ModelType::Scar]->SetModelForAll(GetTopModel());
+						models[(int)ModelType::Scar]->Render(forwardSP);
+					PopModel();
+					break;
+				}
+				case ItemType::Sniper: {
+					auto rotationMat = glm::rotate(glm::mat4(1.f), sign * acosf(glm::dot(front, glm::normalize(glm::vec3(front.x, 0.f, front.z)))),
+						glm::normalize(glm::vec3(-front.z, 0.f, front.x)));
+					PushModel({
+						Translate(cam.GetPos() +
+							glm::vec3(rotationMat * glm::vec4(RotateVecIn2D(glm::vec3(5.f, -6.f, -13.f), atan2(front.x, front.z) + glm::radians(180.f), Axis::y), 1.f))
+						),
+						Rotate(glm::vec4(glm::vec3(-front.z, 0.f, front.x), sign * glm::degrees(acosf(glm::dot(front, glm::normalize(glm::vec3(front.x, 0.f, front.z))))))), 
+						Rotate(glm::vec4(0.f, 1.f, 0.f, glm::degrees(atan2(front.x, front.z)) - 90.f)), 
+						Scale(glm::vec3(2.f)),
+					});
+						models[(int)ModelType::Sniper]->SetModelForAll(GetTopModel());
+						models[(int)ModelType::Sniper]->Render(forwardSP);
+					PopModel();
+					break;
+				}
+			}
+
+			///Terrain
+			PushModel({
+				Scale(glm::vec3(terrainXScale, terrainYScale, terrainZScale)),
+			});
+				meshes[(int)MeshType::Terrain]->SetModel(GetTopModel());
+				meshes[(int)MeshType::Terrain]->Render(forwardSP);
+			PopModel();
+
+			RenderEntities(forwardSP, true);
+			break;
+		}
 	}
 
 	forwardSP.SetMat4fv("PV", &(projection * view)[0][0]);
@@ -2037,58 +2031,6 @@ void Scene::ForwardRender(){
 	}
 
 	glBlendFunc(GL_ONE, GL_ZERO);
-}
-
-void Scene::LightingRenderPass(const uint& posTexRefID, const uint& coloursTexRefID, const uint& normalsTexRefID, const uint& specTexRefID, const uint& reflectionTexRefID){
-	lightingPassSP.Use();
-	const int& pAmt = (int)ptLights.size();
-	const int& dAmt = (int)directionalLights.size();
-	const int& sAmt = (int)spotlights.size();
-
-	lightingPassSP.Set1f("shininess", 32.f); //More light scattering if lower //??
-	lightingPassSP.Set3fv("globalAmbient", Light::globalAmbient);
-	lightingPassSP.Set3fv("camPos", cam.GetPos());
-	lightingPassSP.Set1i("pAmt", pAmt);
-	lightingPassSP.Set1i("dAmt", dAmt);
-	lightingPassSP.Set1i("sAmt", sAmt);
-	lightingPassSP.UseTex(posTexRefID, "posTex");
-	lightingPassSP.UseTex(coloursTexRefID, "coloursTex");
-	lightingPassSP.UseTex(normalsTexRefID, "normalsTex");
-	lightingPassSP.UseTex(specTexRefID, "specTex");
-	lightingPassSP.UseTex(reflectionTexRefID, "reflectionTex");
-
-	int i;
-	for(i = 0; i < pAmt; ++i){
-		const PtLight* const& ptLight = static_cast<PtLight*>(ptLights[i]);
-		lightingPassSP.Set3fv(("ptLights[" + std::to_string(i) + "].ambient").c_str(), ptLight->ambient);
-		lightingPassSP.Set3fv(("ptLights[" + std::to_string(i) + "].diffuse").c_str(), ptLight->diffuse);
-		lightingPassSP.Set3fv(("ptLights[" + std::to_string(i) + "].spec").c_str(), ptLight->spec);
-		lightingPassSP.Set3fv(("ptLights[" + std::to_string(i) + "].pos").c_str(), ptLight->pos);
-		lightingPassSP.Set1f(("ptLights[" + std::to_string(i) + "].constant").c_str(), ptLight->constant);
-		lightingPassSP.Set1f(("ptLights[" + std::to_string(i) + "].linear").c_str(), ptLight->linear);
-		lightingPassSP.Set1f(("ptLights[" + std::to_string(i) + "].quadratic").c_str(), ptLight->quadratic);
-	}
-	for(i = 0; i < dAmt; ++i){
-		const DirectionalLight* const& directionalLight = static_cast<DirectionalLight*>(directionalLights[i]);
-		lightingPassSP.Set3fv(("directionalLights[" + std::to_string(i) + "].ambient").c_str(), directionalLight->ambient);
-		lightingPassSP.Set3fv(("directionalLights[" + std::to_string(i) + "].diffuse").c_str(), directionalLight->diffuse);
-		lightingPassSP.Set3fv(("directionalLights[" + std::to_string(i) + "].spec").c_str(), directionalLight->spec);
-		lightingPassSP.Set3fv(("directionalLights[" + std::to_string(i) + "].dir").c_str(), directionalLight->dir);
-	}
-	for(i = 0; i < sAmt; ++i){
-		const Spotlight* const& spotlight = static_cast<Spotlight*>(spotlights[i]);
-		lightingPassSP.Set3fv(("spotlights[" + std::to_string(i) + "].ambient").c_str(), spotlight->ambient);
-		lightingPassSP.Set3fv(("spotlights[" + std::to_string(i) + "].diffuse").c_str(), spotlight->diffuse);
-		lightingPassSP.Set3fv(("spotlights[" + std::to_string(i) + "].spec").c_str(), spotlight->spec);
-		lightingPassSP.Set3fv(("spotlights[" + std::to_string(i) + "].pos").c_str(), spotlight->pos);
-		lightingPassSP.Set3fv(("spotlights[" + std::to_string(i) + "].dir").c_str(), spotlight->dir);
-		lightingPassSP.Set1f(("spotlights[" + std::to_string(i) + "].cosInnerCutoff").c_str(), spotlight->cosInnerCutoff);
-		lightingPassSP.Set1f(("spotlights[" + std::to_string(i) + "].cosOuterCutoff").c_str(), spotlight->cosOuterCutoff);
-	}
-
-	meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
-	meshes[(int)MeshType::Quad]->Render(lightingPassSP, false);
-	lightingPassSP.ResetTexUnits();
 }
 
 void Scene::BlurRender(const uint& brightTexRefID, const bool& horizontal){

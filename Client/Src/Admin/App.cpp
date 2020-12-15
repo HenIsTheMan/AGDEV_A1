@@ -182,21 +182,21 @@ void App::PreRender() const{
 void App::Render(){
 	glViewport(0, 0, 2048, 2048);
 
-	glBindFramebuffer(GL_FRAMEBUFFER, FBORefIDs[(int)FBO::GeoPass]);
-	for(uint i = 0; i < 5; ++i){
-		glDrawBuffer(GL_COLOR_ATTACHMENT0 + i);
-		i == 1 ? glClearColor(.5f, 0.32f, 0.86f, 1.f) : glClearColor(0.f, 0.f, 0.f, 1.f); //State-setting func
-		glClear(GL_COLOR_BUFFER_BIT);
-	}
-	uint arr1[5]{GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3, GL_COLOR_ATTACHMENT4};
-	glDrawBuffers(sizeof(arr1) / sizeof(arr1[0]), arr1);
-	glClear(GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); //State-using func
-	scene.GeoRenderPass();
+	//glBindFramebuffer(GL_FRAMEBUFFER, FBORefIDs[(int)FBO::GeoPass]);
+	//for(uint i = 0; i < 5; ++i){
+	//	glDrawBuffer(GL_COLOR_ATTACHMENT0 + i);
+	//	i == 1 ? glClearColor(.5f, 0.32f, 0.86f, 1.f) : glClearColor(0.f, 0.f, 0.f, 1.f); //State-setting func
+	//	glClear(GL_COLOR_BUFFER_BIT);
+	//}
+	//uint arr1[5]{GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3, GL_COLOR_ATTACHMENT4};
+	//glDrawBuffers(sizeof(arr1) / sizeof(arr1[0]), arr1);
+	//glClear(GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); //State-using func
+	//scene.GeoRenderPass();
 
-	glBindFramebuffer(GL_FRAMEBUFFER, FBORefIDs[(int)FBO::LightingPass]);
-	uint arr2[2]{GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
-	glDrawBuffers(sizeof(arr2) / sizeof(arr2[0]), arr2);
-	scene.LightingRenderPass(texRefIDs[(int)Tex::Pos], texRefIDs[(int)Tex::Colours], texRefIDs[(int)Tex::Normals], texRefIDs[(int)Tex::Spec], texRefIDs[(int)Tex::Reflection]);
+	//glBindFramebuffer(GL_FRAMEBUFFER, FBORefIDs[(int)FBO::LightingPass]);
+	//uint arr2[2]{GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
+	//glDrawBuffers(sizeof(arr2) / sizeof(arr2[0]), arr2);
+	//scene.LightingRenderPass(texRefIDs[(int)Tex::Pos], texRefIDs[(int)Tex::Colours], texRefIDs[(int)Tex::Normals], texRefIDs[(int)Tex::Spec], texRefIDs[(int)Tex::Reflection]);
 
 	bool horizontal = true;
 	const short amt = 5;
