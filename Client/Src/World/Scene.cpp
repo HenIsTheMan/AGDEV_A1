@@ -1667,7 +1667,7 @@ void Scene::ForwardRender(){
 
 			glDepthFunc(GL_GREATER);
 			textChief.RenderText(textSP, {
-				"Start",
+				"Play",
 				25.f,
 				125.f,
 				textScaleFactors[0],
