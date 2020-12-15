@@ -207,19 +207,19 @@
     <ClInclude Include="Src\World\Scene.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\Blur.fs" />
-    <None Include="Shaders\Forward.fs" />
-    <None Include="Shaders\Forward.vs" />
-    <None Include="Shaders\GeoPass.fs" />
-    <None Include="Shaders\GeoPass.vs" />
-    <None Include="Shaders\LightingPass.fs" />
-    <None Include="Shaders\Normals.fs" />
-    <None Include="Shaders\Normals.gs" />
-    <None Include="Shaders\Normals.vs" />
-    <None Include="Shaders\Quad.vs" />
-    <None Include="Shaders\Screen.fs" />
-    <None Include="Shaders\Text.fs" />
-    <None Include="Shaders\Text.vs" />
+    <None Include="Shaders\Blur.fragS" />
+    <None Include="Shaders\Forward.fragS" />
+    <None Include="Shaders\Forward.vertexS" />
+    <None Include="Shaders\GeoPass.fragS" />
+    <None Include="Shaders\GeoPass.vertexS" />
+    <None Include="Shaders\LightingPass.fragS" />
+    <None Include="Shaders\Normals.fragS" />
+    <None Include="Shaders\Normals.geoS" />
+    <None Include="Shaders\Normals.vertexS" />
+    <None Include="Shaders\Quad.vertexS" />
+    <None Include="Shaders\Screen.fragS" />
+    <None Include="Shaders\Text.fragS" />
+    <None Include="Shaders\Text.vertexS" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
