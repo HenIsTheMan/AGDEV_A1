@@ -1223,7 +1223,9 @@ void Scene::RenderEntities(ShaderProg& SP){
 		if(entity && entity->active){
 			glm::vec3 displacementVec = entity->pos - camPos;
 			if(glm::dot(displacementVec, camFront) > 0.f){
-				entityListForSorting.insert({(int)glm::dot(displacementVec, displacementVec), entity});
+				entityListForSorting.insert({
+					(entity->type == Entity::EntityType::Coin || entity->type == Entity::EntityType::Fire ? -9999 : 0)
+					+ (int)glm::dot(displacementVec, displacementVec), entity});
 			}
 		}
 	}
