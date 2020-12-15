@@ -1731,16 +1731,31 @@ void Scene::ForwardRender(){
 			if(RMB && inv[currSlot] == ItemType::Sniper){
 				forwardSP.Set1i("nightVision", 1);
 
+				forwardSP.Set1i("useCustomDiffuseTexIndex", 1);
+				forwardSP.Set1i("noNormals", 1);
+
 				PushModel({
-					Translate(glm::vec3(0.f, 0.f, -100.f)),
+					Translate(glm::vec3(0.f, 0.f, -9.f)),
+					Scale(glm::vec3(float(winHeight) * 0.7f, float(winHeight) * 0.7f, 1.f)),
+				});
+					forwardSP.Set1i("customDiffuseTexIndex", 1);
+					meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
+					meshes[(int)MeshType::Quad]->Render(forwardSP);
+				PopModel();
+				PushModel({
+					Translate(glm::vec3(0.f, 0.f, -9.1f)),
 					Scale(glm::vec3(float(winWidth) / 2.f, float(winHeight) / 2.f, 1.f)),
 				});
-					forwardSP.Set1i("useCustomDiffuseTexIndex", 1);
-					forwardSP.Set1i("customDiffuseTexIndex", 1);
-						meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
-						meshes[(int)MeshType::Quad]->Render(forwardSP);
-					forwardSP.Set1i("useCustomDiffuseTexIndex", 0);
+					forwardSP.Set1i("customDiffuseTexIndex", -1);
+					forwardSP.Set1i("useCustomColour", 1);
+					forwardSP.Set4fv("customColour", glm::vec4(glm::vec3(0.f), 1.f));
+					meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
+					meshes[(int)MeshType::Quad]->Render(forwardSP);
+					forwardSP.Set1i("useCustomColour", 0);
 				PopModel();
+
+				forwardSP.Set1i("noNormals", 0);
+				forwardSP.Set1i("useCustomDiffuseTexIndex", 0);
 			} else{
 				forwardSP.Set1i("nightVision", 0);
 
