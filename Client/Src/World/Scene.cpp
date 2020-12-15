@@ -225,6 +225,7 @@ bool Scene::Init(){
 	if(!soundEngine){
 		(void)puts("Failed to init soundEngine!\n");
 	}
+	soundEngine->play2D("Audio/Music/Theme.mp3", true);
 
 	meshes[(int)MeshType::CoinSpriteAni]->AddTexMap({"Imgs/Coin.png", Mesh::TexType::Diffuse, 0});
 	static_cast<SpriteAni*>(meshes[(int)MeshType::CoinSpriteAni])->AddAni("CoinSpriteAni", 0, 6);
