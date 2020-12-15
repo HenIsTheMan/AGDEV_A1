@@ -65,6 +65,8 @@ bool InitAPI(GLFWwindow*& win){
     glfwSetMouseButtonCallback(win, MouseButtonCallback);
     //glfwSetScrollCallback(win, ScrollCallback);
 
+    glfwSwapInterval(0);
+
     return true;
 }
 

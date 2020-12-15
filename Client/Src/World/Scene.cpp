@@ -496,6 +496,8 @@ void Scene::Update(GLFWwindow* const& win){
 			}
 			if(timeLeft <= 0.f){
 				screen = Screen::GameOver;
+				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
 				const size_t& mySize = scores.size();
 				if(mySize == 5){ //Max no. of scores saved
 					std::sort(scores.begin(), scores.end(), std::greater<int>());
