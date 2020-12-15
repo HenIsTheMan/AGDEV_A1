@@ -112,7 +112,8 @@ Scene::Scene():
 	view(glm::mat4(1.f)),
 	projection(glm::mat4(1.f)),
 	elapsedTime(0.f),
-	modelStack()
+	modelStack(),
+	polyModes()
 {
 }
 
@@ -190,6 +191,8 @@ Scene::~Scene(){
 }
 
 bool Scene::Init(){
+	glGetIntegerv(GL_POLYGON_MODE, polyModes);
+
 	///Load save
 	cstr const& fPath = "Data/scores.dat";
 	str line;
@@ -705,10 +708,9 @@ void Scene::Update(GLFWwindow* const& win){
 					currGun = nullptr;
 			}
 
-			GLint polyMode;
-			glGetIntegerv(GL_POLYGON_MODE, &polyMode);
 			if(Key(VK_F2) && polyModeBT <= elapsedTime){
-				glPolygonMode(GL_FRONT_AND_BACK, polyMode + (polyMode == GL_FILL ? -2 : 1));
+				polyModes[0] += polyModes[0] == GL_FILL ? -2 : 1;
+				glPolygonMode(GL_FRONT_AND_BACK, polyModes[0]);
 				polyModeBT = elapsedTime + .5f;
 			}
 

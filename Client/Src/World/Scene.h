@@ -1,8 +1,8 @@
 #pragma once
 #include <Engine.h>
 #include "Cam.h"
-#include "../GDEV/Entity.h"
-#include "../GDEV/Gun.h"
+#include "../AGDEV/Entity.h"
+#include "../AGDEV/Gun.h"
 
 #define BIT(x) 1 << x
 
@@ -27,6 +27,8 @@ private:
 	std::vector<ISound*> fireMusic;
 	std::vector<ISoundEffectControl*> fireSoundFX;
 	TextChief textChief;
+
+	int polyModes[2];
 
 	enum struct MeshType{
 		Quad = 0,
@@ -106,6 +108,7 @@ private:
 		Scoreboard,
 		Amt
 	};
+
 	Screen screen;
 	std::vector<Entity*> entityPool;
 	float timeLeft;
@@ -129,6 +132,7 @@ private:
 		glm::vec4 colour;
 		int diffuseTexIndex;
 	};
+
 	void CreateShotgunAmmo(const EntityCreationAttribs& attribs);
 	void CreateScarAmmo(const EntityCreationAttribs& attribs);
 	void CreateSniperAmmo(const EntityCreationAttribs& attribs);

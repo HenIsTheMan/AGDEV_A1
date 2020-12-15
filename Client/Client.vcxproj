@@ -194,15 +194,15 @@
   <ItemGroup>
     <ClCompile Include="Src\Admin\App.cpp" />
     <ClCompile Include="Src\Client.cpp" />
-    <ClCompile Include="Src\GDEV\Entity.cpp" />
-    <ClCompile Include="Src\GDEV\Gun.cpp" />
+    <ClCompile Include="Src\AGDEV\Entity.cpp" />
+    <ClCompile Include="Src\AGDEV\Gun.cpp" />
     <ClCompile Include="Src\World\Cam.cpp" />
     <ClCompile Include="Src\World\Scene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Admin\App.h" />
-    <ClInclude Include="Src\GDEV\Entity.h" />
-    <ClInclude Include="Src\GDEV\Gun.h" />
+    <ClInclude Include="Src\AGDEV\Entity.h" />
+    <ClInclude Include="Src\AGDEV\Gun.h" />
     <ClInclude Include="Src\World\Cam.h" />
     <ClInclude Include="Src\World\Scene.h" />
   </ItemGroup>
