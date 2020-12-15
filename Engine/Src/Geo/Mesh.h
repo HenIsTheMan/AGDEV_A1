@@ -37,6 +37,8 @@ public:
 	virtual ~Mesh();
 
 	void AddModelMat(const glm::mat4& modelMat);
+	void AddColor(const glm::vec3& color);
+	void AddDiffuseTexIndex(const int diffuseTexIndex);
 	void AddTexMap(const std::tuple<str, TexType, uint>& texMap);
 
 	void ClearModelMats();

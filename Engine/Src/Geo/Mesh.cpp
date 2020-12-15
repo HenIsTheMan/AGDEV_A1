@@ -577,6 +577,14 @@ void Mesh::AddModelMat(const glm::mat4& modelMat){
 	modelMats.emplace_back(modelMat);
 }
 
+void Mesh::AddColor(const glm::vec3& color){
+	colors.emplace_back(color);
+}
+
+void Mesh::AddDiffuseTexIndex(const int diffuseTexIndex){
+	diffuseTexIndices.emplace_back(diffuseTexIndex);
+}
+
 void Mesh::AddTexMap(const std::tuple<str, TexType, uint>& texMap){
 	texMaps.emplace_back(texMap);
 }
