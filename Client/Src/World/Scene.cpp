@@ -253,14 +253,14 @@ bool Scene::Init(){
 	}
 
 	Model* const tree = models[(int)ModelType::Tree];
-	tree->ReserveModelMatsForAll(99);
-	tree->ReserveColorsForAll(99);
-	tree->ReserveDiffuseTexIndicesForAll(99);
+	tree->ReserveModelMatsForAll(9999);
+	tree->ReserveColorsForAll(9999);
+	tree->ReserveDiffuseTexIndicesForAll(9999);
 
-	for(int i = 0; i < 99; ++i){
+	for(int i = 0; i < 9999; ++i){
 		const float scaleFactor = 50.0f;
-		const float xPos = PseudorandMinMax(-terrainXScale * 0.5f + 2.f + scaleFactor, terrainXScale * 0.5f - 2.f - scaleFactor);
-		const float zPos = PseudorandMinMax(-terrainZScale * 0.5f + 2.f + scaleFactor, terrainZScale * 0.5f - 2.f - scaleFactor);
+		const float xPos = PseudorandMinMax(-terrainXScale * 0.5f, terrainXScale * 0.5f);
+		const float zPos = PseudorandMinMax(-terrainZScale * 0.5f, terrainZScale * 0.5f);
 		const glm::vec3 pos = glm::vec3(
 			xPos,
 			terrainYScale * static_cast<Terrain*>(meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos / terrainXScale, zPos / terrainZScale, false),
