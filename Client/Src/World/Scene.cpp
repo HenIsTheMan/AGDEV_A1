@@ -1652,7 +1652,7 @@ void Scene::ForwardRender(){
 
 			glDepthFunc(GL_GREATER);
 			textChief.RenderText(textSP, {
-				"Play",
+				"Start",
 				25.f,
 				125.f,
 				textScaleFactors[0],
@@ -1660,37 +1660,37 @@ void Scene::ForwardRender(){
 				0,
 			});
 			textChief.RenderText(textSP, {
-				"Scoreboard",
+				"Scores",
 				25.f,
 				75.f,
 				textScaleFactors[1],
 				textColours[1],
 				0,
-				});
+			});
 			textChief.RenderText(textSP, {
-				"Exit",
+				"Quit",
 				25.f,
 				25.f,
 				textScaleFactors[2],
 				textColours[2],
 				0,
-				});
+			});
 			textChief.RenderText(textSP, {
-				"Total",
+				"ANOTHER",
 				30.f,
-				float(winHeight) / 1.2f,
+				float(winHeight) / 1.1f,
 				2.f,
-				glm::vec4(glm::vec3(0.f, 1.f, 1.f), 1.f),
+				glm::vec4(glm::vec3(1.f, 0.f, 1.f), 1.f),
 				0,
-				});
+			});
 			textChief.RenderText(textSP, {
-				"Offense",
+				"WORLD",
 				30.f,
-				float(winHeight) / 1.2f - 100.f,
+				float(winHeight) / 1.1f - 100.f,
 				2.f,
-				glm::vec4(glm::vec3(0.f, 1.f, 1.f), 1.f),
+				glm::vec4(glm::vec3(1.f, 0.f, 1.f), 1.f),
 				0,
-				});
+			});
 			glDepthFunc(GL_LESS);
 
 			break;
@@ -1922,7 +1922,7 @@ void Scene::ForwardRender(){
 				0,
 				});
 			textChief.RenderText(textSP, {
-				"Scoreboard",
+				"Scores",
 				25.f,
 				75.f,
 				textScaleFactors[1],
@@ -1930,7 +1930,7 @@ void Scene::ForwardRender(){
 				0,
 				});
 			textChief.RenderText(textSP, {
-				"Exit",
+				"Quit",
 				25.f,
 				25.f,
 				textScaleFactors[2],
@@ -1982,7 +1982,7 @@ void Scene::ForwardRender(){
 
 			float currOffset = 0.f;
 			textChief.RenderText(textSP, {
-				"Scoreboard",
+				"Scores",
 				30.f,
 				float(winHeight) / 1.2f,
 				1.f,
