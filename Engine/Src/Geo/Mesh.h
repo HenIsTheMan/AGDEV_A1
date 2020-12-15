@@ -38,21 +38,36 @@ public:
 
 	void AddModelMat(const glm::mat4& modelMat);
 	void AddTexMap(const std::tuple<str, TexType, uint>& texMap);
+
 	void ClearModelMats();
 	void ClearTexMaps();
+
 	void RemoveModelMat(const size_t& index);
 	void RemoveTexMap(str const& texPath);
+
+	void ReserveModelMats(const size_t size);
+	void ResizeModelMats(const size_t size);
+	void ReserveColors(const size_t size);
+	void ResizeColors(const size_t size);
+	void ReserveDiffuseTexIndices(const size_t size);
+	void ResizeDiffuseTexIndices(const size_t size);
+
+	void SetModel(const glm::mat4& model);
+	void SetModelMat(const glm::mat4& modelMat, const ptrdiff_t& index);
+
 	//void BatchRender(const std::vector<BatchRenderParams>& params); //Old and not working??
 	void InstancedRender(ShaderProg& SP, const bool& autoConfig = true);
 	virtual void Render(ShaderProg& SP, const bool& autoConfig = true);
-	void SetModel(const glm::mat4& model);
 protected:
 	MeshType type;
 	int primitive;
 	std::vector<Vertex>* vertices;
 	std::vector<uint>* indices;
 	std::vector<std::tuple<str, TexType, uint>> texMaps;
+
 	std::vector<glm::mat4> modelMats;
+	std::vector<glm::vec3> colors;
+	std::vector<int> diffuseTexIndices;
 
 	//std::vector<BatchRenderParams> paramsVec;
 	//int geoMaxAmt;

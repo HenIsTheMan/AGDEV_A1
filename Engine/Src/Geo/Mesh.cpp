@@ -381,48 +381,82 @@ void Mesh::InstancedRender(ShaderProg& SP, const bool& autoConfig){
 		glGenBuffers(1, &instancingVBO);
 
 		glBindVertexArray(instancingVAO);
-			glBindBuffer(GL_ARRAY_BUFFER, instancingVBO);
+		glBindBuffer(GL_ARRAY_BUFFER, instancingVBO);
 
-			glBufferData(GL_ARRAY_BUFFER, vertices->size() * sizeof(Vertex) + modelMats.size() * sizeof(glm::mat4), NULL, GL_STATIC_DRAW);
-			glBufferSubData(GL_ARRAY_BUFFER, 0, vertices->size() * sizeof(Vertex), &(*vertices)[0]);
-			glBufferSubData(GL_ARRAY_BUFFER, vertices->size() * sizeof(Vertex), modelMats.size() * sizeof(glm::mat4), &(modelMats)[0]);
+		const size_t verticesTrueSize = vertices->size() * sizeof(Vertex);
+		const size_t modelMatsTrueSize = modelMats.size() * sizeof(glm::mat4);
+		const size_t colorsTrueSize = colors.size() * sizeof(glm::vec3);
+		const size_t diffuseTexIndicesTrueSize = diffuseTexIndices.size() * sizeof(int);
 
-			glEnableVertexAttribArray(0);
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, pos));
-			glEnableVertexAttribArray(1);
-			glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, colour));
-			glEnableVertexAttribArray(2);
-			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, texCoords));
-			glEnableVertexAttribArray(3);
-			glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, normal));
-			glEnableVertexAttribArray(4);
-			glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, tangent));
-			glEnableVertexAttribArray(5);
-			glVertexAttribPointer(5, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, diffuseTexIndex));
+		glBufferData(GL_ARRAY_BUFFER,
+			verticesTrueSize
+			+ modelMatsTrueSize
+			+ colorsTrueSize
+			+ diffuseTexIndicesTrueSize
+			, NULL, GL_STATIC_DRAW);
 
-			size_t mySize = vertices->size() * sizeof(Vertex);
-			glEnableVertexAttribArray(6);
-			glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(glm::vec4), (const void*)(mySize));
-			mySize += sizeof(glm::vec4);
-			glEnableVertexAttribArray(7);
-			glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(glm::vec4), (const void*)(mySize));
-			mySize += sizeof(glm::vec4);
-			glEnableVertexAttribArray(8);
-			glVertexAttribPointer(8, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(glm::vec4), (const void*)(mySize));
-			mySize += sizeof(glm::vec4);
-			glEnableVertexAttribArray(9);
-			glVertexAttribPointer(9, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(glm::vec4), (const void*)(mySize));
+		glBufferSubData(GL_ARRAY_BUFFER, 0, verticesTrueSize, &(*vertices)[0]);
+		glBufferSubData(GL_ARRAY_BUFFER, verticesTrueSize, modelMatsTrueSize, &(modelMats)[0]);
+		glBufferSubData(GL_ARRAY_BUFFER, verticesTrueSize + modelMatsTrueSize, colorsTrueSize, &(colors)[0]);
+		glBufferSubData(GL_ARRAY_BUFFER, verticesTrueSize + modelMatsTrueSize + colorsTrueSize, diffuseTexIndicesTrueSize, &(diffuseTexIndices)[0]);
 
-			glVertexAttribDivisor(6, 1);
-			glVertexAttribDivisor(7, 1);
-			glVertexAttribDivisor(8, 1);
-			glVertexAttribDivisor(9, 1);
+		//* For vertices
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, pos));
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, colour));
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, texCoords));
+		glEnableVertexAttribArray(3);
+		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, normal));
+		glEnableVertexAttribArray(4);
+		glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, tangent));
+		glEnableVertexAttribArray(5);
+		glVertexAttribPointer(5, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, diffuseTexIndex));
+		//*/
 
-			if(indices){
-				glGenBuffers(1, &instancingEBO);
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, instancingEBO);
-				glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices->size() * sizeof(uint), &(*indices)[0], GL_STATIC_DRAW);
-			}
+		size_t mySize = verticesTrueSize;
+
+		//* For model matrices
+		glEnableVertexAttribArray(6);
+		glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(glm::vec4), (const void*)(mySize));
+		mySize += sizeof(glm::vec4);
+		glEnableVertexAttribArray(7);
+		glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(glm::vec4), (const void*)(mySize));
+		mySize += sizeof(glm::vec4);
+		glEnableVertexAttribArray(8);
+		glVertexAttribPointer(8, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(glm::vec4), (const void*)(mySize));
+		mySize += sizeof(glm::vec4);
+		glEnableVertexAttribArray(9);
+		glVertexAttribPointer(9, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(glm::vec4), (const void*)(mySize));
+
+		glVertexAttribDivisor(6, 1);
+		glVertexAttribDivisor(7, 1);
+		glVertexAttribDivisor(8, 1);
+		glVertexAttribDivisor(9, 1);
+		//*/
+
+		//* For colors
+		mySize = verticesTrueSize + modelMatsTrueSize;
+		glEnableVertexAttribArray(10);
+		glVertexAttribPointer(10, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (const void*)(mySize));
+
+		glVertexAttribDivisor(10, 1);
+		//*/
+
+		//* For diffuseTexIndices
+		mySize = verticesTrueSize + modelMatsTrueSize + colorsTrueSize;
+		glEnableVertexAttribArray(11);
+		glVertexAttribPointer(11, 1, GL_FLOAT, GL_FALSE, sizeof(int), (const void*)(mySize));
+
+		glVertexAttribDivisor(11, 1);
+		//*/
+
+		if(indices){
+			glGenBuffers(1, &instancingEBO);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, instancingEBO);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices->size() * sizeof(uint), &(*indices)[0], GL_STATIC_DRAW);
+		}
 	} else{
 		glBindVertexArray(instancingVAO);
 	}
@@ -572,24 +606,37 @@ void Mesh::RemoveTexMap(str const& texPath){
 	}
 }
 
+void Mesh::ReserveModelMats(const size_t size){
+	modelMats.reserve(size);
+}
+
+void Mesh::ResizeModelMats(const size_t size){
+	modelMats.resize(size);
+}
+
+void Mesh::ReserveColors(const size_t size){
+	colors.reserve(size);
+}
+
+void Mesh::ResizeColors(const size_t size){
+	colors.resize(size);
+}
+
+void Mesh::ReserveDiffuseTexIndices(const size_t size){
+	diffuseTexIndices.reserve(size);
+}
+
+void Mesh::ResizeDiffuseTexIndices(const size_t size){
+	diffuseTexIndices.resize(size);
+}
+
 void Mesh::SetModel(const glm::mat4& model){
 	this->model = model;
 }
 
-//void Mesh::SetType(const MeshType& type){
-//	if(vertices){
-//		delete vertices;
-//		vertices = nullptr;
-//	}
-//	if(VAO){
-//		//...
-//	}
-//	this->type = type;
-//}
-//
-//void Mesh::SetPrimitive(const int& primitive){
-//	this->primitive = primitive;
-//}
+void Mesh::SetModelMat(const glm::mat4& modelMat, const ptrdiff_t& index){
+	modelMats[index] = modelMat;
+}
 
 void Mesh::CreateQuad(){
 	if(!vertices){

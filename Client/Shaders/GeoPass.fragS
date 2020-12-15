@@ -19,6 +19,7 @@ uniform bool useCustomColour;
 uniform int customDiffuseTexIndex;
 uniform vec4 customColour;
 
+uniform bool instancing;
 uniform bool useDiffuseMap;
 uniform bool useSpecMap;
 uniform bool useEmissionMap;
@@ -34,18 +35,22 @@ uniform samplerCube cubemapSampler;
 void main(){
     pos = fsIn.pos;
 
-	if(skybox){
-		colour = texture(cubemapSampler, fsIn.pos);
+	if(instancing){
+		colour = fsIn.colour * (fsIn.diffuseTexIndex >= 0 ? texture(diffuseMaps[fsIn.diffuseTexIndex], fsIn.texCoords) : vec4(1.0f));
 	} else{
-		if(!useCustomColour && !useDiffuseMap){
-			colour = fsIn.colour;
+		if(skybox){
+			colour = texture(cubemapSampler, fsIn.pos);
 		} else{
-			colour = (useCustomColour ? customColour : vec4(1.f)) * (useDiffuseMap &&
-				(useCustomDiffuseTexIndex ? customDiffuseTexIndex : fsIn.diffuseTexIndex) >= 0 ?
-				texture(diffuseMaps[useCustomDiffuseTexIndex ? customDiffuseTexIndex : fsIn.diffuseTexIndex], fsIn.texCoords) : vec4(1.f));
-		}
-		if(useEmissionMap){
-			colour.rgb += texture(emissionMap, fsIn.texCoords).rgb;
+			if(!useCustomColour && !useDiffuseMap){
+				colour = fsIn.colour;
+			} else{
+				colour = (useCustomColour ? customColour : vec4(1.f)) * (useDiffuseMap &&
+					(useCustomDiffuseTexIndex ? customDiffuseTexIndex : fsIn.diffuseTexIndex) >= 0 ?
+					texture(diffuseMaps[useCustomDiffuseTexIndex ? customDiffuseTexIndex : fsIn.diffuseTexIndex], fsIn.texCoords) : vec4(1.f));
+			}
+			if(useEmissionMap){
+				colour.rgb += texture(emissionMap, fsIn.texCoords).rgb;
+			}
 		}
 	}
 
