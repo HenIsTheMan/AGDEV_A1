@@ -114,14 +114,19 @@ const vec3 visionColour = vec3(.2f, 1.f, .4f);
 const float luminanceThreshold = .6f;
 const float colourAmplification = 2.f;
 uniform bool nightVision;
+uniform bool instancing;
 
 void main(){
 	if(!useCustomColour && !useDiffuseMap){
 		Colour = fsIn.colour;
 	} else{
-		Colour = (useCustomColour ? customColour : vec4(1.f)) * (useDiffuseMap &&
-            (useCustomDiffuseTexIndex ? customDiffuseTexIndex : fsIn.diffuseTexIndex) >= 0 ?
-            texture(diffuseMaps[useCustomDiffuseTexIndex ? customDiffuseTexIndex : fsIn.diffuseTexIndex], fsIn.texCoords) : vec4(1.f));
+        if(instancing){
+		    Colour = fsIn.colour * (fsIn.diffuseTexIndex >= 0 ? texture(diffuseMaps[fsIn.diffuseTexIndex], fsIn.texCoords) : vec4(1.0f));
+	    } else{
+		    Colour = (useCustomColour ? customColour : vec4(1.f)) * (useDiffuseMap &&
+                (useCustomDiffuseTexIndex ? customDiffuseTexIndex : fsIn.diffuseTexIndex) >= 0 ?
+                texture(diffuseMaps[useCustomDiffuseTexIndex ? customDiffuseTexIndex : fsIn.diffuseTexIndex], fsIn.texCoords) : vec4(1.f));
+        }
 	}
 	if(useEmissionMap){
 		Colour.rgb += texture(emissionMap, fsIn.texCoords).rgb;
