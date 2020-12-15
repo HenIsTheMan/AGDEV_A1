@@ -8,6 +8,8 @@ Mesh::Mesh():
 	indices(nullptr),
 	texMaps({}),
 	modelMats({}),
+	colors({}),
+	diffuseTexIndices({}),
 	batchVAO(0),
 	batchVBO(0),
 	batchEBO(0),
@@ -614,27 +616,27 @@ void Mesh::RemoveTexMap(str const& texPath){
 	}
 }
 
-void Mesh::ReserveModelMats(const size_t size){
+void Mesh::ReserveModelMats(const size_t& size){
 	modelMats.reserve(size);
 }
 
-void Mesh::ResizeModelMats(const size_t size){
+void Mesh::ResizeModelMats(const size_t& size){
 	modelMats.resize(size);
 }
 
-void Mesh::ReserveColors(const size_t size){
+void Mesh::ReserveColors(const size_t& size){
 	colors.reserve(size);
 }
 
-void Mesh::ResizeColors(const size_t size){
+void Mesh::ResizeColors(const size_t& size){
 	colors.resize(size);
 }
 
-void Mesh::ReserveDiffuseTexIndices(const size_t size){
+void Mesh::ReserveDiffuseTexIndices(const size_t& size){
 	diffuseTexIndices.reserve(size);
 }
 
-void Mesh::ResizeDiffuseTexIndices(const size_t size){
+void Mesh::ResizeDiffuseTexIndices(const size_t& size){
 	diffuseTexIndices.resize(size);
 }
 

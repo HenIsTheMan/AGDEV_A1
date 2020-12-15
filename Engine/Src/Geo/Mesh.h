@@ -47,12 +47,12 @@ public:
 	void RemoveModelMat(const size_t& index);
 	void RemoveTexMap(str const& texPath);
 
-	void ReserveModelMats(const size_t size);
-	void ResizeModelMats(const size_t size);
-	void ReserveColors(const size_t size);
-	void ResizeColors(const size_t size);
-	void ReserveDiffuseTexIndices(const size_t size);
-	void ResizeDiffuseTexIndices(const size_t size);
+	void ReserveModelMats(const size_t& size);
+	void ResizeModelMats(const size_t& size);
+	void ReserveColors(const size_t& size);
+	void ResizeColors(const size_t& size);
+	void ReserveDiffuseTexIndices(const size_t& size);
+	void ResizeDiffuseTexIndices(const size_t& size);
 
 	void SetModel(const glm::mat4& model);
 	void SetModelMat(const glm::mat4& modelMat, const ptrdiff_t& index);

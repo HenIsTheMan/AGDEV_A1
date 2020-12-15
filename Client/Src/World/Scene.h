@@ -44,6 +44,10 @@ private:
 		Shotgun = 0,
 		Scar,
 		Sniper,
+		Flower,
+		Grass,
+		Rock,
+		Tree,
 		Amt
 	};
 	Model* models[(int)ModelType::Amt];

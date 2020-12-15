@@ -60,6 +60,18 @@ Scene::Scene():
 		new Model("ObjsAndMtls/Sniper.obj", {
 			aiTextureType_DIFFUSE,
 		}),
+		new Model("ObjsAndMtls/Flower.obj", {
+			aiTextureType_DIFFUSE,
+		}),
+		new Model("ObjsAndMtls/Grass.obj", {
+			aiTextureType_DIFFUSE,
+		}),
+		new Model("ObjsAndMtls/Rock.obj", {
+			aiTextureType_DIFFUSE,
+		}),
+		new Model("ObjsAndMtls/Tree.obj", {
+			aiTextureType_DIFFUSE,
+		}),
 	},
 	blurSP{"Shaders/Quad.vertexS", "Shaders/Blur.fragS"},
 	forwardSP{"Shaders/Forward.vertexS", "Shaders/Forward.fragS"},
@@ -240,19 +252,29 @@ bool Scene::Init(){
 		entityPool[i] = new Entity();
 	}
 
-	Mesh* const quadMesh = meshes[(int)MeshType::Quad];
-	quadMesh->ReserveModelMats(9999);
-	quadMesh->ReserveColors(9999);
-	quadMesh->ReserveDiffuseTexIndices(9999);
+	Model* const tree = models[(int)ModelType::Tree];
+	tree->ReserveModelMatsForAll(9999);
+	tree->ReserveColorsForAll(9999);
+	tree->ReserveDiffuseTexIndicesForAll(9999);
 
 	for(int i = 0; i < 9999; ++i){
+		const float scaleFactor = 10.0f;
+		const float xPos = PseudorandMinMax(-terrainXScale * 0.5f + 5.f + scaleFactor, terrainXScale * 0.5f - 5.f - scaleFactor);
+		const float zPos = PseudorandMinMax(-terrainZScale * 0.5f + 5.f + scaleFactor, terrainZScale * 0.5f - 5.f - scaleFactor);
+		const glm::vec3 pos = glm::vec3(
+			xPos,
+			terrainYScale * static_cast<Terrain*>(meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos / terrainXScale, zPos / terrainZScale, false) + scaleFactor,
+			zPos
+		);
+
 		PushModel({
-			Translate(glm::vec3(PseudorandMinMax(-2000.f, 2000.f), PseudorandMinMax(-2000.f, 2000.f), -5.f)),
-			Rotate(glm::vec4(0.f, 1.f, 0.f, -45.f)),
+			Translate(pos),
+			//Rotate(glm::vec4(0.f, 1.f, 0.f, PseudorandMinMax(0.0f, 360.0f))),
+			//Scale(glm::vec3(scaleFactor))
 		});
-			quadMesh->AddModelMat(GetTopModel());
-			quadMesh->AddColor(glm::vec3(PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f)));
-			quadMesh->AddDiffuseTexIndex(PseudorandMinMax(0, 6));
+			tree->AddModelMatForAll(GetTopModel());
+			tree->AddColorForAll(glm::vec3(PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f)));
+			tree->AddDiffuseTexIndexForAll(PseudorandMinMax(0, 6));
 		PopModel();
 	}
 
@@ -1284,7 +1306,7 @@ void Scene::ForwardRender(){
 	forwardSP.SetMat4fv("PV", &(projection * view)[0][0]);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	meshes[(int)MeshType::Quad]->InstancedRender(forwardSP);
+	models[(int)ModelType::Tree]->InstancedRender(forwardSP);
 
 	switch(screen){
 		case Screen::MainMenu: {

@@ -9,7 +9,16 @@ public:
     ~Model();
 
     void AddModelMatForAll(const glm::mat4& modelMat);
-    //void BatchRender(const int& primitive);
+    void AddColorForAll(const glm::vec3& color);
+    void AddDiffuseTexIndexForAll(const int diffuseTexIndex);
+
+    void ReserveModelMatsForAll(const size_t& size);
+    void ResizeModelMatsForAll(const size_t& size);
+    void ReserveColorsForAll(const size_t& size);
+    void ResizeColorsForAll(const size_t& size);
+    void ReserveDiffuseTexIndicesForAll(const size_t& size);
+    void ResizeDiffuseTexIndicesForAll(const size_t& size);
+
     void InstancedRender(ShaderProg& SP, const int& primitive = GL_TRIANGLES);
     void Render(ShaderProg& SP, const int& primitive = GL_TRIANGLES);
     void SetModelForAll(const glm::mat4& model);
@@ -21,7 +30,11 @@ private:
     std::vector<Vertex> allVertices;
     std::vector<uint> allIndices;
     glm::mat4 modelForAll;
+
     std::vector<glm::mat4> modelMatsForAll;
+    std::vector<glm::vec3> colorsForAll;
+    std::vector<int> diffuseTexIndicesForAll;
+
     uint VAO;
     uint VBO;
     uint EBO;
