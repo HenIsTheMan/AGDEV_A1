@@ -10,19 +10,12 @@ class App final: public Singleton<App>{
 	friend Singleton<App>;
 public:
 	enum struct FBO{
-		GeoPass = 0,
-		LightingPass,
 		PingPong0,
 		PingPong1,
 		Minimap,
 		Amt
 	};
 	enum struct Tex{
-		Pos = 0,
-		Colours,
-		Normals,
-		Spec,
-		Reflection,
 		Lit,
 		Bright,
 		PingPong0,
