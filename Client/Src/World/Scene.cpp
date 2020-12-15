@@ -1595,8 +1595,8 @@ void Scene::MinimapRender(){
 			Rotate(glm::vec4(0.f, 1.f, 0.f, glm::degrees(atan2(cam.CalcFront().x, cam.CalcFront().z)))),
 			Scale(glm::vec3(20.f)),
 		});
-			models[(int)ModelType::Scar]->SetModelForAll(GetTopModel());
-			models[(int)ModelType::Scar]->Render(forwardSP);
+			meshes[(int)MeshType::Sphere]->SetModel(GetTopModel());
+			meshes[(int)MeshType::Sphere]->Render(forwardSP);
 		PopModel();
 	}
 }
@@ -2008,10 +2008,6 @@ void Scene::ForwardRender(){
 
 	glBlendFunc(GL_ONE, GL_ZERO);
 }
-
-
-
-
 
 void Scene::LightingRenderPass(const uint& posTexRefID, const uint& coloursTexRefID, const uint& normalsTexRefID, const uint& specTexRefID, const uint& reflectionTexRefID){
 	lightingPassSP.Use();
