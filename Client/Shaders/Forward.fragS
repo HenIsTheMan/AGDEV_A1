@@ -117,7 +117,7 @@ uniform bool nightVision;
 uniform bool instancing;
 
 void main(){
-	if(!useCustomColour && !useDiffuseMap){
+	if(!useCustomColour && (!useDiffuseMap || (useDiffuseMap && useCustomDiffuseTexIndex && customDiffuseTexIndex == -1))){
 		Colour = fsIn.colour;
 	} else{
         if(instancing){
