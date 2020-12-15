@@ -10,16 +10,10 @@ class App final: public Singleton<App>{
 	friend Singleton<App>;
 public:
 	enum struct FBO{
-		PingPong0,
-		PingPong1,
 		Minimap,
 		Amt
 	};
 	enum struct Tex{
-		Lit,
-		Bright,
-		PingPong0,
-		PingPong1,
 		Minimap,
 		Amt
 	};
