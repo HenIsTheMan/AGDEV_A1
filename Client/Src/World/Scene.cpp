@@ -273,7 +273,7 @@ bool Scene::Init(){
 			Scale(glm::vec3(scaleFactor))
 		});
 			tree->AddModelMatForAll(GetTopModel());
-			tree->AddColorForAll(glm::vec3(PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f)));
+			tree->AddColorForAll(glm::rgbColor(glm::vec3(PseudorandMinMax(0.0f, 1.0f), 1.0f, PseudorandMinMax(0.0f, 1.0f))));
 			tree->AddDiffuseTexIndexForAll(0);
 		PopModel();
 	}
