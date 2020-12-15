@@ -274,9 +274,11 @@ bool Scene::Init(){
 		});
 			tree->AddModelMatForAll(GetTopModel());
 			tree->AddColorForAll(glm::vec3(PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f)));
-			tree->AddDiffuseTexIndexForAll(PseudorandMinMax(0, 6));
+			tree->AddDiffuseTexIndexForAll(0);
 		PopModel();
 	}
+
+	directionalLights.emplace_back(CreateLight(LightType::Directional)); //Simulate sunlight
 
 	return true;
 }
@@ -1874,9 +1876,9 @@ void Scene::MinimapRender(){
 
 void Scene::ForwardRender(){
 	forwardSP.Use();
-	const int& pAmt = 0;
-	const int& dAmt = 0;
-	const int& sAmt = 0;
+	const int& pAmt = (int)ptLights.size();
+	const int& dAmt = (int)directionalLights.size();
+	const int& sAmt = (int)spotlights.size();
 
 	forwardSP.Set1f("shininess", 32.f); //More light scattering if lower
 	forwardSP.Set3fv("globalAmbient", Light::globalAmbient);
@@ -1884,6 +1886,35 @@ void Scene::ForwardRender(){
 	forwardSP.Set1i("pAmt", pAmt);
 	forwardSP.Set1i("dAmt", dAmt);
 	forwardSP.Set1i("sAmt", sAmt);
+
+	int i;
+	for(i = 0; i < pAmt; ++i){
+		const PtLight* const& ptLight = static_cast<PtLight*>(ptLights[i]);
+		forwardSP.Set3fv(("ptLights[" + std::to_string(i) + "].ambient").c_str(), ptLight->ambient);
+		forwardSP.Set3fv(("ptLights[" + std::to_string(i) + "].diffuse").c_str(), ptLight->diffuse);
+		forwardSP.Set3fv(("ptLights[" + std::to_string(i) + "].spec").c_str(), ptLight->spec);
+		forwardSP.Set3fv(("ptLights[" + std::to_string(i) + "].pos").c_str(), ptLight->pos);
+		forwardSP.Set1f(("ptLights[" + std::to_string(i) + "].constant").c_str(), ptLight->constant);
+		forwardSP.Set1f(("ptLights[" + std::to_string(i) + "].linear").c_str(), ptLight->linear);
+		forwardSP.Set1f(("ptLights[" + std::to_string(i) + "].quadratic").c_str(), ptLight->quadratic);
+	}
+	for(i = 0; i < dAmt; ++i){
+		const DirectionalLight* const& directionalLight = static_cast<DirectionalLight*>(directionalLights[i]);
+		forwardSP.Set3fv(("directionalLights[" + std::to_string(i) + "].ambient").c_str(), directionalLight->ambient);
+		forwardSP.Set3fv(("directionalLights[" + std::to_string(i) + "].diffuse").c_str(), directionalLight->diffuse);
+		forwardSP.Set3fv(("directionalLights[" + std::to_string(i) + "].spec").c_str(), directionalLight->spec);
+		forwardSP.Set3fv(("directionalLights[" + std::to_string(i) + "].dir").c_str(), directionalLight->dir);
+	}
+	for(i = 0; i < sAmt; ++i){
+		const Spotlight* const& spotlight = static_cast<Spotlight*>(spotlights[i]);
+		forwardSP.Set3fv(("spotlights[" + std::to_string(i) + "].ambient").c_str(), spotlight->ambient);
+		forwardSP.Set3fv(("spotlights[" + std::to_string(i) + "].diffuse").c_str(), spotlight->diffuse);
+		forwardSP.Set3fv(("spotlights[" + std::to_string(i) + "].spec").c_str(), spotlight->spec);
+		forwardSP.Set3fv(("spotlights[" + std::to_string(i) + "].pos").c_str(), spotlight->pos);
+		forwardSP.Set3fv(("spotlights[" + std::to_string(i) + "].dir").c_str(), spotlight->dir);
+		forwardSP.Set1f(("spotlights[" + std::to_string(i) + "].cosInnerCutoff").c_str(), spotlight->cosInnerCutoff);
+		forwardSP.Set1f(("spotlights[" + std::to_string(i) + "].cosOuterCutoff").c_str(), spotlight->cosOuterCutoff);
+	}
 
 	forwardSP.SetMat4fv("PV", &(projection * view)[0][0]);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
