@@ -1892,8 +1892,10 @@ void Scene::ForwardRender(){
 				0,
 			});
 			#endif
+
+			const float FPS = 1.0f / dt;
 			textChief.RenderText(textSP, {
-				"FPS: " + std::to_string(1.f / dt).substr(0, 2),
+				"FPS: " + std::to_string(FPS).substr(0, std::to_string((int)FPS).length() + 3),
 				25.f,
 				125.f,
 				1.f,
