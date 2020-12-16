@@ -4,16 +4,16 @@ extern float terrainXScale;
 extern float terrainZScale;
 
 RegionControl::~RegionControl(){
-	if(root){
-		root->DestroyRegionPool();
-		delete root;
-		root = nullptr;
+	if(rootRegion){
+		rootRegion->DestroyRegionPool();
+		delete rootRegion;
+		rootRegion = nullptr;
 	}
 }
 
 void RegionControl::Update(){
-	root->ClearMovableAndDeactivateChildren();
-	root->Partition(true);
+	rootRegion->ClearMovableAndDeactivateChildren();
+	rootRegion->Partition(true);
 }
 
 void RegionControl::Render(ShaderProg& SP) const{
@@ -22,33 +22,33 @@ void RegionControl::Render(ShaderProg& SP) const{
 }
 
 const Region* RegionControl::FindRegion(Node* const& node, const bool movable){
-	return root->FindRegion(node, movable);
+	return rootRegion->FindRegion(node, movable);
 }
 
 void RegionControl::AddNode(Node* const& node, const bool movable){
-	root->AddNode(node, movable);
+	rootRegion->AddNode(node, movable);
 }
 
 void RegionControl::RemoveNode(Node* const& node, const bool movable){
-	root->RemoveNode(node, movable);
+	rootRegion->RemoveNode(node, movable);
 }
 
 void RegionControl::ReserveStationaryNodes(const size_t& size){
-	root->ReserveStationaryNodes(size);
+	rootRegion->ReserveStationaryNodes(size);
 }
 
 void RegionControl::ReserveMovableNodes(const size_t& size){
-	root->ReserveMovableNodes(size);
+	rootRegion->ReserveMovableNodes(size);
 }
 
 void RegionControl::InitRegionPool(const size_t& size){
-	root->InitRegionPool(size);
+	rootRegion->InitRegionPool(size);
 }
 
 RegionControl::RegionControl():
-	root(new Region())
+	rootRegion(new Region())
 {
-	root->active = true;
-	root->origin = glm::vec2(0.0f);
-	root->size = glm::vec2(terrainXScale, terrainZScale);
+	rootRegion->active = true;
+	rootRegion->origin = glm::vec2(0.0f);
+	rootRegion->size = glm::vec2(terrainXScale, terrainZScale);
 }

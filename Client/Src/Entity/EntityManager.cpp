@@ -32,8 +32,15 @@ void EntityManager::Render(ShaderProg& SP) const{
 	regionControl->Render(SP);
 }
 
+void EntityManager::DoEntityProcedure(Entity* const entity){
+	Node* const node = new Node();
+	node->SetEntity(entity);
+}
+
 void EntityManager::CreateShotgunBullet(const glm::vec3& camPos, const glm::vec3& camFront){
 	Entity* const entity = ActivateEntity(true);
+	DoEntityProcedure(entity);
+
 	entity->type = Entity::EntityType::Bullet;
 	entity->life = 5.f;
 	entity->maxLife = 5.f;
@@ -51,6 +58,7 @@ void EntityManager::CreateShotgunBullet(const glm::vec3& camPos, const glm::vec3
 
 void EntityManager::CreateScarBullet(const glm::vec3& camPos, const glm::vec3& camFront){
 	Entity* const entity = ActivateEntity(true);
+
 	entity->type = Entity::EntityType::Bullet;
 	entity->life = 5.f;
 	entity->maxLife = 5.f;

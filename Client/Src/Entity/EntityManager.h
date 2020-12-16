@@ -33,7 +33,9 @@ private:
 	EntityManager();
 
 	Entity* const ActivateEntity(const bool movable);
+	void DoEntityProcedure(Entity* const entity);
 
 	std::vector<Entity*> entityPool;
+
 	RegionControl* regionControl;
 };

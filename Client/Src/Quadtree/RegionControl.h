@@ -24,5 +24,5 @@ public:
 private:
 	RegionControl();
 
-	Region* root;
+	Region* rootRegion;
 };
