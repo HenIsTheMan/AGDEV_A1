@@ -16,7 +16,6 @@ void Sniper::Shoot(const float& elapsedTime, const glm::vec3& camPos, const glm:
 
 		Entity* const entity = entityManager->FetchEntity();
 		entity->type = Entity::EntityType::Bullet;
-		entity->active = true;
 		entity->life = 5.f;
 		entity->maxLife = 5.f;
 		entity->colour = glm::vec4(0.f, 0.f, 1.f, .3f);

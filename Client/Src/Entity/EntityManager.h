@@ -25,7 +25,7 @@ public:
 	void CreateFire(const EntityCreationAttribs& attribs);
 	void CreateEnemy(const EntityCreationAttribs& attribs);
 
-	Entity* const& FetchEntity();
+	Entity* const FetchEntity();
 private:
 	EntityManager();
 
