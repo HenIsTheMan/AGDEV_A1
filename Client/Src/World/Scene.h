@@ -147,6 +147,10 @@ private:
 	void UpdateEntities();
 	void RenderEntities(ShaderProg& SP);
 
+	void MainMenuAndGameOverUpdate(GLFWwindow* const& win, const POINT& mousePos, float& buttonBT);
+	void GameUpdate(GLFWwindow* const& win);
+	void ScoreboardUpdate(GLFWwindow* const& win, const POINT& mousePos, float& buttonBT);
+
 	void MainMenuRender();
 	void GameRender();
 	void GameOverRender();

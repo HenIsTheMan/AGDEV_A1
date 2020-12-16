@@ -301,401 +301,15 @@ void Scene::Update(GLFWwindow* const& win){
 
 	switch(screen){
 		case Screen::GameOver:
-		case Screen::MainMenu: {
-			glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-
-			cam.SetPos(glm::vec3(0.f, 0.f, 5.f));
-			cam.SetTarget(glm::vec3(0.f));
-			cam.SetUp(glm::vec3(0.f, 1.f, 0.f));
-			view = cam.LookAt();
-			projection = glm::ortho(-float(winWidth) / 2.f, float(winWidth) / 2.f, -float(winHeight) / 2.f, float(winHeight) / 2.f, .1f, 9999.f);
-
-			if(mousePos.x >= 25.f && mousePos.x <= (screen == Screen::MainMenu ? 100.f : 230.f) && mousePos.y >= winHeight - 160.f && mousePos.y <= winHeight - 125.f){
-				if(textScaleFactors[0] != 1.1f){
-					soundEngine->play2D("Audio/Sounds/Pop.flac", false);
-					textScaleFactors[0] = 1.1f;
-					textColours[0] = glm::vec4(1.f, 1.f, 0.f, 1.f);
-				}
-				if(leftRightMB > 0.f && buttonBT <= elapsedTime){
-					soundEngine->play2D("Audio/Sounds/Select.wav", false);
-					timeLeft = 60.f;
-					score = 0;
-					playerHealth = playerMaxHealth;
-					playerLives = playerMaxLives;
-					if(guns[0]){
-						delete guns[0];
-						guns[0] = nullptr;
-					}
-					guns[0] = new Shotgun();
-					if(guns[1]){
-						delete guns[1];
-						guns[1] = nullptr;
-					}
-					guns[1] = new Scar();
-					if(guns[2]){
-						delete guns[2];
-						guns[2] = nullptr;
-					}
-					guns[2] = new Sniper();
-					screen = Screen::Game;
-					cam.SetPos(glm::vec3(0.f));
-					cam.SetTarget(glm::vec3(0.f, 0.f, -1.f));
-					cam.SetUp(glm::vec3(0.f, 1.f, 0.f));
-					buttonBT = elapsedTime + .3f;
-				}
-			} else{
-				textScaleFactors[0] = 1.f;
-				textColours[0] = glm::vec4(1.f);
-			}
-			if(mousePos.x >= 25.f && mousePos.x <= 230.f && mousePos.y >= winHeight - 110.f && mousePos.y <= winHeight - 75.f){
-				if(textScaleFactors[1] != 1.1f){
-					soundEngine->play2D("Audio/Sounds/Pop.flac", false);
-					textScaleFactors[1] = 1.1f;
-					textColours[1] = glm::vec4(1.f, 1.f, 0.f, 1.f);
-				}
-				if(leftRightMB > 0.f && buttonBT <= elapsedTime){
-					soundEngine->play2D("Audio/Sounds/Select.wav", false);
-					screen = Screen::Scoreboard;
-					buttonBT = elapsedTime + .3f;
-				}
-			} else{
-				textScaleFactors[1] = 1.f;
-				textColours[1] = glm::vec4(1.f);
-			}
-			if(mousePos.x >= 25.f && mousePos.x <= 100.f && mousePos.y >= winHeight - 60.f && mousePos.y <= winHeight - 25.f){
-				if(textScaleFactors[2] != 1.1f){
-					soundEngine->play2D("Audio/Sounds/Pop.flac", false);
-					textScaleFactors[2] = 1.1f;
-					textColours[2] = glm::vec4(1.f, 1.f, 0.f, 1.f);
-				}
-				if(leftRightMB > 0.f && buttonBT <= elapsedTime){
-					soundEngine->play2D("Audio/Sounds/Select.wav", false);
-					endLoop = true;
-					buttonBT = elapsedTime + .3f;
-				}
-			} else{
-				textScaleFactors[2] = 1.f;
-				textColours[2] = glm::vec4(1.f);
-			}
-
+		case Screen::MainMenu:
+			MainMenuAndGameOverUpdate(win, mousePos, buttonBT);
 			break;
-		}
-		case Screen::Game: {
-			if(playerHealth <= 0.f){
-				--playerLives;
-				playerHealth = playerMaxHealth;
-			}
-			if(playerLives <= 0){
-				timeLeft = 0.f;
-			} else{
-				timeLeft -= dt;
-			}
-			if(timeLeft <= 0.f){
-				screen = Screen::GameOver;
-				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-				const size_t& mySize = scores.size();
-				if(mySize == 5){ //Max no. of scores saved
-					std::sort(scores.begin(), scores.end(), std::greater<int>());
-					if(score > scores.back()){
-						scores.pop_back();
-						scores.emplace_back(score);
-					}
-					std::sort(scores.begin(), scores.end(), std::greater<int>());
-				} else{
-					scores.emplace_back(score);
-					std::sort(scores.begin(), scores.end(), std::greater<int>());
-				}
-			}
-			glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
-			////Control player states
-			static float sprintBT = 0.f;
-			static float heightBT = 0.f;
-
-			///Toggle sprint
-			if(Key(VK_SHIFT) && sprintBT <= elapsedTime){
-				sprintOn = !sprintOn;
-				sprintBT = elapsedTime + .5f;
-			}
-
-			///Set movement state
-			if(Key(GLFW_KEY_A) || Key(GLFW_KEY_D) || Key(GLFW_KEY_W) || Key(GLFW_KEY_S)){
-				if(sprintOn){
-					playerStates &= ~(int)PlayerState::NoMovement;
-					playerStates &= ~(int)PlayerState::Walking;
-					playerStates |= (int)PlayerState::Sprinting;
-				} else{
-					playerStates &= ~(int)PlayerState::NoMovement;
-					playerStates |= (int)PlayerState::Walking;
-					playerStates &= ~(int)PlayerState::Sprinting;
-				}
-			} else{
-				playerStates |= (int)PlayerState::NoMovement;
-				playerStates &= ~(int)PlayerState::Walking;
-				playerStates &= ~(int)PlayerState::Sprinting;
-			}
-
-			///Set height state
-			if(heightBT <= elapsedTime){
-				if(Key(GLFW_KEY_C)){
-					if(playerStates & (int)PlayerState::Standing){
-						playerStates |= (int)PlayerState::Crouching;
-						playerStates &= ~(int)PlayerState::Standing;
-					} else if(playerStates & (int)PlayerState::Crouching){
-						playerStates |= (int)PlayerState::Proning;
-						playerStates &= ~(int)PlayerState::Crouching;
-					}
-					heightBT = elapsedTime + .5f;
-				}
-				if(Key(VK_SPACE)){
-					if(playerStates & (int)PlayerState::Proning){
-						playerStates |= (int)PlayerState::Crouching;
-						playerStates &= ~(int)PlayerState::Proning;
-					} else if(playerStates & (int)PlayerState::Crouching){
-						playerStates |= (int)PlayerState::Standing;
-						playerStates &= ~(int)PlayerState::Crouching;
-					} else if(playerStates & (int)PlayerState::Standing){
-						soundEngine->play2D("Audio/Sounds/Jump.wav", false);
-						playerStates |= (int)PlayerState::Jumping;
-						playerStates &= ~(int)PlayerState::Standing;
-					}
-					heightBT = elapsedTime + .5f;
-				} else{
-					if((playerStates & (int)PlayerState::Jumping)){
-						playerStates |= (int)PlayerState::Falling;
-						playerStates &= ~(int)PlayerState::Jumping;
-						cam.SetVel(0.f);
-					}
-				}
-			}
-
-			float yMin = terrainYScale * static_cast<Terrain*>(meshes[(int)MeshType::Terrain])->GetHeightAtPt(cam.GetPos().x / terrainXScale, cam.GetPos().z / terrainZScale);
-			float yMax = yMin;
-
-			///Update player according to its states
-			int playerStatesTemp = playerStates;
-			int bitMask = 1;
-			while(playerStatesTemp){
-				switch(PlayerState(playerStatesTemp & bitMask)){
-					case PlayerState::NoMovement:
-						cam.SetSpd(0.f);
-						break;
-					case PlayerState::Walking:
-						cam.SetSpd(100.f);
-						break;
-					case PlayerState::Sprinting:
-						cam.SetSpd(250.f);
-						break;
-					case PlayerState::Standing:
-						yMin += 30.f;
-						yMax += 30.f;
-						break;
-					case PlayerState::Jumping:
-						cam.SetVel(300.f);
-					case PlayerState::Falling:
-						cam.SetAccel(-1500.f);
-						yMin += 30.f;
-						yMax += 250.f;
-						break;
-					case PlayerState::Crouching:
-						cam.SetSpd(cam.GetSpd() / 5.f);
-						yMin += 5.f;
-						yMax += 5.f;
-						break;
-					case PlayerState::Proning:
-						cam.SetSpd(5.f);
-						yMin += 1.f;
-						yMax += 1.f;
-						break;
-				}
-				playerStatesTemp &= ~bitMask;
-				bitMask <<= 1;
-			}
-
-			if(playerStates & (int)PlayerState::Jumping){
-				if(cam.GetPos().y >= yMax){
-					playerStates |= (int)PlayerState::Falling;
-					playerStates &= ~(int)PlayerState::Jumping;
-					cam.SetVel(0.f);
-				}
-			}
-			if(playerStates & (int)PlayerState::Falling){
-				if(cam.GetPos().y <= yMin){
-					playerStates |= (int)PlayerState::Standing;
-					playerStates &= ~(int)PlayerState::Falling;
-					cam.SetAccel(0.f);
-					cam.SetVel(0.f);
-				}
-			}
-			cam.UpdateJumpFall();
-			cam.Update(GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_W, GLFW_KEY_S, -terrainXScale / 2.f + 5.f, terrainXScale / 2.f - 5.f, yMin, yMax, -terrainZScale / 2.f + 5.f, terrainZScale / 2.f - 5.f);
-			view = cam.LookAt();
-
-			///Control FOV of perspective projection based on item selected in inv
-			if(RMB){
-				switch(inv[currSlot]){
-					case ItemType::Shotgun:
-						angularFOV = 40.f;
-						break;
-					case ItemType::Scar:
-						angularFOV = 30.f;
-						break;
-					case ItemType::Sniper:
-						if(angularFOV != 15.f){
-							soundEngine->play2D("Audio/Sounds/Scope.wav", false);
-						}
-						angularFOV = 15.f;
-						break;
-				}
-			} else{
-				angularFOV = 45.f;
-			}
-			projection = glm::perspective(glm::radians(angularFOV), cam.GetAspectRatio(), .1f, 9999.f);
-
-			const glm::vec3& camPos = cam.GetPos();
-			const glm::vec3& camFront = cam.CalcFront();
-			soundEngine->setListenerPosition(vec3df(camPos.x, camPos.y, camPos.z), vec3df(camFront.x, camFront.y, camFront.z));
-
-			static_cast<SpriteAni*>(meshes[(int)MeshType::CoinSpriteAni])->Update();
-			static_cast<SpriteAni*>(meshes[(int)MeshType::FireSpriteAni])->Update();
-
-			static float polyModeBT = 0.f;
-			static float minimapViewBT = 0.f;
-			static float distortionBT = 0.f;
-			static float echoBT = 0.f;
-			static float wavesReverbBT = 0.f;
-			static float resetSoundFXBT = 0.f;
-
-			///Track changing of inv slots
-			int keys[]{
-				GLFW_KEY_1,
-				GLFW_KEY_2,
-				GLFW_KEY_3,
-				GLFW_KEY_4,
-				GLFW_KEY_5,
-			};
-			for(int i = 0; i < sizeof(keys) / sizeof(keys[0]); ++i){
-				if(Key(keys[i])){
-					currSlot = keys[i] - 49;
-					break;
-				}
-			}
-			switch(inv[currSlot]){
-				case ItemType::Shotgun:
-				case ItemType::Scar:
-				case ItemType::Sniper:
-					currGun = guns[int(inv[currSlot])];
-					break;
-				default:
-					currGun = nullptr;
-			}
-
-			if(Key(VK_F2) && polyModeBT <= elapsedTime){
-				polyModes[0] += polyModes[0] == GL_FILL ? -2 : 1;
-				glPolygonMode(GL_FRONT_AND_BACK, polyModes[0]);
-				polyModeBT = elapsedTime + .5f;
-			}
-
-			if(Key(VK_F3) && minimapViewBT <= elapsedTime){
-				minimapView = MinimapViewType((int)minimapView + 1);
-				if(minimapView == MinimapViewType::Amt){
-					minimapView = MinimapViewType(0);
-				}
-				minimapViewBT = elapsedTime + .5f;
-			}
-
-			if(score < 0){
-				score = 0;
-			}
-
-			///Control soundFX
-			const size_t& coinSoundFXSize = coinSoundFX.size();
-			for(size_t i = 0; i < coinSoundFXSize; ++i){
-				ISoundEffectControl* soundFX = coinSoundFX[i];
-				if(soundFX){
-					if(Key(KEY_I) && distortionBT <= elapsedTime){
-						soundFX->isDistortionSoundEffectEnabled() ? soundFX->disableDistortionSoundEffect() : (void)soundFX->enableDistortionSoundEffect();
-						distortionBT = elapsedTime + .5f;
-					}
-					if(Key(KEY_O) && echoBT <= elapsedTime){
-						soundFX->isEchoSoundEffectEnabled() ? soundFX->disableEchoSoundEffect() : (void)soundFX->enableEchoSoundEffect();
-						echoBT = elapsedTime + .5f;
-					}
-					if(Key(KEY_P) && wavesReverbBT <= elapsedTime){
-						soundFX->isWavesReverbSoundEffectEnabled() ? soundFX->disableWavesReverbSoundEffect() : (void)soundFX->enableWavesReverbSoundEffect();
-						wavesReverbBT = elapsedTime + .5f;
-					}
-					if(Key(KEY_L) && resetSoundFXBT <= elapsedTime){
-						soundFX->disableAllEffects();
-						resetSoundFXBT = elapsedTime + .5f;
-					}
-				}
-			}
-			const size_t& fireSoundFXSize = fireSoundFX.size();
-			for(size_t i = 0; i < fireSoundFXSize; ++i){
-				ISoundEffectControl* soundFX = fireSoundFX[i];
-				if(soundFX){
-					if(Key(KEY_I) && distortionBT <= elapsedTime){
-						soundFX->isDistortionSoundEffectEnabled() ? soundFX->disableDistortionSoundEffect() : (void)soundFX->enableDistortionSoundEffect();
-						distortionBT = elapsedTime + .5f;
-					}
-					if(Key(KEY_O) && echoBT <= elapsedTime){
-						soundFX->isEchoSoundEffectEnabled() ? soundFX->disableEchoSoundEffect() : (void)soundFX->enableEchoSoundEffect();
-						echoBT = elapsedTime + .5f;
-					}
-					if(Key(KEY_P) && wavesReverbBT <= elapsedTime){
-						soundFX->isWavesReverbSoundEffectEnabled() ? soundFX->disableWavesReverbSoundEffect() : (void)soundFX->enableWavesReverbSoundEffect();
-						wavesReverbBT = elapsedTime + .5f;
-					}
-					if(Key(KEY_L) && resetSoundFXBT <= elapsedTime){
-						soundFX->disableAllEffects();
-						resetSoundFXBT = elapsedTime + .5f;
-					}
-				}
-			}
-
-			///Control shooting and reloading of currGun
-			if(currGun){
-				if(LMB){
-					currGun->Shoot(elapsedTime, FetchEntity(), cam.GetPos(), cam.CalcFront(), soundEngine);
-				}
-				if(Key(GLFW_KEY_R)){
-					currGun->Reload(soundEngine);
-				}
-				currGun->Update();
-			}
-			UpdateEntities();
-
+		case Screen::Game:
+			GameUpdate(win);
 			break;
-		}
-		case Screen::Scoreboard: {
-			glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-
-			cam.SetPos(glm::vec3(0.f, 0.f, 5.f));
-			cam.SetTarget(glm::vec3(0.f));
-			cam.SetUp(glm::vec3(0.f, 1.f, 0.f));
-			view = cam.LookAt();
-			projection = glm::ortho(-float(winWidth) / 2.f, float(winWidth) / 2.f, -float(winHeight) / 2.f, float(winHeight) / 2.f, .1f, 9999.f);
-
-			if(mousePos.x >= 25.f && mousePos.x <= 110.f && mousePos.y >= winHeight - 60.f && mousePos.y <= winHeight - 25.f){
-				if(textScaleFactors[2] != 1.1f){
-					soundEngine->play2D("Audio/Sounds/Pop.flac", false);
-					textScaleFactors[2] = 1.1f;
-					textColours[2] = glm::vec4(1.f, 1.f, 0.f, 1.f);
-				}
-				if(leftRightMB > 0.f && buttonBT <= elapsedTime){
-					soundEngine->play2D("Audio/Sounds/Select.wav", false);
-					screen = Screen::MainMenu;
-					buttonBT = elapsedTime + .3f;
-				}
-			} else{
-				textScaleFactors[2] = 1.f;
-				textColours[2] = glm::vec4(1.f);
-			}
-
+		case Screen::Scoreboard:
+			ScoreboardUpdate(win, mousePos, buttonBT);
 			break;
-		}
 	}
 }
 
@@ -1189,6 +803,397 @@ void Scene::RenderEntities(ShaderProg& SP){
 	}
 }
 
+void Scene::MainMenuAndGameOverUpdate(GLFWwindow* const& win, const POINT& mousePos, float& buttonBT){
+	glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+
+	cam.SetPos(glm::vec3(0.f, 0.f, 5.f));
+	cam.SetTarget(glm::vec3(0.f));
+	cam.SetUp(glm::vec3(0.f, 1.f, 0.f));
+	view = cam.LookAt();
+	projection = glm::ortho(-float(winWidth) / 2.f, float(winWidth) / 2.f, -float(winHeight) / 2.f, float(winHeight) / 2.f, .1f, 9999.f);
+
+	if(mousePos.x >= 25.f && mousePos.x <= (screen == Screen::MainMenu ? 100.f : 230.f) && mousePos.y >= winHeight - 160.f && mousePos.y <= winHeight - 125.f){
+		if(textScaleFactors[0] != 1.1f){
+			soundEngine->play2D("Audio/Sounds/Pop.flac", false);
+			textScaleFactors[0] = 1.1f;
+			textColours[0] = glm::vec4(1.f, 1.f, 0.f, 1.f);
+		}
+		if(leftRightMB > 0.f && buttonBT <= elapsedTime){
+			soundEngine->play2D("Audio/Sounds/Select.wav", false);
+			timeLeft = 60.f;
+			score = 0;
+			playerHealth = playerMaxHealth;
+			playerLives = playerMaxLives;
+			if(guns[0]){
+				delete guns[0];
+				guns[0] = nullptr;
+			}
+			guns[0] = new Shotgun();
+			if(guns[1]){
+				delete guns[1];
+				guns[1] = nullptr;
+			}
+			guns[1] = new Scar();
+			if(guns[2]){
+				delete guns[2];
+				guns[2] = nullptr;
+			}
+			guns[2] = new Sniper();
+			screen = Screen::Game;
+			cam.SetPos(glm::vec3(0.f));
+			cam.SetTarget(glm::vec3(0.f, 0.f, -1.f));
+			cam.SetUp(glm::vec3(0.f, 1.f, 0.f));
+			buttonBT = elapsedTime + .3f;
+		}
+	} else{
+		textScaleFactors[0] = 1.f;
+		textColours[0] = glm::vec4(1.f);
+	}
+	if(mousePos.x >= 25.f && mousePos.x <= 230.f && mousePos.y >= winHeight - 110.f && mousePos.y <= winHeight - 75.f){
+		if(textScaleFactors[1] != 1.1f){
+			soundEngine->play2D("Audio/Sounds/Pop.flac", false);
+			textScaleFactors[1] = 1.1f;
+			textColours[1] = glm::vec4(1.f, 1.f, 0.f, 1.f);
+		}
+		if(leftRightMB > 0.f && buttonBT <= elapsedTime){
+			soundEngine->play2D("Audio/Sounds/Select.wav", false);
+			screen = Screen::Scoreboard;
+			buttonBT = elapsedTime + .3f;
+		}
+	} else{
+		textScaleFactors[1] = 1.f;
+		textColours[1] = glm::vec4(1.f);
+	}
+	if(mousePos.x >= 25.f && mousePos.x <= 100.f && mousePos.y >= winHeight - 60.f && mousePos.y <= winHeight - 25.f){
+		if(textScaleFactors[2] != 1.1f){
+			soundEngine->play2D("Audio/Sounds/Pop.flac", false);
+			textScaleFactors[2] = 1.1f;
+			textColours[2] = glm::vec4(1.f, 1.f, 0.f, 1.f);
+		}
+		if(leftRightMB > 0.f && buttonBT <= elapsedTime){
+			soundEngine->play2D("Audio/Sounds/Select.wav", false);
+			endLoop = true;
+			buttonBT = elapsedTime + .3f;
+		}
+	} else{
+		textScaleFactors[2] = 1.f;
+		textColours[2] = glm::vec4(1.f);
+	}
+}
+
+void Scene::GameUpdate(GLFWwindow* const& win){
+	if(playerHealth <= 0.f){
+		--playerLives;
+		playerHealth = playerMaxHealth;
+	}
+	if(playerLives <= 0){
+		timeLeft = 0.f;
+	} else{
+		timeLeft -= dt;
+	}
+	if(timeLeft <= 0.f){
+		screen = Screen::GameOver;
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+		const size_t& mySize = scores.size();
+		if(mySize == 5){ //Max no. of scores saved
+			std::sort(scores.begin(), scores.end(), std::greater<int>());
+			if(score > scores.back()){
+				scores.pop_back();
+				scores.emplace_back(score);
+			}
+			std::sort(scores.begin(), scores.end(), std::greater<int>());
+		} else{
+			scores.emplace_back(score);
+			std::sort(scores.begin(), scores.end(), std::greater<int>());
+		}
+	}
+	glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+	////Control player states
+	static float sprintBT = 0.f;
+	static float heightBT = 0.f;
+
+	///Toggle sprint
+	if(Key(VK_SHIFT) && sprintBT <= elapsedTime){
+		sprintOn = !sprintOn;
+		sprintBT = elapsedTime + .5f;
+	}
+
+	///Set movement state
+	if(Key(GLFW_KEY_A) || Key(GLFW_KEY_D) || Key(GLFW_KEY_W) || Key(GLFW_KEY_S)){
+		if(sprintOn){
+			playerStates &= ~(int)PlayerState::NoMovement;
+			playerStates &= ~(int)PlayerState::Walking;
+			playerStates |= (int)PlayerState::Sprinting;
+		} else{
+			playerStates &= ~(int)PlayerState::NoMovement;
+			playerStates |= (int)PlayerState::Walking;
+			playerStates &= ~(int)PlayerState::Sprinting;
+		}
+	} else{
+		playerStates |= (int)PlayerState::NoMovement;
+		playerStates &= ~(int)PlayerState::Walking;
+		playerStates &= ~(int)PlayerState::Sprinting;
+	}
+
+	///Set height state
+	if(heightBT <= elapsedTime){
+		if(Key(GLFW_KEY_C)){
+			if(playerStates & (int)PlayerState::Standing){
+				playerStates |= (int)PlayerState::Crouching;
+				playerStates &= ~(int)PlayerState::Standing;
+			} else if(playerStates & (int)PlayerState::Crouching){
+				playerStates |= (int)PlayerState::Proning;
+				playerStates &= ~(int)PlayerState::Crouching;
+			}
+			heightBT = elapsedTime + .5f;
+		}
+		if(Key(VK_SPACE)){
+			if(playerStates & (int)PlayerState::Proning){
+				playerStates |= (int)PlayerState::Crouching;
+				playerStates &= ~(int)PlayerState::Proning;
+			} else if(playerStates & (int)PlayerState::Crouching){
+				playerStates |= (int)PlayerState::Standing;
+				playerStates &= ~(int)PlayerState::Crouching;
+			} else if(playerStates & (int)PlayerState::Standing){
+				soundEngine->play2D("Audio/Sounds/Jump.wav", false);
+				playerStates |= (int)PlayerState::Jumping;
+				playerStates &= ~(int)PlayerState::Standing;
+			}
+			heightBT = elapsedTime + .5f;
+		} else{
+			if((playerStates & (int)PlayerState::Jumping)){
+				playerStates |= (int)PlayerState::Falling;
+				playerStates &= ~(int)PlayerState::Jumping;
+				cam.SetVel(0.f);
+			}
+		}
+	}
+
+	float yMin = terrainYScale * static_cast<Terrain*>(meshes[(int)MeshType::Terrain])->GetHeightAtPt(cam.GetPos().x / terrainXScale, cam.GetPos().z / terrainZScale);
+	float yMax = yMin;
+
+	///Update player according to its states
+	int playerStatesTemp = playerStates;
+	int bitMask = 1;
+	while(playerStatesTemp){
+		switch(PlayerState(playerStatesTemp & bitMask)){
+			case PlayerState::NoMovement:
+				cam.SetSpd(0.f);
+				break;
+			case PlayerState::Walking:
+				cam.SetSpd(100.f);
+				break;
+			case PlayerState::Sprinting:
+				cam.SetSpd(250.f);
+				break;
+			case PlayerState::Standing:
+				yMin += 30.f;
+				yMax += 30.f;
+				break;
+			case PlayerState::Jumping:
+				cam.SetVel(300.f);
+			case PlayerState::Falling:
+				cam.SetAccel(-1500.f);
+				yMin += 30.f;
+				yMax += 250.f;
+				break;
+			case PlayerState::Crouching:
+				cam.SetSpd(cam.GetSpd() / 5.f);
+				yMin += 5.f;
+				yMax += 5.f;
+				break;
+			case PlayerState::Proning:
+				cam.SetSpd(5.f);
+				yMin += 1.f;
+				yMax += 1.f;
+				break;
+		}
+		playerStatesTemp &= ~bitMask;
+		bitMask <<= 1;
+	}
+
+	if(playerStates & (int)PlayerState::Jumping){
+		if(cam.GetPos().y >= yMax){
+			playerStates |= (int)PlayerState::Falling;
+			playerStates &= ~(int)PlayerState::Jumping;
+			cam.SetVel(0.f);
+		}
+	}
+	if(playerStates & (int)PlayerState::Falling){
+		if(cam.GetPos().y <= yMin){
+			playerStates |= (int)PlayerState::Standing;
+			playerStates &= ~(int)PlayerState::Falling;
+			cam.SetAccel(0.f);
+			cam.SetVel(0.f);
+		}
+	}
+	cam.UpdateJumpFall();
+	cam.Update(GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_W, GLFW_KEY_S, -terrainXScale / 2.f + 5.f, terrainXScale / 2.f - 5.f, yMin, yMax, -terrainZScale / 2.f + 5.f, terrainZScale / 2.f - 5.f);
+	view = cam.LookAt();
+
+	///Control FOV of perspective projection based on item selected in inv
+	if(RMB){
+		switch(inv[currSlot]){
+			case ItemType::Shotgun:
+				angularFOV = 40.f;
+				break;
+			case ItemType::Scar:
+				angularFOV = 30.f;
+				break;
+			case ItemType::Sniper:
+				if(angularFOV != 15.f){
+					soundEngine->play2D("Audio/Sounds/Scope.wav", false);
+				}
+				angularFOV = 15.f;
+				break;
+		}
+	} else{
+		angularFOV = 45.f;
+	}
+	projection = glm::perspective(glm::radians(angularFOV), cam.GetAspectRatio(), .1f, 9999.f);
+
+	const glm::vec3& camPos = cam.GetPos();
+	const glm::vec3& camFront = cam.CalcFront();
+	soundEngine->setListenerPosition(vec3df(camPos.x, camPos.y, camPos.z), vec3df(camFront.x, camFront.y, camFront.z));
+
+	static_cast<SpriteAni*>(meshes[(int)MeshType::CoinSpriteAni])->Update();
+	static_cast<SpriteAni*>(meshes[(int)MeshType::FireSpriteAni])->Update();
+
+	static float polyModeBT = 0.f;
+	static float minimapViewBT = 0.f;
+	static float distortionBT = 0.f;
+	static float echoBT = 0.f;
+	static float wavesReverbBT = 0.f;
+	static float resetSoundFXBT = 0.f;
+
+	///Track changing of inv slots
+	int keys[]{
+		GLFW_KEY_1,
+		GLFW_KEY_2,
+		GLFW_KEY_3,
+		GLFW_KEY_4,
+		GLFW_KEY_5,
+	};
+	for(int i = 0; i < sizeof(keys) / sizeof(keys[0]); ++i){
+		if(Key(keys[i])){
+			currSlot = keys[i] - 49;
+			break;
+		}
+	}
+	switch(inv[currSlot]){
+		case ItemType::Shotgun:
+		case ItemType::Scar:
+		case ItemType::Sniper:
+			currGun = guns[int(inv[currSlot])];
+			break;
+		default:
+			currGun = nullptr;
+	}
+
+	if(Key(VK_F2) && polyModeBT <= elapsedTime){
+		polyModes[0] += polyModes[0] == GL_FILL ? -2 : 1;
+		glPolygonMode(GL_FRONT_AND_BACK, polyModes[0]);
+		polyModeBT = elapsedTime + .5f;
+	}
+
+	if(Key(VK_F3) && minimapViewBT <= elapsedTime){
+		minimapView = MinimapViewType((int)minimapView + 1);
+		if(minimapView == MinimapViewType::Amt){
+			minimapView = MinimapViewType(0);
+		}
+		minimapViewBT = elapsedTime + .5f;
+	}
+
+	if(score < 0){
+		score = 0;
+	}
+
+	///Control soundFX
+	const size_t& coinSoundFXSize = coinSoundFX.size();
+	for(size_t i = 0; i < coinSoundFXSize; ++i){
+		ISoundEffectControl* soundFX = coinSoundFX[i];
+		if(soundFX){
+			if(Key(KEY_I) && distortionBT <= elapsedTime){
+				soundFX->isDistortionSoundEffectEnabled() ? soundFX->disableDistortionSoundEffect() : (void)soundFX->enableDistortionSoundEffect();
+				distortionBT = elapsedTime + .5f;
+			}
+			if(Key(KEY_O) && echoBT <= elapsedTime){
+				soundFX->isEchoSoundEffectEnabled() ? soundFX->disableEchoSoundEffect() : (void)soundFX->enableEchoSoundEffect();
+				echoBT = elapsedTime + .5f;
+			}
+			if(Key(KEY_P) && wavesReverbBT <= elapsedTime){
+				soundFX->isWavesReverbSoundEffectEnabled() ? soundFX->disableWavesReverbSoundEffect() : (void)soundFX->enableWavesReverbSoundEffect();
+				wavesReverbBT = elapsedTime + .5f;
+			}
+			if(Key(KEY_L) && resetSoundFXBT <= elapsedTime){
+				soundFX->disableAllEffects();
+				resetSoundFXBT = elapsedTime + .5f;
+			}
+		}
+	}
+	const size_t& fireSoundFXSize = fireSoundFX.size();
+	for(size_t i = 0; i < fireSoundFXSize; ++i){
+		ISoundEffectControl* soundFX = fireSoundFX[i];
+		if(soundFX){
+			if(Key(KEY_I) && distortionBT <= elapsedTime){
+				soundFX->isDistortionSoundEffectEnabled() ? soundFX->disableDistortionSoundEffect() : (void)soundFX->enableDistortionSoundEffect();
+				distortionBT = elapsedTime + .5f;
+			}
+			if(Key(KEY_O) && echoBT <= elapsedTime){
+				soundFX->isEchoSoundEffectEnabled() ? soundFX->disableEchoSoundEffect() : (void)soundFX->enableEchoSoundEffect();
+				echoBT = elapsedTime + .5f;
+			}
+			if(Key(KEY_P) && wavesReverbBT <= elapsedTime){
+				soundFX->isWavesReverbSoundEffectEnabled() ? soundFX->disableWavesReverbSoundEffect() : (void)soundFX->enableWavesReverbSoundEffect();
+				wavesReverbBT = elapsedTime + .5f;
+			}
+			if(Key(KEY_L) && resetSoundFXBT <= elapsedTime){
+				soundFX->disableAllEffects();
+				resetSoundFXBT = elapsedTime + .5f;
+			}
+		}
+	}
+
+	///Control shooting and reloading of currGun
+	if(currGun){
+		if(LMB){
+			currGun->Shoot(elapsedTime, FetchEntity(), cam.GetPos(), cam.CalcFront(), soundEngine);
+		}
+		if(Key(GLFW_KEY_R)){
+			currGun->Reload(soundEngine);
+		}
+		currGun->Update();
+	}
+	UpdateEntities();
+}
+
+void Scene::ScoreboardUpdate(GLFWwindow* const& win, const POINT& mousePos, float& buttonBT){
+	glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+
+	cam.SetPos(glm::vec3(0.f, 0.f, 5.f));
+	cam.SetTarget(glm::vec3(0.f));
+	cam.SetUp(glm::vec3(0.f, 1.f, 0.f));
+	view = cam.LookAt();
+	projection = glm::ortho(-float(winWidth) / 2.f, float(winWidth) / 2.f, -float(winHeight) / 2.f, float(winHeight) / 2.f, .1f, 9999.f);
+
+	if(mousePos.x >= 25.f && mousePos.x <= 110.f && mousePos.y >= winHeight - 60.f && mousePos.y <= winHeight - 25.f){
+		if(textScaleFactors[2] != 1.1f){
+			soundEngine->play2D("Audio/Sounds/Pop.flac", false);
+			textScaleFactors[2] = 1.1f;
+			textColours[2] = glm::vec4(1.f, 1.f, 0.f, 1.f);
+		}
+		if(leftRightMB > 0.f && buttonBT <= elapsedTime){
+			soundEngine->play2D("Audio/Sounds/Select.wav", false);
+			screen = Screen::MainMenu;
+			buttonBT = elapsedTime + .3f;
+		}
+	} else{
+		textScaleFactors[2] = 1.f;
+		textColours[2] = glm::vec4(1.f);
+	}
+}
 
 void Scene::MainMenuRender(){
 	forwardSP.Set1i("nightVision", 0);
@@ -1771,7 +1776,7 @@ void Scene::ScoreboardRender(){
 	glDepthFunc(GL_LESS);
 }
 
-constexpr float Divisor = 5.f;
+constexpr static float Divisor = 5.f;
 
 void Scene::MinimapRender(){
 	if(screen == Screen::Game){
