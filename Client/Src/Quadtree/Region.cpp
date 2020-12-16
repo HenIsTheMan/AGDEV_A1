@@ -18,13 +18,15 @@ Region::Region():
 
 Region::~Region(){
 	for(Node*& node: stationaryNodes){
-		if(node){ //Deleted elsewhere
+		if(node){
+			delete node;
 			node = nullptr;
 		}
 	}
 
 	for(Node*& node: movableNodes){
-		if(node){ //Deleted elsewhere
+		if(node){
+			delete node;
 			node = nullptr;
 		}
 	}

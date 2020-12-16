@@ -8,6 +8,10 @@ EntityManager::~EntityManager(){
 		}
 	}
 
+	if(rootNode){
+		delete rootNode;
+		rootNode = nullptr;
+	}
 	regionControl->Destroy();
 }
 
@@ -39,6 +43,8 @@ void EntityManager::SetUpRegionsForStationary(){
 void EntityManager::ActivateEntityProcedure(Entity* const entity){
 	Node* const node = new Node();
 	node->SetEntity(entity);
+	node->SetParent(rootNode);
+	regionControl->AddNode(node, entity->movable);
 }
 
 void EntityManager::DeactivateEntityProcedure(Entity* const entity){
@@ -212,6 +218,7 @@ void EntityManager::DeactivateEntity(Entity* const& entity, const bool movable){
 
 EntityManager::EntityManager():
 	entityPool(),
+	rootNode(new Node()),
 	regionControl(RegionControl::GetObjPtr())
 {
 }

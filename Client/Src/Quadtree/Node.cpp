@@ -21,10 +21,9 @@ Node::~Node(){
 	entity = nullptr;
 	parent = nullptr;
 
-	for(Node* const child: children){
-		child->DestroyAllChildren();
+	for(Node*& child: children){
+		child = nullptr;
 	}
-	delete this;
 }
 
 void Node::AddChild(Node* const child){

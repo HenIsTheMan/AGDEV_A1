@@ -199,6 +199,37 @@ Scene::~Scene(){
 void Scene::InitEntities(){
 	entityManager->Init();
 
+	for(short i = 0; i < 20; ++i){
+		const float scaleFactor = 15.f;
+		const float xPos = PseudorandMinMax(-terrainXScale / 2.f + 5.f + scaleFactor, terrainXScale / 2.f - 5.f - scaleFactor);
+		const float zPos = PseudorandMinMax(-terrainZScale / 2.f + 5.f + scaleFactor, terrainZScale / 2.f - 5.f - scaleFactor);
+		const glm::vec3 pos = glm::vec3(xPos, terrainYScale * static_cast<Terrain*>(meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos / terrainXScale, zPos / terrainZScale) + scaleFactor, zPos);
+		entityManager->CreateCoin({
+			pos,
+			glm::vec3(1.f, 0.f, 0.f),
+			glm::vec3(scaleFactor),
+			glm::vec4(5.f * glm::rgbColor(glm::vec3(PseudorandMinMax(0.f, 255.f), 1.f, 1.f)), .99f),
+			-1,
+		});
+
+		ISound* music = soundEngine->play3D("Audio/Music/Spin.mp3", vec3df(pos.x, pos.y, pos.z), true, true, true, ESM_AUTO_DETECT, true);
+		if(music){
+			music->setMinDistance(3.f);
+			music->setVolume(5);
+
+			ISoundEffectControl* soundFX = music->getSoundEffectControl();
+			if(!soundFX){
+				(void)puts("No soundFX support!\n");
+			}
+			coinSoundFX.emplace_back(soundFX);
+
+			coinMusic.emplace_back(music);
+		} else{
+			(void)puts("Failed to init music!\n");
+		}
+	}
+
+	//* Create trees
 	Model* const tree = models[(int)ModelType::Tree];
 	tree->ReserveModelMatsForAll(999);
 	tree->ReserveColorsForAll(999);
@@ -224,12 +255,19 @@ void Scene::InitEntities(){
 		tree->AddDiffuseTexIndexForAll(0);
 		PopModel();
 	}
+	//*/
 
 	entityManager->SetUpRegionsForStationary();
 }
 
 bool Scene::Init(){
 	glGetIntegerv(GL_POLYGON_MODE, polyModes);
+
+	soundEngine = createIrrKlangDevice(ESOD_AUTO_DETECT, ESEO_DEFAULT_OPTIONS & ~ESEO_PRINT_DEBUG_INFO_TO_DEBUGGER & ~ESEO_PRINT_DEBUG_INFO_TO_STDOUT);
+	if(!soundEngine){
+		(void)puts("Failed to init soundEngine!\n");
+	}
+	soundEngine->play2D("Audio/Music/Theme.mp3", true);
 
 	InitEntities();
 
@@ -260,12 +298,6 @@ bool Scene::Init(){
 		"Imgs/Skybox/Back.png"
 	};
 	SetUpCubemap(cubemapRefID, faces);
-
-	soundEngine = createIrrKlangDevice(ESOD_AUTO_DETECT, ESEO_DEFAULT_OPTIONS & ~ESEO_PRINT_DEBUG_INFO_TO_DEBUGGER & ~ESEO_PRINT_DEBUG_INFO_TO_STDOUT);
-	if(!soundEngine){
-		(void)puts("Failed to init soundEngine!\n");
-	}
-	soundEngine->play2D("Audio/Music/Theme.mp3", true);
 
 	meshes[(int)MeshType::CoinSpriteAni]->AddTexMap({"Imgs/Coin.png", Mesh::TexType::Diffuse, 0});
 	static_cast<SpriteAni*>(meshes[(int)MeshType::CoinSpriteAni])->AddAni("CoinSpriteAni", 0, 6);

@@ -41,6 +41,6 @@ private:
 	void DeactivateEntityProcedure(Entity* const entity);
 
 	std::vector<Entity*> entityPool;
-
+	Node* rootNode;
 	RegionControl* regionControl;
 };
