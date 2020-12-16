@@ -20,8 +20,8 @@ void EntityManager::Init(){
 	}
 
 	regionControl->InitRegionPool(100);
-	regionControl->ReserveStationaryEntities(999);
-	regionControl->ReserveMovableEntities(500);
+	regionControl->ReserveStationaryNodes(999);
+	regionControl->ReserveMovableNodes(500);
 }
 
 void EntityManager::Update(){
@@ -30,6 +30,57 @@ void EntityManager::Update(){
 
 void EntityManager::Render(ShaderProg& SP) const{
 	regionControl->Render(SP);
+}
+
+void EntityManager::CreateShotgunBullet(const glm::vec3& camPos, const glm::vec3& camFront){
+	Entity* const entity = ActivateEntity(true);
+	entity->type = Entity::EntityType::Bullet;
+	entity->life = 5.f;
+	entity->maxLife = 5.f;
+	entity->colour = glm::vec4(glm::vec3(.4f), .3f);
+	entity->diffuseTexIndex = -1;
+	entity->collisionNormal = glm::vec3(1.f, 0.f, 0.f);
+	entity->scale = glm::vec3(.2f);
+	entity->light = nullptr;
+
+	entity->pos = camPos;
+	entity->vel = 200.f * glm::vec3(glm::rotate(glm::mat4(1.f), glm::radians(PseudorandMinMax(-1.f, 1.f)), {0.f, 1.f, 0.f}) * glm::vec4(camFront, 0.f)); //With bullet bloom
+	entity->mass = 5.f;
+	entity->force = glm::vec3(0.f);
+}
+
+void EntityManager::CreateScarBullet(const glm::vec3& camPos, const glm::vec3& camFront){
+	Entity* const entity = ActivateEntity(true);
+	entity->type = Entity::EntityType::Bullet;
+	entity->life = 5.f;
+	entity->maxLife = 5.f;
+	entity->colour = glm::vec4(glm::vec3(1.f), .3f);
+	entity->diffuseTexIndex = -1;
+	entity->collisionNormal = glm::vec3(1.f, 0.f, 0.f);
+	entity->scale = glm::vec3(.2f);
+	entity->light = nullptr;
+
+	entity->pos = camPos + 10.f * camFront;
+	entity->vel = 180.f * glm::vec3(glm::rotate(glm::mat4(1.f), glm::radians(PseudorandMinMax(-2.f, 2.f)), {0.f, 1.f, 0.f}) * glm::vec4(camFront, 0.f)); //With bullet bloom
+	entity->mass = 5.f;
+	entity->force = glm::vec3(0.f);
+}
+
+void EntityManager::CreateSniperBullet(const glm::vec3& camPos, const glm::vec3& camFront){
+	Entity* const entity = ActivateEntity(true);
+	entity->type = Entity::EntityType::Bullet;
+	entity->life = 5.f;
+	entity->maxLife = 5.f;
+	entity->colour = glm::vec4(0.f, 0.f, 1.f, .3f);
+	entity->diffuseTexIndex = -1;
+	entity->collisionNormal = glm::vec3(1.f, 0.f, 0.f);
+	entity->scale = glm::vec3(.2f);
+	entity->light = nullptr;
+
+	entity->pos = camPos + 10.f * camFront;
+	entity->vel = 500.f * camFront;
+	entity->mass = 5.f;
+	entity->force = glm::vec3(0.f);
 }
 
 void EntityManager::CreateAmmo(const Entity::EntityType type, const EntityCreationAttribs& attribs){
@@ -118,7 +169,8 @@ Entity* const EntityManager::ActivateEntity(const bool movable){
 	return entity;
 }
 
-void DeactivateEntity(const bool movable){
+void EntityManager::DeactivateEntity(Entity* const& entity, const bool movable){
+	entity->active = false;
 }
 
 EntityManager::EntityManager():

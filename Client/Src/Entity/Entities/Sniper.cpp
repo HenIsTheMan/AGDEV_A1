@@ -14,20 +14,7 @@ void Sniper::Shoot(const float& elapsedTime, const glm::vec3& camPos, const glm:
 	if(canShoot && loadedBullets && bulletBT <= elapsedTime){
 		soundEngine->play2D("Audio/Sounds/Sniper.wav", false);
 
-		Entity* const entity = entityManager->ActivateEntity(true);
-		entity->type = Entity::EntityType::Bullet;
-		entity->life = 5.f;
-		entity->maxLife = 5.f;
-		entity->colour = glm::vec4(0.f, 0.f, 1.f, .3f);
-		entity->diffuseTexIndex = -1;
-		entity->collisionNormal = glm::vec3(1.f, 0.f, 0.f);
-		entity->scale = glm::vec3(.2f);
-		entity->light = nullptr;
-
-		entity->pos = camPos + 10.f * camFront;
-		entity->vel = 500.f * camFront;
-		entity->mass = 5.f;
-		entity->force = glm::vec3(0.f);
+		entityManager->CreateSniperBullet(camPos, camFront);
 
 		--loadedBullets;
 		bulletBT = elapsedTime + shotCooldownTime;
