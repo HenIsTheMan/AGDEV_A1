@@ -138,6 +138,8 @@ private:
 	void GameOverRender();
 	void ScoreboardRender();
 
+	void InitEntities();
+
 	glm::mat4 view;
 	glm::mat4 projection;
 

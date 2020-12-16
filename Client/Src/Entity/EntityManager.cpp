@@ -32,6 +32,10 @@ void EntityManager::Render(ShaderProg& SP) const{
 	regionControl->Render(SP);
 }
 
+void EntityManager::SetUpRegionsForStationary(){
+	regionControl->SetUpRegionsForStationary();
+}
+
 void EntityManager::ActivateEntityProcedure(Entity* const entity){
 	Node* const node = new Node();
 	node->SetEntity(entity);

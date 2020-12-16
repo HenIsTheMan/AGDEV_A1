@@ -21,6 +21,8 @@ public:
 	void ReserveMovableNodes(const size_t& size);
 
 	void InitRegionPool(const size_t& size);
+
+	void SetUpRegionsForStationary();
 private:
 	RegionControl();
 

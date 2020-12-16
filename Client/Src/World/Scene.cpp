@@ -196,8 +196,42 @@ Scene::~Scene(){
 	entityManager->Destroy();
 }
 
+void Scene::InitEntities(){
+	entityManager->Init();
+
+	Model* const tree = models[(int)ModelType::Tree];
+	tree->ReserveModelMatsForAll(999);
+	tree->ReserveColorsForAll(999);
+	tree->ReserveDiffuseTexIndicesForAll(999);
+
+	for(int i = 0; i < 999; ++i){
+		const float scaleFactor = 50.0f;
+		const float xPos = PseudorandMinMax(-terrainXScale * 0.5f, terrainXScale * 0.5f);
+		const float zPos = PseudorandMinMax(-terrainZScale * 0.5f, terrainZScale * 0.5f);
+		const glm::vec3 pos = glm::vec3(
+			xPos,
+			terrainYScale * static_cast<Terrain*>(meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos / terrainXScale, zPos / terrainZScale, false),
+			zPos
+		);
+
+		PushModel({
+			Translate(pos),
+			Rotate(glm::vec4(0.f, 1.f, 0.f, PseudorandMinMax(0.0f, 360.0f))),
+			Scale(glm::vec3(scaleFactor))
+			});
+		tree->AddModelMatForAll(GetTopModel());
+		tree->AddColorForAll(glm::rgbColor(glm::vec3(PseudorandMinMax(0.0f, 1.0f), 1.0f, PseudorandMinMax(0.0f, 1.0f))));
+		tree->AddDiffuseTexIndexForAll(0);
+		PopModel();
+	}
+
+	entityManager->SetUpRegionsForStationary();
+}
+
 bool Scene::Init(){
 	glGetIntegerv(GL_POLYGON_MODE, polyModes);
+
+	InitEntities();
 
 	///Load save
 	cstr const& fPath = "Data/scores.dat";
@@ -216,8 +250,6 @@ bool Scene::Init(){
 	if(scores.size() > 1){
 		std::sort(scores.begin(), scores.end(), std::greater<int>());
 	}
-
-	entityManager->Init();
 
 	const std::vector<cstr> faces{
 		"Imgs/Skybox/Right.png",
@@ -244,32 +276,6 @@ bool Scene::Init(){
 	static_cast<SpriteAni*>(meshes[(int)MeshType::FireSpriteAni])->Play("FireSpriteAni", -1, .5f);
 
 	meshes[(int)MeshType::Terrain]->AddTexMap({"Imgs/Floor.jpg", Mesh::TexType::Diffuse, 0});
-
-	Model* const tree = models[(int)ModelType::Tree];
-	tree->ReserveModelMatsForAll(999);
-	tree->ReserveColorsForAll(999);
-	tree->ReserveDiffuseTexIndicesForAll(999);
-
-	for(int i = 0; i < 999; ++i){
-		const float scaleFactor = 50.0f;
-		const float xPos = PseudorandMinMax(-terrainXScale * 0.5f, terrainXScale * 0.5f);
-		const float zPos = PseudorandMinMax(-terrainZScale * 0.5f, terrainZScale * 0.5f);
-		const glm::vec3 pos = glm::vec3(
-			xPos,
-			terrainYScale * static_cast<Terrain*>(meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos / terrainXScale, zPos / terrainZScale, false),
-			zPos
-		);
-
-		PushModel({
-			Translate(pos),
-			Rotate(glm::vec4(0.f, 1.f, 0.f, PseudorandMinMax(0.0f, 360.0f))),
-			Scale(glm::vec3(scaleFactor))
-		});
-			tree->AddModelMatForAll(GetTopModel());
-			tree->AddColorForAll(glm::rgbColor(glm::vec3(PseudorandMinMax(0.0f, 1.0f), 1.0f, PseudorandMinMax(0.0f, 1.0f))));
-			tree->AddDiffuseTexIndexForAll(0);
-		PopModel();
-	}
 
 	directionalLights.emplace_back(CreateLight(LightType::Directional)); //Simulate sunlight
 

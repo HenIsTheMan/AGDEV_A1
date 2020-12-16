@@ -45,6 +45,10 @@ void RegionControl::InitRegionPool(const size_t& size){
 	rootRegion->InitRegionPool(size);
 }
 
+void RegionControl::SetUpRegionsForStationary(){
+	rootRegion->Partition(false);
+}
+
 RegionControl::RegionControl():
 	rootRegion(new Region())
 {
