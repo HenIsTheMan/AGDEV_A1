@@ -115,7 +115,7 @@ void Region::Partition(){
 	}
 }
 
-const Region* const Region::FindEntity(Entity* const entity) const{ //Search children 1st
+const Region* Region::FindEntity(Entity* const entity) const{ //Search children 1st
 	if(UL){ //If UL exists...
 		const Region* const& Region = UL->FindEntity(entity);
 		if(Region){ //If entity was found in a Region...

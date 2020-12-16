@@ -9,7 +9,7 @@ public:
 	Region();
 	~Region();
 
-	const Region* const FindEntity(Entity* const entity) const;
+	const Region* FindEntity(Entity* const entity) const;
 
 	void CalcTopRight() const;
 	void CalcBottomLeft() const;
