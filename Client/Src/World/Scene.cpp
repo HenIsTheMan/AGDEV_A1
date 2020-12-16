@@ -320,46 +320,10 @@ void Scene::Update(GLFWwindow* const& win){
 	}
 }
 
-void Scene::CreateShotgunAmmo(const EntityCreationAttribs& attribs){
+void Scene::CreateAmmo(const Entity::EntityType type, const EntityCreationAttribs& attribs){
 	Entity* const& entity = FetchEntity();
 
-	entity->type = Entity::EntityType::ShotgunAmmo;
-	entity->active = true;
-	entity->life = 0.f;
-	entity->maxLife = 0.f;
-	entity->colour = attribs.colour;
-	entity->diffuseTexIndex = attribs.diffuseTexIndex;
-	entity->collisionNormal = attribs.collisionNormal;
-	entity->scale = attribs.scale;
-
-	entity->pos = attribs.pos;
-	entity->vel = glm::vec3(0.f);
-	entity->mass = 5.f;
-	entity->force = glm::vec3(0.f);
-}
-
-void Scene::CreateScarAmmo(const EntityCreationAttribs& attribs){
-	Entity* const& entity = FetchEntity();
-
-	entity->type = Entity::EntityType::ScarAmmo;
-	entity->active = true;
-	entity->life = 0.f;
-	entity->maxLife = 0.f;
-	entity->colour = attribs.colour;
-	entity->diffuseTexIndex = attribs.diffuseTexIndex;
-	entity->collisionNormal = attribs.collisionNormal;
-	entity->scale = attribs.scale;
-
-	entity->pos = attribs.pos;
-	entity->vel = glm::vec3(0.f);
-	entity->mass = 5.f;
-	entity->force = glm::vec3(0.f);
-}
-
-void Scene::CreateSniperAmmo(const EntityCreationAttribs& attribs){
-	Entity* const& entity = FetchEntity();
-
-	entity->type = Entity::EntityType::SniperAmmo;
+	entity->type = type;
 	entity->active = true;
 	entity->life = 0.f;
 	entity->maxLife = 0.f;
@@ -426,106 +390,6 @@ void Scene::CreateEnemy(const EntityCreationAttribs& attribs){
 	entity->vel = glm::vec3(0.f);
 	entity->mass = 5.f;
 	entity->force = glm::vec3(0.f);
-}
-
-void Scene::CreateSphere(const EntityCreationAttribs& attribs){
-	Entity* const& entity = FetchEntity();
-
-	entity->type = Entity::EntityType::Sphere;
-	entity->active = true;
-	entity->life = 0.f;
-	entity->maxLife = 0.f;
-	entity->colour = attribs.colour;
-	entity->diffuseTexIndex = attribs.diffuseTexIndex;
-	entity->collisionNormal = attribs.collisionNormal;
-	entity->scale = attribs.scale;
-
-	entity->pos = attribs.pos;
-	entity->vel = glm::vec3(0.f);
-	entity->mass = 5.f;
-	entity->force = glm::vec3(0.f);
-}
-
-void Scene::CreateThinWall(const EntityCreationAttribs& attribs){
-	Entity* const& entity = FetchEntity();
-
-	entity->type = Entity::EntityType::Wall;
-	entity->active = true;
-	entity->life = 0.f;
-	entity->maxLife = 0.f;
-	entity->colour = attribs.colour;
-	entity->diffuseTexIndex = attribs.diffuseTexIndex;
-	entity->collisionNormal = attribs.collisionNormal;
-	entity->scale = attribs.scale;
-
-	entity->pos = attribs.pos;
-	entity->vel = glm::vec3(0.f);
-	entity->mass = 5.f;
-	entity->force = glm::vec3(0.f);
-}
-
-void Scene::CreatePillar(const EntityCreationAttribs& attribs){
-	Entity* const& entity = FetchEntity();
-
-	entity->type = Entity::EntityType::Pillar;
-	entity->active = true;
-	entity->life = 0.f;
-	entity->maxLife = 0.f;
-	entity->colour = attribs.colour;
-	entity->diffuseTexIndex = attribs.diffuseTexIndex;
-	entity->collisionNormal = attribs.collisionNormal;
-	entity->scale = attribs.scale;
-
-	entity->pos = attribs.pos;
-	entity->vel = glm::vec3(0.f);
-	entity->mass = 5.f;
-	entity->force = glm::vec3(0.f);
-}
-
-void Scene::CreateThickWall(const EntityCreationAttribs& attribs){
-	const glm::vec3 NP = glm::vec3(-attribs.collisionNormal.z, attribs.collisionNormal.y, attribs.collisionNormal.x);
-	CreateThinWall({
-		attribs.pos,
-		attribs.collisionNormal,
-		attribs.scale,
-		attribs.colour,
-		attribs.diffuseTexIndex,
-	});
-	CreateThinWall({
-		attribs.pos,
-		NP,
-		glm::vec3(attribs.scale.y, attribs.scale.x, attribs.scale.z),
-		attribs.colour,
-		-1,
-	});
-	CreatePillar({
-		attribs.pos + NP * attribs.scale.y + attribs.collisionNormal * attribs.scale.x,
-		glm::vec3(0.f),
-		glm::vec3(glm::vec2(.005f), attribs.scale.z),
-		attribs.colour,
-		-1,
-	});
-	CreatePillar({
-		attribs.pos + -NP * attribs.scale.y + -attribs.collisionNormal * attribs.scale.x,
-		glm::vec3(0.f),
-		glm::vec3(glm::vec2(.005f), attribs.scale.z),
-		attribs.colour,
-		-1,
-	});
-	CreatePillar({
-		attribs.pos + -NP * attribs.scale.y + attribs.collisionNormal * attribs.scale.x,
-		glm::vec3(0.f),
-		glm::vec3(glm::vec2(.005f), attribs.scale.z),
-		attribs.colour,
-		-1,
-	});
-	CreatePillar({
-		attribs.pos + NP * attribs.scale.y + -attribs.collisionNormal * attribs.scale.x,
-		glm::vec3(0.f),
-		glm::vec3(glm::vec2(.005f), attribs.scale.z),
-		attribs.colour,
-		-1,
-	});
 }
 
 void Scene::UpdateCollisionBetweenEntities(Entity* const& entity1, Entity* const& entity2){ //For collision between bullets and enemies

@@ -129,6 +129,7 @@ private:
 	Gun* guns[3];
 	glm::vec4 reticleColour;
 	Entity* const& FetchEntity();
+
 	struct EntityCreationAttribs final{
 		glm::vec3 pos;
 		glm::vec3 collisionNormal;
@@ -137,16 +138,10 @@ private:
 		int diffuseTexIndex;
 	};
 
-	void CreateShotgunAmmo(const EntityCreationAttribs& attribs);
-	void CreateScarAmmo(const EntityCreationAttribs& attribs);
-	void CreateSniperAmmo(const EntityCreationAttribs& attribs);
+	void CreateAmmo(const Entity::EntityType type, const EntityCreationAttribs& attribs);
 	void CreateCoin(const EntityCreationAttribs& attribs);
 	void CreateFire(const EntityCreationAttribs& attribs);
 	void CreateEnemy(const EntityCreationAttribs& attribs);
-	void CreateSphere(const EntityCreationAttribs& attribs);
-	void CreateThinWall(const EntityCreationAttribs& attribs);
-	void CreatePillar(const EntityCreationAttribs& attribs);
-	void CreateThickWall(const EntityCreationAttribs& attribs);
 	void UpdateCollisionBetweenEntities(Entity* const& entity1, Entity* const& entity2);
 	void UpdateEntities();
 	void RenderEntities(ShaderProg& SP);

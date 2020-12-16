@@ -12,9 +12,6 @@ class Entity final{
 private:
 	enum class EntityType{
 		Bullet = 0,
-		Sphere,
-		Wall,
-		Pillar,
 		Coin,
 		Fire,
 		Enemy,
