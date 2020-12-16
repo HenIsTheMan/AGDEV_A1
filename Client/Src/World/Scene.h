@@ -143,8 +143,6 @@ private:
 	void CreateFire(const EntityCreationAttribs& attribs);
 	void CreateEnemy(const EntityCreationAttribs& attribs);
 	void UpdateCollisionBetweenEntities(Entity* const& entity1, Entity* const& entity2);
-	void UpdateEntities();
-	void RenderEntities(ShaderProg& SP);
 
 	void MainMenuAndGameOverUpdate(GLFWwindow* const& win, const POINT& mousePos, float& buttonBT);
 	void GameUpdate(GLFWwindow* const& win);
