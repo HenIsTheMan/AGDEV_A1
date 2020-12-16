@@ -1,6 +1,7 @@
 #include "RegionControl.h"
 
 extern float terrainXScale;
+extern float terrainYScale;
 extern float terrainZScale;
 
 RegionControl::~RegionControl(){
@@ -17,9 +18,6 @@ void RegionControl::Update(){
 }
 
 void RegionControl::RenderEntities(ShaderProg& SP, const Cam& cam){
-	//Render lines or leaf nodes??
-	//Not visible if not active??
-
 	SP.Set1i("noNormals", 1);
 	SP.Set1i("useCustomColour", 1);
 	SP.Set1i("useCustomDiffuseTexIndex", 1);
@@ -97,6 +95,9 @@ void RegionControl::RenderQSP(ShaderProg& SP, const Cam& cam){
 	std::vector<Region*> leaves;
 	rootRegion->GetLeaves(SP, leaves);
 	const size_t size = leaves.size();
+
+	std::cout << size << '\n';
+
 	if(!size){
 		return;
 	}
@@ -109,7 +110,7 @@ void RegionControl::RenderQSP(ShaderProg& SP, const Cam& cam){
 		const Region* const leaf = leaves[i];
 
 		modelStack.PushModel({
-			modelStack.Translate(glm::vec3(leaf->origin[0], 20.0f, leaf->origin[1])),
+			modelStack.Translate(glm::vec3(leaf->origin[0], terrainYScale, leaf->origin[1])),
 			modelStack.Rotate(glm::vec4(1.0f, 0.0f, 0.0f, 90.0f)),
 			modelStack.Scale(glm::vec3(leaf->origin[0], leaf->origin[1], 1.0f))
 		});

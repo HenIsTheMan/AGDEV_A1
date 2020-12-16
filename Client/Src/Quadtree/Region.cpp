@@ -33,7 +33,7 @@ Region::~Region(){
 void Region::GetEntitiesToRender(std::map<int, Entity*>& entitiesOpaque, std::map<int, Entity*>& entitiesNotOpaque, const Cam& cam){
 	//Check if visible??
 
-	if(topLeft || topRight || bottomLeft || bottomRight){
+	if((topLeft && topLeft->active) || (topRight && topRight->active) || (bottomLeft && bottomLeft->active) || (bottomRight && bottomRight->active)){
 		topLeft->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
 		topRight->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
 		bottomLeft->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
@@ -72,7 +72,7 @@ void Region::GetEntitiesToRender(std::map<int, Entity*>& entitiesOpaque, std::ma
 }
 
 void Region::GetLeaves(ShaderProg& SP, std::vector<Region*>& leaves){
-	if(topLeft || topRight || bottomLeft || bottomRight){
+	if((topLeft && topLeft->active) || (topRight && topRight->active) || (bottomLeft && bottomLeft->active) || (bottomRight && bottomRight->active)){
 		topLeft->GetLeaves(SP, leaves);
 		topRight->GetLeaves(SP, leaves);
 		bottomLeft->GetLeaves(SP, leaves);
@@ -83,35 +83,37 @@ void Region::GetLeaves(ShaderProg& SP, std::vector<Region*>& leaves){
 }
 
 const Region* Region::FindRegion(Node* const node, const bool movable) const{
-	if(topLeft){
+	if(topLeft && topLeft->active){
 		const Region* const& region = topLeft->FindRegion(node, movable);
 		if(region){
 			return region;
 		}
 	}
-	if(topRight){
+	if(topRight && topRight->active){
 		const Region* const& region = topRight->FindRegion(node, movable);
 		if(region){
 			return region;
 		}
 	}
-	if(bottomLeft){
+	if(bottomLeft && bottomLeft->active){
 		const Region* const& region = bottomLeft->FindRegion(node, movable);
 		if(region){
 			return region;
 		}
 	}
-	if(bottomRight){
+	if(bottomRight && bottomRight->active){
 		const Region* const& region = bottomRight->FindRegion(node, movable);
 		if(region){
 			return region;
 		}
 	}
 
-	const std::vector<Node*>& nodes = movable ? movableNodes : stationaryNodes;
-	for(const Node* const& myNode: nodes){
-		if(myNode == node){
-			return this;
+	if(active){
+		const std::vector<Node*>& nodes = movable ? movableNodes : stationaryNodes;
+		for(const Node* const& myNode : nodes){
+			if(myNode == node){
+				return this;
+			}
 		}
 	}
 
@@ -153,27 +155,31 @@ void Region::RemoveNode(Node* const node, const bool movable){
 void Region::ClearMovableAndDeactivateChildren(){
 	if(topLeft){
 		topLeft->movableNodes.clear();
-		topLeft->active = false; //So region can be used elsewhere
+		if(topLeft->stationaryNodes.empty()){
+			topLeft->active = false;
+		}
 		topLeft->ClearMovableAndDeactivateChildren();
-		topLeft = nullptr; //For condition checking
 	}
 	if(topRight){
 		topRight->movableNodes.clear();
-		topRight->active = false; //So region can be used elsewhere
+		if(topRight->stationaryNodes.empty()){
+			topRight->active = false;
+		}
 		topRight->ClearMovableAndDeactivateChildren();
-		topRight = nullptr; //For condition checking
 	}
 	if(bottomLeft){
 		bottomLeft->movableNodes.clear();
-		bottomLeft->active = false; //So region can be used elsewhere
+		if(bottomLeft->stationaryNodes.empty()){
+			bottomLeft->active = false;
+		}
 		bottomLeft->ClearMovableAndDeactivateChildren();
-		bottomLeft = nullptr; //For condition checking
 	}
 	if(bottomRight){
 		bottomRight->movableNodes.clear();
-		bottomRight->active = false; //So region can be used elsewhere
+		if(bottomRight->stationaryNodes.empty()){
+			bottomRight->active = false;
+		}
 		bottomRight->ClearMovableAndDeactivateChildren();
-		bottomRight = nullptr; //For condition checking
 	}
 }
 
@@ -183,33 +189,29 @@ void Region::Partition(const bool movable){
 		return;
 	}
 
-	if(topLeft == nullptr){
+	if(topLeft == nullptr || !topLeft->active){
 		topLeft = FetchRegion();
-		topLeft->active = true;
 		topLeft->parent = this;
 		topLeft->origin = glm::vec2(origin[0] - size[0] * 0.25f, origin[1] - size[1] * 0.25f);
 		topLeft->size = glm::vec2(size[0] * 0.5f, size[1] * 0.5f);
 	}
 
-	if(topRight == nullptr){
+	if(topRight == nullptr || !topRight->active){
 		topRight = FetchRegion();
-		topRight->active = true;
 		topRight->parent = this;
 		topRight->origin = glm::vec2(origin[0] + size[0] * 0.25f, origin[1] - size[1] * 0.25f);
 		topRight->size = topLeft->size;
 	}
 
-	if(bottomLeft == nullptr){
+	if(bottomLeft == nullptr || !bottomLeft->active){
 		bottomLeft = FetchRegion();
-		bottomLeft->active = true;
 		bottomLeft->parent = this;
 		bottomLeft->origin = glm::vec2(origin[0] - size[0] * 0.25f, origin[1] + size[1] * 0.25f);
 		bottomLeft->size = topLeft->size;
 	}
 
-	if(bottomRight == nullptr){
+	if(bottomRight == nullptr || !bottomRight->active){
 		bottomRight = FetchRegion();
-		bottomRight->active = true;
 		bottomRight->parent = this;
 		bottomRight->origin = glm::vec2(origin[0] + size[0] * 0.25f, origin[1] + size[1] * 0.25f);
 		bottomRight->size = topLeft->size;
