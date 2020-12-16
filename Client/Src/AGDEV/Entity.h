@@ -3,6 +3,7 @@
 #include <Engine.h>
 
 class Entity final{
+	friend class Region;
 	friend class Shotgun;
 	friend class Scar;
 	friend class Sniper;

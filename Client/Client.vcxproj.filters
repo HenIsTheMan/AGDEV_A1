@@ -7,6 +7,8 @@
     <ClCompile Include="Src\World\Scene.cpp" />
     <ClCompile Include="Src\AGDEV\Entity.cpp" />
     <ClCompile Include="Src\AGDEV\Gun.cpp" />
+    <ClCompile Include="Src\Quadtree\Region.cpp" />
+    <ClCompile Include="Src\Quadtree\RegionControl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Admin\App.h" />
@@ -14,6 +16,8 @@
     <ClInclude Include="Src\World\Scene.h" />
     <ClInclude Include="Src\AGDEV\Entity.h" />
     <ClInclude Include="Src\AGDEV\Gun.h" />
+    <ClInclude Include="Src\Quadtree\Region.h" />
+    <ClInclude Include="Src\Quadtree\RegionControl.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Blur.fragS" />

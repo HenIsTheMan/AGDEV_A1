@@ -66,7 +66,7 @@ bool App::Init(){
 	(void)InitOptions();
 	(void)scene.Init();
 	glPointSize(10.f);
-	glLineWidth(5.f);
+	glLineWidth(5.0f);
 
 	return true;
 }
