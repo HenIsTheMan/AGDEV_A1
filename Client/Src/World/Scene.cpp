@@ -473,15 +473,6 @@ void Scene::UpdateEntities(){
 					}
 					break;
 				}
-				case Entity::EntityType::Sphere: {
-					///Check for collision with cam
-					const glm::vec3& relativeVel = cam.trueVel;
-					const glm::vec3& displacementVec = entity->pos - cam.GetPos();
-					if(glm::dot(relativeVel, displacementVec) > 0.f && glm::dot(-displacementVec, -displacementVec) <= (entity->scale.x + 5.f) * (entity->scale.x + 5.f)){
-						cam.canMove = false;
-					}
-					break;
-				}
 				case Entity::EntityType::ShotgunAmmo: {
 					glm::vec3 N = entity->collisionNormal;
 					const glm::vec3 displacement = entity->pos - cam.GetPos();
@@ -554,26 +545,6 @@ void Scene::UpdateEntities(){
 					}
 					break;
 				}
-				case Entity::EntityType::Wall: {
-					glm::vec3 N = entity->collisionNormal;
-					const glm::vec3 displacement = entity->pos - cam.GetPos();
-					if(glm::dot(displacement, N) < 0.f){
-						N = -N;
-					}
-
-					const glm::vec3& camPos = cam.GetPos();
-					const float halfWidth = entity->scale.x;
-					const float halfHeight = entity->scale.y;
-					const float halfDepth = entity->scale.z;
-					glm::vec3 closestPt;
-					closestPt.x = std::max(entity->pos.x - halfWidth, std::min(camPos.x, entity->pos.x + halfWidth));
-					closestPt.y = std::max(entity->pos.y - halfHeight, std::min(camPos.y, entity->pos.y + halfHeight));
-					closestPt.z = std::max(entity->pos.z - halfDepth, std::min(camPos.z, entity->pos.z + halfDepth));
-					if(glm::dot(cam.trueVel, N) > 0.f && glm::length(closestPt - camPos) < 20.f){
-						cam.canMove = false;
-					}
-					break;
-				}
 			}
 
 			for(size_t j = 0; j < entityPool.size(); ++j){
@@ -623,7 +594,6 @@ void Scene::RenderEntities(ShaderProg& SP){
 		SP.Set1i("customDiffuseTexIndex", entity->diffuseTexIndex);
 		switch(entity->type){
 			case Entity::EntityType::Bullet:
-			case Entity::EntityType::Sphere:
 			case Entity::EntityType::Enemy:
 				PushModel({
 					Translate(entity->pos),
@@ -635,7 +605,6 @@ void Scene::RenderEntities(ShaderProg& SP){
 			case Entity::EntityType::ShotgunAmmo:
 			case Entity::EntityType::ScarAmmo:
 			case Entity::EntityType::SniperAmmo:
-			case Entity::EntityType::Wall:
 				PushModel({
 					Translate(entity->pos),
 					//Rotate(glm::vec4(0.f, 1.f, 0.f, glm::degrees(atan2(entity->collisionNormal.z, entity->collisionNormal.x)))),
