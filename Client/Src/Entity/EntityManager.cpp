@@ -121,21 +121,3 @@ EntityManager::EntityManager():
 		entityPool[i] = new Entity();
 	}
 }
-
-//void Scene::UpdateCollisionBetweenEntities(Entity* const& entity1, Entity* const& entity2){ //For collision between bullets and enemies
-//	const glm::vec3& displacementVec = entity2->pos - entity1->pos;
-//	if(glm::dot(-displacementVec, -displacementVec) <= (entity1->scale.x + entity2->scale.x) * (entity1->scale.y + entity2->scale.y)){
-//		entity1->active = false;
-//		if(entity1->colour == glm::vec4(glm::vec3(.4f), .3f)){ //If shotgun bullet...
-//			entity2->life -= 50.f * float(glm::length(cam.GetPos() - entity2->pos) <= 150.f);
-//		} else if(entity1->colour == glm::vec4(glm::vec3(1.f), .3f)){ //If scar bullet...
-//			entity2->life -= 5.f;
-//		} else{ //If sniper bullet...
-//			entity2->life = 0.f;
-//		}
-//		if(entity2->life <= 0.f){
-//			entity2->active = false;
-//			score += 200;
-//		}
-//	}
-//}
