@@ -93,7 +93,6 @@ Scene::Scene():
 	},
 	playerStates((int)PlayerState::NoMovement | (int)PlayerState::Standing),
 	screen(Screen::MainMenu),
-	entityPool(std::vector<Entity*>(50)),
 	timeLeft(0.f),
 	score(0),
 	scores({}),
@@ -150,12 +149,6 @@ Scene::~Scene(){
 		if(guns[i]){
 			delete guns[i];
 			guns[i] = nullptr;
-		}
-	}
-	for(Entity*& entity: entityPool){
-		if(entity){
-			delete entity;
-			entity = nullptr;
 		}
 	}
 
@@ -250,11 +243,6 @@ bool Scene::Init(){
 
 	meshes[(int)MeshType::Terrain]->AddTexMap({"Imgs/Floor.jpg", Mesh::TexType::Diffuse, 0});
 
-	const size_t& mySize = entityPool.size();
-	for(size_t i = 0; i < mySize; ++i){
-		entityPool[i] = new Entity();
-	}
-
 	Model* const tree = models[(int)ModelType::Tree];
 	tree->ReserveModelMatsForAll(999);
 	tree->ReserveColorsForAll(999);
@@ -317,96 +305,6 @@ void Scene::Update(GLFWwindow* const& win){
 		case Screen::Scoreboard:
 			ScoreboardUpdate(win, mousePos, buttonBT);
 			break;
-	}
-}
-
-void Scene::CreateAmmo(const Entity::EntityType type, const EntityCreationAttribs& attribs){
-	Entity* const& entity = FetchEntity();
-
-	entity->type = type;
-	entity->active = true;
-	entity->life = 0.f;
-	entity->maxLife = 0.f;
-	entity->colour = attribs.colour;
-	entity->diffuseTexIndex = attribs.diffuseTexIndex;
-	entity->collisionNormal = attribs.collisionNormal;
-	entity->scale = attribs.scale;
-
-	entity->pos = attribs.pos;
-	entity->vel = glm::vec3(0.f);
-	entity->mass = 5.f;
-	entity->force = glm::vec3(0.f);
-}
-
-void Scene::CreateCoin(const EntityCreationAttribs& attribs){
-	Entity* const& entity = FetchEntity();
-
-	entity->type = Entity::EntityType::Coin;
-	entity->active = true;
-	entity->life = 0.f;
-	entity->maxLife = 0.f;
-	entity->colour = attribs.colour;
-	entity->diffuseTexIndex = attribs.diffuseTexIndex;
-	entity->collisionNormal = attribs.collisionNormal;
-	entity->scale = attribs.scale;
-
-	entity->pos = attribs.pos;
-	entity->vel = glm::vec3(0.f);
-	entity->mass = 5.f;
-	entity->force = glm::vec3(0.f);
-}
-
-void Scene::CreateFire(const EntityCreationAttribs& attribs){
-	Entity* const& entity = FetchEntity();
-
-	entity->type = Entity::EntityType::Fire;
-	entity->active = true;
-	entity->life = 0.f;
-	entity->maxLife = 0.f;
-	entity->colour = attribs.colour;
-	entity->diffuseTexIndex = attribs.diffuseTexIndex;
-	entity->collisionNormal = attribs.collisionNormal;
-	entity->scale = attribs.scale;
-
-	entity->pos = attribs.pos;
-	entity->vel = glm::vec3(0.f);
-	entity->mass = 5.f;
-	entity->force = glm::vec3(0.f);
-}
-
-void Scene::CreateEnemy(const EntityCreationAttribs& attribs){
-	Entity* const& entity = FetchEntity();
-
-	entity->type = Entity::EntityType::Enemy;
-	entity->active = true;
-	entity->life = 100.f;
-	entity->maxLife = 100.f;
-	entity->colour = attribs.colour;
-	entity->diffuseTexIndex = attribs.diffuseTexIndex;
-	entity->collisionNormal = attribs.collisionNormal;
-	entity->scale = attribs.scale;
-
-	entity->pos = attribs.pos;
-	entity->vel = glm::vec3(0.f);
-	entity->mass = 5.f;
-	entity->force = glm::vec3(0.f);
-}
-
-void Scene::UpdateCollisionBetweenEntities(Entity* const& entity1, Entity* const& entity2){ //For collision between bullets and enemies
-	const glm::vec3& displacementVec = entity2->pos - entity1->pos;
-	if(glm::dot(-displacementVec, -displacementVec) <= (entity1->scale.x + entity2->scale.x) * (entity1->scale.y + entity2->scale.y)){
-		entity1->active = false;
-		if(entity1->colour == glm::vec4(glm::vec3(.4f), .3f)){ //If shotgun bullet...
-			entity2->life -= 50.f * float(glm::length(cam.GetPos() - entity2->pos) <= 150.f);
-		} else if(entity1->colour == glm::vec4(glm::vec3(1.f), .3f)){ //If scar bullet...
-			entity2->life -= 5.f;
-		} else{ //If sniper bullet...
-			entity2->life = 0.f;
-		}
-		if(entity2->life <= 0.f){
-			entity2->active = false;
-			score += 200;
-		}
 	}
 }
 
@@ -1571,17 +1469,6 @@ void Scene::DefaultRender(const uint& screenTexRefID, const uint& blurTexRefID, 
 		PopModel();
 		screenSP.ResetTexUnits();
 	}
-}
-
-Entity* const& Scene::FetchEntity(){
-	for(Entity* const& entity: entityPool){
-		if(!entity->active){
-			return entity;
-		}
-	}
-	entityPool.emplace_back(new Entity());
-	(void)puts("1 entity was added to entityPool!\n");
-	return entityPool.back();
 }
 
 glm::mat4 Scene::Translate(const glm::vec3& translate){

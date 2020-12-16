@@ -9,6 +9,7 @@
     <ClCompile Include="Src\Quadtree\RegionControl.cpp" />
     <ClCompile Include="Src\Entity\Entity.cpp" />
     <ClCompile Include="Src\Entity\Entities\Gun.cpp" />
+    <ClCompile Include="Src\Entity\EntityManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Admin\App.h" />
@@ -18,6 +19,7 @@
     <ClInclude Include="Src\Quadtree\RegionControl.h" />
     <ClInclude Include="Src\Entity\Entity.h" />
     <ClInclude Include="Src\Entity\Entities\Gun.h" />
+    <ClInclude Include="Src\Entity\EntityManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Blur.fragS" />

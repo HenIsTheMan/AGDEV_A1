@@ -3,12 +3,12 @@
 #include <Engine.h>
 
 class Entity final{
+	friend class EntityManager;
 	friend class Region;
 	friend class Shotgun;
 	friend class Scar;
 	friend class Sniper;
 	friend class Gun;
-	friend class Scene;
 private:
 	enum class EntityType{
 		Bullet = 0,

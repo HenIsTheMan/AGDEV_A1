@@ -43,21 +43,3 @@ protected:
 private:
 	bool reloading;
 };
-
-class Shotgun final: public Gun{
-public:
-	Shotgun();
-	void Shoot(const float& elapsedTime, Entity* const& entity, const glm::vec3& camPos, const glm::vec3& camFront, ISoundEngine* const& soundEngine) override;
-};
-
-class Scar final: public Gun{
-public:
-	Scar();
-	void Shoot(const float& elapsedTime, Entity* const& entity, const glm::vec3& camPos, const glm::vec3& camFront, ISoundEngine* const& soundEngine) override;
-};
-
-class Sniper final: public Gun{
-public:
-	Sniper();
-	void Shoot(const float& elapsedTime, Entity* const& entity, const glm::vec3& camPos, const glm::vec3& camFront, ISoundEngine* const& soundEngine) override;
-};
