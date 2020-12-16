@@ -50,27 +50,27 @@ void Region::DestroyRegionPool(){
 	}
 }
 
-const Region* Region::FindEntity(Entity* const entity, const bool movable) const{
+const Region* Region::FindRegion(Entity* const entity, const bool movable) const{
 	if(topLeft){
-		const Region* const& region = topLeft->FindEntity(entity, movable);
+		const Region* const& region = topLeft->FindRegion(entity, movable);
 		if(region){
 			return region;
 		}
 	}
 	if(topRight){
-		const Region* const& region = topRight->FindEntity(entity, movable);
+		const Region* const& region = topRight->FindRegion(entity, movable);
 		if(region){
 			return region;
 		}
 	}
 	if(bottomLeft){
-		const Region* const& region = bottomLeft->FindEntity(entity, movable);
+		const Region* const& region = bottomLeft->FindRegion(entity, movable);
 		if(region){
 			return region;
 		}
 	}
 	if(bottomRight){
-		const Region* const& region = bottomRight->FindEntity(entity, movable);
+		const Region* const& region = bottomRight->FindRegion(entity, movable);
 		if(region){
 			return region;
 		}

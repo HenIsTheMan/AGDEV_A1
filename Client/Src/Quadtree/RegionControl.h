@@ -7,21 +7,10 @@ public:
 	RegionControl();
 	~RegionControl();
 
-	void Update();
-	void Render() const;
+	const Region* FindRegion(Entity* const& entity);
 
 	void AddEntity(Entity* const& entity);
 	void RemoveEntity(Entity* const& entity);
-	void DeactivateAndClear();
-
-	 const Region* FindRegion(Entity* const& entity);
-
-	void InitRegionPool(const int& amt);
-	void DestroyRegionPool();
-
-	Region* FetchRegion();
-
-	static void Partition();
 
 	// Collision Check for an entity against Spatial Partition's entities
 	//virtual bool CheckForCollisionWithEntity(CEntity3D* cEntity3D);

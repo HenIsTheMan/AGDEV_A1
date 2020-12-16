@@ -6,18 +6,18 @@ extern float terrainZScale;
 RegionControl::RegionControl():
 	root(new Region())
 {
-	root->SetActive(true);
-	root->SetOrigin(glm::vec2(0.0f));
-	root->SetSize(glm::vec2(terrainXScale, terrainZScale));
+	root->active = true;
+	root->origin = glm::vec2(0.0f);
+	root->size = glm::vec2(terrainXScale, terrainZScale);
 	InitRegionPool(80);
 }
 
 RegionControl::~RegionControl(){
-	/*root->DestroyCubeSectionPool();
 	if(root){
+		root->DestroyRegionPool();
 		delete root;
 		root = nullptr;
-	}*/
+	}
 }
 
 void Update();
@@ -26,11 +26,6 @@ void Render() const;
 void AddEntity(Entity* const& entity);
 void RemoveEntity(Entity* const& entity);
 void DeactivateAndClear();
-
-const Region* FindRegion(Entity* const& entity);
-
-void InitRegionPool(const int& amt);
-void DestroyRegionPool();
 
 //Entity* const& EntityManager::FetchEntity(){
 //	for(Entity* const& entity: entityList){
