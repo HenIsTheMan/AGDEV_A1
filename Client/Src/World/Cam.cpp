@@ -60,7 +60,12 @@ glm::mat4 Cam::LookAt() const{
 	return rotation * translation;
 }
 
-void Cam::Update(const int& left, const int& right, const int& front, const int& back, const float& xMin, const float& xMax, const float& yMin, const float& yMax, const float& zMin, const float& zMax){
+void Cam::UpdateAttached(
+	const int& left, const int& right, const int& front, const int& back,
+	const float& xMin, const float& xMax,
+	const float& yMin, const float& yMax,
+	const float& zMin, const float& zMax
+){
 	const float camSpd = canMove ? spd * dt : 0.f;
 	float leftRight = float(Key(left) - Key(right));
 	float frontBack = float(Key(front) - Key(back));
@@ -96,6 +101,31 @@ void Cam::Update(const int& left, const int& right, const int& front, const int&
 	if(pitchCheck < -80.f){
 		pitchCheck = -80.f;
 	}
+	yaw = pitch = 0.f;
+}
+
+void Cam::UpdateDetached(const int& up, const int& down, const int& left, const int& right, const int& front, const int& back){
+	const float camSpd = spd * dt;
+	float upDown = float(Key(up) - Key(down));
+	float leftRight = float(Key(left) - Key(right));
+	float frontBack = float(Key(front) - Key(back));
+
+	const glm::vec3&& camFront = CalcFront();
+	const glm::vec3&& xzCamFront = glm::vec3(camFront.x, 0.f, camFront.z);
+	glm::vec3&& frontBackDir = glm::normalize(glm::dot(camFront, glm::normalize(xzCamFront)) * glm::normalize(xzCamFront));
+	frontBackDir.y = 1.f;
+
+	glm::vec3&& change = glm::vec3(frontBack, upDown, frontBack) * frontBackDir + leftRight * -CalcRight() + leftRightMB * camFront;
+	if(change != glm::vec3(0.f)){
+		change = normalize(change);
+	}
+	pos += camSpd * change;
+	//pos.y = std::max(-100.f + 100.f * Mesh::ReadHeightMap(Mesh::heightMap, pos.x / 500.f, pos.z / 500.f) + 1.f, pos.y);
+	target += camSpd * change;
+
+	glm::mat4 yawPitch = glm::rotate(glm::rotate(glm::mat4(1.f), glm::radians(yaw), {0.f, 1.f, 0.f}), glm::radians(pitch), CalcRight());
+	target = pos + glm::vec3(yawPitch * glm::vec4(camFront, 0.f));
+	this->up = glm::vec3(yawPitch * glm::vec4(this->up, 0.f));
 	yaw = pitch = 0.f;
 }
 

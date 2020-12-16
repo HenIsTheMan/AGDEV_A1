@@ -138,6 +138,7 @@ private:
 
 	EntityManager* entityManager;
 
+	bool isCamDetached;
 	float elapsedTime;
 
 	ModelStack modelStack;

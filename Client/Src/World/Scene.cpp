@@ -97,6 +97,7 @@ Scene::Scene():
 	reticleColour(glm::vec4(1.f)),
 	view(glm::mat4(1.f)),
 	projection(glm::mat4(1.f)),
+	isCamDetached(false),
 	elapsedTime(0.f),
 	modelStack(),
 	polyModes(),
@@ -428,127 +429,143 @@ void Scene::GameUpdate(GLFWwindow* const& win){
 	}
 	glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-	////Control player states
-	static float sprintBT = 0.f;
-	static float heightBT = 0.f;
-
-	///Toggle sprint
-	if(Key(VK_SHIFT) && sprintBT <= elapsedTime){
-		sprintOn = !sprintOn;
-		sprintBT = elapsedTime + .5f;
+	static float camAttachmentBT = 0.0f;
+	if(Key(GLFW_KEY_B) && camAttachmentBT <= elapsedTime){
+		isCamDetached = !isCamDetached;
+		camAttachmentBT = elapsedTime + .5f;
 	}
 
-	///Set movement state
-	if(Key(GLFW_KEY_A) || Key(GLFW_KEY_D) || Key(GLFW_KEY_W) || Key(GLFW_KEY_S)){
-		if(sprintOn){
-			playerStates &= ~(int)PlayerState::NoMovement;
-			playerStates &= ~(int)PlayerState::Walking;
-			playerStates |= (int)PlayerState::Sprinting;
+	if(isCamDetached){
+		cam.UpdateDetached(GLFW_KEY_Q, GLFW_KEY_E, GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_W, GLFW_KEY_S);
+	} else{
+		////Control player states
+		static float sprintBT = 0.f;
+		static float heightBT = 0.f;
+
+		///Toggle sprint
+		if(Key(VK_SHIFT) && sprintBT <= elapsedTime){
+			sprintOn = !sprintOn;
+			sprintBT = elapsedTime + .5f;
+		}
+
+		///Set movement state
+		if(Key(GLFW_KEY_A) || Key(GLFW_KEY_D) || Key(GLFW_KEY_W) || Key(GLFW_KEY_S)){
+			if(sprintOn){
+				playerStates &= ~(int)PlayerState::NoMovement;
+				playerStates &= ~(int)PlayerState::Walking;
+				playerStates |= (int)PlayerState::Sprinting;
+			} else{
+				playerStates &= ~(int)PlayerState::NoMovement;
+				playerStates |= (int)PlayerState::Walking;
+				playerStates &= ~(int)PlayerState::Sprinting;
+			}
 		} else{
-			playerStates &= ~(int)PlayerState::NoMovement;
-			playerStates |= (int)PlayerState::Walking;
+			playerStates |= (int)PlayerState::NoMovement;
+			playerStates &= ~(int)PlayerState::Walking;
 			playerStates &= ~(int)PlayerState::Sprinting;
 		}
-	} else{
-		playerStates |= (int)PlayerState::NoMovement;
-		playerStates &= ~(int)PlayerState::Walking;
-		playerStates &= ~(int)PlayerState::Sprinting;
-	}
 
-	///Set height state
-	if(heightBT <= elapsedTime){
-		if(Key(GLFW_KEY_C)){
-			if(playerStates & (int)PlayerState::Standing){
-				playerStates |= (int)PlayerState::Crouching;
-				playerStates &= ~(int)PlayerState::Standing;
-			} else if(playerStates & (int)PlayerState::Crouching){
-				playerStates |= (int)PlayerState::Proning;
-				playerStates &= ~(int)PlayerState::Crouching;
+		///Set height state
+		if(heightBT <= elapsedTime){
+			if(Key(GLFW_KEY_C)){
+				if(playerStates & (int)PlayerState::Standing){
+					playerStates |= (int)PlayerState::Crouching;
+					playerStates &= ~(int)PlayerState::Standing;
+				} else if(playerStates & (int)PlayerState::Crouching){
+					playerStates |= (int)PlayerState::Proning;
+					playerStates &= ~(int)PlayerState::Crouching;
+				}
+				heightBT = elapsedTime + .5f;
 			}
-			heightBT = elapsedTime + .5f;
+			if(Key(VK_SPACE)){
+				if(playerStates & (int)PlayerState::Proning){
+					playerStates |= (int)PlayerState::Crouching;
+					playerStates &= ~(int)PlayerState::Proning;
+				} else if(playerStates & (int)PlayerState::Crouching){
+					playerStates |= (int)PlayerState::Standing;
+					playerStates &= ~(int)PlayerState::Crouching;
+				} else if(playerStates & (int)PlayerState::Standing){
+					soundEngine->play2D("Audio/Sounds/Jump.wav", false);
+					playerStates |= (int)PlayerState::Jumping;
+					playerStates &= ~(int)PlayerState::Standing;
+				}
+				heightBT = elapsedTime + .5f;
+			} else{
+				if((playerStates & (int)PlayerState::Jumping)){
+					playerStates |= (int)PlayerState::Falling;
+					playerStates &= ~(int)PlayerState::Jumping;
+					cam.SetVel(0.f);
+				}
+			}
 		}
-		if(Key(VK_SPACE)){
-			if(playerStates & (int)PlayerState::Proning){
-				playerStates |= (int)PlayerState::Crouching;
-				playerStates &= ~(int)PlayerState::Proning;
-			} else if(playerStates & (int)PlayerState::Crouching){
-				playerStates |= (int)PlayerState::Standing;
-				playerStates &= ~(int)PlayerState::Crouching;
-			} else if(playerStates & (int)PlayerState::Standing){
-				soundEngine->play2D("Audio/Sounds/Jump.wav", false);
-				playerStates |= (int)PlayerState::Jumping;
-				playerStates &= ~(int)PlayerState::Standing;
+
+		float yMin = terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(cam.GetPos().x / terrainXScale, cam.GetPos().z / terrainZScale);
+		float yMax = yMin;
+
+		///Update player according to its states
+		int playerStatesTemp = playerStates;
+		int bitMask = 1;
+		while(playerStatesTemp){
+			switch(PlayerState(playerStatesTemp & bitMask)){
+				case PlayerState::NoMovement:
+					cam.SetSpd(0.f);
+					break;
+				case PlayerState::Walking:
+					cam.SetSpd(100.f);
+					break;
+				case PlayerState::Sprinting:
+					cam.SetSpd(250.f);
+					break;
+				case PlayerState::Standing:
+					yMin += 30.f;
+					yMax += 30.f;
+					break;
+				case PlayerState::Jumping:
+					cam.SetVel(300.f);
+				case PlayerState::Falling:
+					cam.SetAccel(-1500.f);
+					yMin += 30.f;
+					yMax += 250.f;
+					break;
+				case PlayerState::Crouching:
+					cam.SetSpd(cam.GetSpd() / 5.f);
+					yMin += 5.f;
+					yMax += 5.f;
+					break;
+				case PlayerState::Proning:
+					cam.SetSpd(5.f);
+					yMin += 1.f;
+					yMax += 1.f;
+					break;
 			}
-			heightBT = elapsedTime + .5f;
-		} else{
-			if((playerStates & (int)PlayerState::Jumping)){
+			playerStatesTemp &= ~bitMask;
+			bitMask <<= 1;
+		}
+
+		if(playerStates & (int)PlayerState::Jumping){
+			if(cam.GetPos().y >= yMax){
 				playerStates |= (int)PlayerState::Falling;
 				playerStates &= ~(int)PlayerState::Jumping;
 				cam.SetVel(0.f);
 			}
 		}
-	}
-
-	float yMin = terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(cam.GetPos().x / terrainXScale, cam.GetPos().z / terrainZScale);
-	float yMax = yMin;
-
-	///Update player according to its states
-	int playerStatesTemp = playerStates;
-	int bitMask = 1;
-	while(playerStatesTemp){
-		switch(PlayerState(playerStatesTemp & bitMask)){
-			case PlayerState::NoMovement:
-				cam.SetSpd(0.f);
-				break;
-			case PlayerState::Walking:
-				cam.SetSpd(100.f);
-				break;
-			case PlayerState::Sprinting:
-				cam.SetSpd(250.f);
-				break;
-			case PlayerState::Standing:
-				yMin += 30.f;
-				yMax += 30.f;
-				break;
-			case PlayerState::Jumping:
-				cam.SetVel(300.f);
-			case PlayerState::Falling:
-				cam.SetAccel(-1500.f);
-				yMin += 30.f;
-				yMax += 250.f;
-				break;
-			case PlayerState::Crouching:
-				cam.SetSpd(cam.GetSpd() / 5.f);
-				yMin += 5.f;
-				yMax += 5.f;
-				break;
-			case PlayerState::Proning:
-				cam.SetSpd(5.f);
-				yMin += 1.f;
-				yMax += 1.f;
-				break;
+		if(playerStates & (int)PlayerState::Falling){
+			if(cam.GetPos().y <= yMin){
+				playerStates |= (int)PlayerState::Standing;
+				playerStates &= ~(int)PlayerState::Falling;
+				cam.SetAccel(0.f);
+				cam.SetVel(0.f);
+			}
 		}
-		playerStatesTemp &= ~bitMask;
-		bitMask <<= 1;
-	}
 
-	if(playerStates & (int)PlayerState::Jumping){
-		if(cam.GetPos().y >= yMax){
-			playerStates |= (int)PlayerState::Falling;
-			playerStates &= ~(int)PlayerState::Jumping;
-			cam.SetVel(0.f);
-		}
+		cam.UpdateJumpFall();
+		cam.UpdateAttached(
+			GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_W, GLFW_KEY_S,
+			-terrainXScale / 2.f + 5.f, terrainXScale / 2.f - 5.f,
+			yMin, yMax,
+			-terrainZScale / 2.f + 5.f, terrainZScale / 2.f - 5.f
+		);
 	}
-	if(playerStates & (int)PlayerState::Falling){
-		if(cam.GetPos().y <= yMin){
-			playerStates |= (int)PlayerState::Standing;
-			playerStates &= ~(int)PlayerState::Falling;
-			cam.SetAccel(0.f);
-			cam.SetVel(0.f);
-		}
-	}
-	cam.UpdateJumpFall();
-	cam.Update(GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_W, GLFW_KEY_S, -terrainXScale / 2.f + 5.f, terrainXScale / 2.f - 5.f, yMin, yMax, -terrainZScale / 2.f + 5.f, terrainZScale / 2.f - 5.f);
 	view = cam.LookAt();
 
 	///Control FOV of perspective projection based on item selected in inv
