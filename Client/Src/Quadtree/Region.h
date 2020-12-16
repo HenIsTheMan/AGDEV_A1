@@ -26,9 +26,6 @@ private:
 	void ClearMovableAndDeactivateChildren();
 	void Partition(const bool movable);
 
-	void ReserveStationaryNodes(const size_t& size);
-	void ReserveMovableNodes(const size_t& size);
-
 	void InitRegionPool(const size_t& size);
 	void DestroyRegionPool();
 

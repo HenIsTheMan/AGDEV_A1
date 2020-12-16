@@ -162,36 +162,10 @@ void Region::ClearMovableAndDeactivateChildren(){
 }
 
 void Region::Partition(const bool movable){
-	//const std::vector<Entity*>& entities = movable ? movableEntities : stationaryEntities;
-	//if(entities.size() <= (size_t)1){
-	//	return;
-	//}
-
-	//if(topLeft){
-	//	topLeft->ReserveStationaryEntities(size);
-	//}
-	//if(topRight){
-	//	topRight->ReserveStationaryEntities(size);
-	//}
-	//if(bottomLeft){
-	//	bottomLeft->ReserveStationaryEntities(size);
-	//}
-	//if(bottomRight){
-	//	bottomRight->ReserveStationaryEntities(size);
-	//}
-
-	//if(topLeft){
-	//	topLeft->ReserveMovableEntities(size);
-	//}
-	//if(topRight){
-	//	topRight->ReserveMovableEntities(size);
-	//}
-	//if(bottomLeft){
-	//	bottomLeft->ReserveMovableEntities(size);
-	//}
-	//if(bottomRight){
-	//	bottomRight->ReserveMovableEntities(size);
-	//}
+	const std::vector<Node*>& entities = movable ? movableNodes : stationaryNodes;
+	if(entities.size() <= (size_t)1){
+		return;
+	}
 
 	topLeft = FetchRegion();
 	topLeft->active = true;
@@ -248,14 +222,6 @@ void Region::Partition(const bool movable){
 	//topRight->Partition();
 	//bottomLeft->Partition();
 	//bottomRight->Partition();
-}
-
-void Region::ReserveStationaryNodes(const size_t& size){
-	stationaryNodes.reserve(size);
-}
-
-void Region::ReserveMovableNodes(const size_t& size){
-	movableNodes.reserve(size);
 }
 
 void Region::InitRegionPool(const size_t& size){
