@@ -88,7 +88,7 @@ void Region::RemoveNode(Node* const node, const bool movable){
 	const std::vector<Node*>::iterator iter = std::find(nodes.begin(), nodes.end(), node);
 
 	if(iter != nodes.end()){
-		return assert(false && "Entity could not be found!");
+		return assert(false && "Node could not be found!");
 	}
 
 	nodes.erase(iter);

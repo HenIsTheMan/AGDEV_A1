@@ -11,7 +11,6 @@ RegionControl::~RegionControl(){
 	}
 }
 
-
 void RegionControl::Update(){
 	root->ClearMovableAndDeactivateChildren();
 	root->Partition(true);
@@ -22,24 +21,24 @@ void RegionControl::Render(ShaderProg& SP) const{
 	//Not visible if not active??
 }
 
-const Region* RegionControl::FindRegion(Entity* const& entity, const bool movable){
-	return root->FindRegion(entity, movable);
+const Region* RegionControl::FindRegion(Node* const& node, const bool movable){
+	return root->FindRegion(node, movable);
 }
 
-void RegionControl::AddEntity(Entity* const& entity, const bool movable){
-	root->AddEntity(entity, movable);
+void RegionControl::AddNode(Node* const& node, const bool movable){
+	root->AddNode(node, movable);
 }
 
-void RegionControl::RemoveEntity(Entity* const& entity, const bool movable){
-	root->RemoveEntity(entity, movable);
+void RegionControl::RemoveNode(Node* const& node, const bool movable){
+	root->RemoveNode(node, movable);
 }
 
-void RegionControl::ReserveStationaryEntities(const size_t& size){
-	root->ReserveStationaryEntities(size);
+void RegionControl::ReserveStationaryNodes(const size_t& size){
+	root->ReserveStationaryNodes(size);
 }
 
-void RegionControl::ReserveMovableEntities(const size_t& size){
-	root->ReserveMovableEntities(size);
+void RegionControl::ReserveMovableNodes(const size_t& size){
+	root->ReserveMovableNodes(size);
 }
 
 void RegionControl::InitRegionPool(const size_t& size){

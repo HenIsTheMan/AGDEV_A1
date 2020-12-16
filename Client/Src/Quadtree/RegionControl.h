@@ -12,13 +12,13 @@ public:
 	void Update();
 	void Render(ShaderProg& SP) const;
 
-	const Region* FindRegion(Entity* const& entity, const bool movable);
+	const Region* FindRegion(Node* const& node, const bool movable);
 
-	void AddEntity(Entity* const& entity, const bool movable);
-	void RemoveEntity(Entity* const& entity, const bool movable);
+	void AddNode(Node* const& node, const bool movable);
+	void RemoveNode(Node* const& node, const bool movable);
 
-	void ReserveStationaryEntities(const size_t& size);
-	void ReserveMovableEntities(const size_t& size);
+	void ReserveStationaryNodes(const size_t& size);
+	void ReserveMovableNodes(const size_t& size);
 
 	void InitRegionPool(const size_t& size);
 private:
