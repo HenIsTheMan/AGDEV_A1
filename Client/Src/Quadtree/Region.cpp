@@ -31,6 +31,8 @@ Region::~Region(){
 }
 
 void Region::GetEntitiesToRender(std::map<int, Entity*>& entitiesOpaque, std::map<int, Entity*>& entitiesNotOpaque, const Cam& cam){
+	//Check if visible??
+
 	if(topLeft || topRight || bottomLeft || bottomRight){
 		topLeft->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
 		topRight->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
@@ -43,6 +45,8 @@ void Region::GetEntitiesToRender(std::map<int, Entity*>& entitiesOpaque, std::ma
 	const glm::vec3& camFront = cam.CalcFront();
 
 	for(int i = 0; i < stationaryNodes.size(); ++i){
+		//Check if visible??
+
 		Entity* const entity = stationaryNodes[i]->RetrieveEntity();
 
 		if(entity && entity->active){
@@ -65,6 +69,17 @@ void Region::GetEntitiesToRender(std::map<int, Entity*>& entitiesOpaque, std::ma
 			}
 		}
 	}
+}
+
+void Region::GetLeaves(ShaderProg& SP, std::vector<Region*>& leaves){
+	if(topLeft || topRight || bottomLeft || bottomRight){
+		topLeft->GetLeaves(SP, leaves);
+		topRight->GetLeaves(SP, leaves);
+		bottomLeft->GetLeaves(SP, leaves);
+		bottomRight->GetLeaves(SP, leaves);
+		return;
+	}
+	leaves.emplace_back(this);
 }
 
 const Region* Region::FindRegion(Node* const node, const bool movable) const{

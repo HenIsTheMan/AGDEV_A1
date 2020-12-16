@@ -16,7 +16,7 @@ void RegionControl::Update(){
 	rootRegion->Partition(true);
 }
 
-void RegionControl::Render(ShaderProg& SP, const Cam& cam){
+void RegionControl::RenderEntities(ShaderProg& SP, const Cam& cam){
 	//Render lines or leaf nodes??
 	//Not visible if not active??
 
@@ -60,12 +60,12 @@ void RegionControl::Render(ShaderProg& SP, const Cam& cam){
 		modelStack.PopModel();
 	}
 
+	SP.Set1i("useCustomColour", 0);
+	SP.Set1i("useCustomDiffuseTexIndex", 0);
+
 	///Then render non-opaque entities
 	for(std::map<int, Entity*>::reverse_iterator iter = entitiesNotOpaque.rbegin(); iter != entitiesNotOpaque.rend(); ++iter){
 		Entity* const& entity = iter->second;
-
-		SP.Set4fv("customColour", entity->colour);
-		SP.Set1i("customDiffuseTexIndex", entity->diffuseTexIndex);
 
 		switch(entity->type){
 			case Entity::EntityType::Coin:
@@ -74,8 +74,6 @@ void RegionControl::Render(ShaderProg& SP, const Cam& cam){
 					modelStack.Rotate(glm::vec4(0.f, 1.f, 0.f, glm::degrees(atan2(cam.GetPos().x - entity->pos.x, cam.GetPos().z - entity->pos.z)))),
 					modelStack.Scale(entity->scale),
 				});
-					SP.Set1i("useCustomColour", 0);
-					SP.Set1i("useCustomDiffuseTexIndex", 0);
 					Meshes::meshes[(int)MeshType::CoinSpriteAni]->SetModel(modelStack.GetTopModel());
 					Meshes::meshes[(int)MeshType::CoinSpriteAni]->Render(SP);
 				break;
@@ -85,8 +83,6 @@ void RegionControl::Render(ShaderProg& SP, const Cam& cam){
 					modelStack.Rotate(glm::vec4(0.f, 1.f, 0.f, glm::degrees(atan2(cam.GetPos().x - entity->pos.x, cam.GetPos().z - entity->pos.z)))),
 					modelStack.Scale(glm::vec3(entity->scale.x, entity->scale.y * 2.f, entity->scale.z)),
 				});
-					SP.Set1i("useCustomColour", 0);
-					SP.Set1i("useCustomDiffuseTexIndex", 0);
 					Meshes::meshes[(int)MeshType::FireSpriteAni]->SetModel(modelStack.GetTopModel());
 					Meshes::meshes[(int)MeshType::FireSpriteAni]->Render(SP);
 				break;
@@ -94,9 +90,37 @@ void RegionControl::Render(ShaderProg& SP, const Cam& cam){
 		modelStack.PopModel();
 	}
 
-	SP.Set1i("useCustomDiffuseTexIndex", 0);
-	SP.Set1i("useCustomColour", 0);
 	SP.Set1i("noNormals", 0);
+}
+
+void RegionControl::RenderQSP(ShaderProg& SP, const Cam& cam){
+	//std::vector<Region*> leaves;
+	//rootRegion->GetLeaves(SP, leaves);
+	//const size_t size = leaves.size();
+	//if(!size){
+	//	return;
+	//}
+
+	//SP.Set1i("noNormals", 1);
+	//SP.Set1i("useCustomColour", 1);
+	//SP.Set1i("useCustomDiffuseTexIndex", 1);
+
+	//for(size_t i = 0; i < size; ++i){
+	//	modelStack.PushModel({
+	//		modelStack.Translate(entity->pos + glm::vec3(0.f, entity->scale.y / 2.f, 0.f)),
+	//		modelStack.Rotate(glm::vec4(0.f, 1.f, 0.f, glm::degrees(atan2(cam.GetPos().x - entity->pos.x, cam.GetPos().z - entity->pos.z)))),
+	//		modelStack.Scale(glm::vec3(entity->scale.x, entity->scale.y * 2.f, entity->scale.z)),
+	//	});
+	//		SP.Set1i("useCustomColour", 0);
+	//		SP.Set1i("useCustomDiffuseTexIndex", 0);
+	//		Meshes::meshes[(int)MeshType::FireSpriteAni]->SetModel(modelStack.GetTopModel());
+	//		Meshes::meshes[(int)MeshType::FireSpriteAni]->Render(SP);
+	//	modelStack.PopModel();
+	//}
+
+	//SP.Set1i("useCustomDiffuseTexIndex", 0);
+	//SP.Set1i("useCustomColour", 0);
+	//SP.Set1i("noNormals", 0);
 }
 
 const Region* RegionControl::FindRegion(Node* const& node, const bool movable){

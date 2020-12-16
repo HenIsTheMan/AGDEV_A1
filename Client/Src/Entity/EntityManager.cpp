@@ -34,7 +34,8 @@ void EntityManager::Update(){
 }
 
 void EntityManager::Render(ShaderProg& SP, const Cam& cam) const{
-	regionControl->Render(SP, cam);
+	regionControl->RenderEntities(SP, cam);
+	regionControl->RenderQSP(SP, cam);
 }
 
 void EntityManager::SetUpRegionsForStationary(){

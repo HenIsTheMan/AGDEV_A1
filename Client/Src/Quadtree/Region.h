@@ -16,6 +16,7 @@ private:
 	~Region();
 
 	void GetEntitiesToRender(std::map<int, Entity*>& entitiesOpaque, std::map<int, Entity*>& entitiesNotOpaque, const Cam& cam);
+	void GetLeaves(ShaderProg& SP, std::vector<Region*>& leaves);
 
 	const Region* FindRegion(Node* const node, const bool movable) const;
 	Region* FetchRegion();

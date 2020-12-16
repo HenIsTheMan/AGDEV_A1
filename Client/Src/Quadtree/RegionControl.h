@@ -10,7 +10,8 @@ public:
 	~RegionControl();
 
 	void Update();
-	void Render(ShaderProg& SP, const Cam& cam);
+	void RenderEntities(ShaderProg& SP, const Cam& cam);
+	void RenderQSP(ShaderProg& SP, const Cam& cam);
 
 	const Region* FindRegion(Node* const& node, const bool movable);
 
