@@ -21,15 +21,7 @@ public:
 	void ReserveMovableEntities(const size_t& size);
 
 	void InitRegionPool(const size_t& size);
-
-	// Collision Check for an entity against Spatial Partition's entities
-	//virtual bool CheckForCollisionWithEntity(CEntity3D* cEntity3D);
-
-	// This view is for calculating frustum culling 
-	// as we may detach the camera from the player.
-	//glm::mat4 frustumCullingView;
 private:
-	//CFrustumCulling* cFrustumCulling;
 	RegionControl();
 
 	Region* root;
