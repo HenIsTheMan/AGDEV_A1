@@ -10,7 +10,7 @@ public:
 	~RegionControl();
 
 	void Update();
-	void Render(ShaderProg& SP) const;
+	void Render(ShaderProg& SP);
 
 	const Region* FindRegion(Node* const& node, const bool movable);
 

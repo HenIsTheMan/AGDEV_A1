@@ -16,7 +16,7 @@ void RegionControl::Update(){
 	rootRegion->Partition(true);
 }
 
-void RegionControl::Render(ShaderProg& SP) const{
+void RegionControl::Render(ShaderProg& SP){
 	//Render lines or leaf nodes??
 	//Not visible if not active??
 

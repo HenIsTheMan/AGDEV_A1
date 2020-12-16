@@ -6,8 +6,6 @@ float terrainXScale = 1500.f;
 float terrainYScale = 200.f;
 float terrainZScale = 1500.f;
 
-//#define DEBUGGING
-
 extern bool LMB;
 extern bool RMB;
 extern bool endLoop;

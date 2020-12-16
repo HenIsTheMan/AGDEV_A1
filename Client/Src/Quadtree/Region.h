@@ -4,13 +4,16 @@
 
 #include "Node.h"
 
+#include "../Shared/Meshes.h"
+#include "../World/ModelStack.h"
+
 class Region final{
 	friend class RegionControl;
 private:
 	Region();
 	~Region();
 
-	void Render(ShaderProg& SP) const;
+	void Render(ShaderProg& SP);
 
 	const Region* FindRegion(Node* const node, const bool movable) const;
 	Region* FetchRegion();
@@ -41,4 +44,6 @@ private:
 	std::vector<Node*> movableNodes;
 
 	static std::vector<Region*> regionPool;
+
+	ModelStack modelStack;
 };
