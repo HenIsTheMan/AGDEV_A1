@@ -200,6 +200,7 @@
     <ClCompile Include="Src\Entity\Entity.cpp" />
     <ClCompile Include="Src\Entity\Entities\Gun.cpp" />
     <ClCompile Include="Src\Entity\EntityManager.cpp" />
+    <ClCompile Include="Src\Quadtree\Node.cpp" />
     <ClCompile Include="Src\Quadtree\Region.cpp" />
     <ClCompile Include="Src\Quadtree\RegionControl.cpp" />
     <ClCompile Include="Src\World\Cam.cpp" />
@@ -213,6 +214,7 @@
     <ClInclude Include="Src\Entity\Entity.h" />
     <ClInclude Include="Src\Entity\Entities\Gun.h" />
     <ClInclude Include="Src\Entity\EntityManager.h" />
+    <ClInclude Include="Src\Quadtree\Node.h" />
     <ClInclude Include="Src\Quadtree\Region.h" />
     <ClInclude Include="Src\Quadtree\RegionControl.h" />
     <ClInclude Include="Src\World\Cam.h" />

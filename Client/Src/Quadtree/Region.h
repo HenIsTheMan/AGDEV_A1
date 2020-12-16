@@ -4,10 +4,8 @@
 
 #include "../Entity/Entity.h"
 
-class RegionControl;
-
 class Region final{
-	friend RegionControl;
+	friend class RegionControl;
 private:
 	Region();
 	~Region();

@@ -13,6 +13,7 @@
     <ClCompile Include="Src\Entity\Entities\Scar.cpp" />
     <ClCompile Include="Src\Entity\Entities\Shotgun.cpp" />
     <ClCompile Include="Src\Entity\Entities\Sniper.cpp" />
+    <ClCompile Include="Src\Quadtree\Node.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Admin\App.h" />
@@ -26,6 +27,7 @@
     <ClInclude Include="Src\Entity\Entities\Scar.h" />
     <ClInclude Include="Src\Entity\Entities\Shotgun.h" />
     <ClInclude Include="Src\Entity\Entities\Sniper.h" />
+    <ClInclude Include="Src\Quadtree\Node.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Blur.fragS" />

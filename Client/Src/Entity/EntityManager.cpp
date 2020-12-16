@@ -114,6 +114,7 @@ Entity* const EntityManager::ActivateEntity(const bool movable){
 
 	Entity* const entity = entityPool.back();
 	entity->active = true;
+	entity->movable = movable;
 	return entity;
 }
 
