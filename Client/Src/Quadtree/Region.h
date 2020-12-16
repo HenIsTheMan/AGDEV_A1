@@ -12,9 +12,6 @@ private:
 	Region();
 	~Region();
 
-	static void InitRegionPool(const size_t& size);
-	static void DestroyRegionPool();
-
 	const Region* FindRegion(Entity* const entity, const bool movable) const;
 	Region* FetchRegion();
 
@@ -26,6 +23,9 @@ private:
 
 	void ReserveStationaryEntities(const size_t& size);
 	void ReserveMovableEntities(const size_t& size);
+
+	void InitRegionPool(const size_t& size);
+	void DestroyRegionPool();
 
 	bool active;
 	Region* parent;

@@ -1,16 +1,24 @@
 #pragma once
 
+#include <Engine.h>
+
 #include "Region.h"
 
-class RegionControl final{
+class RegionControl final: public Singleton<RegionControl>{
+	friend Singleton<RegionControl>;
 public:
-	RegionControl();
 	~RegionControl();
 
-	const Region* FindRegion(Entity* const& entity);
+	void Update();
+	void Render() const;
 
-	void AddEntity(Entity* const& entity);
-	void RemoveEntity(Entity* const& entity);
+	const Region* FindRegion(Entity* const& entity, const bool movable);
+
+	void AddEntity(Entity* const& entity, const bool movable);
+	void RemoveEntity(Entity* const& entity, const bool movable);
+
+	void ReserveStationaryEntities(const size_t& size);
+	void ReserveMovableEntities(const size_t& size);
 
 	// Collision Check for an entity against Spatial Partition's entities
 	//virtual bool CheckForCollisionWithEntity(CEntity3D* cEntity3D);
@@ -20,6 +28,7 @@ public:
 	//glm::mat4 frustumCullingView;
 private:
 	//CFrustumCulling* cFrustumCulling;
+	RegionControl();
 
 	Region* root;
 };

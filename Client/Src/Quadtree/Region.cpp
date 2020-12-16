@@ -30,26 +30,6 @@ Region::~Region(){
 	}
 }
 
-void Region::InitRegionPool(const size_t& size){
-	if(regionPool.size()){
-		assert(false && "regionPool is not empty!");
-	}
-
-	regionPool.resize(size);
-	for(size_t i = 0; i < size; ++i){
-		regionPool[i] = new Region();
-	}
-}
-
-void Region::DestroyRegionPool(){
-	for(Region*& region: regionPool){
-		if(region){
-			delete region;
-			region = nullptr;
-		}
-	}
-}
-
 const Region* Region::FindRegion(Entity* const entity, const bool movable) const{
 	if(topLeft){
 		const Region* const& region = topLeft->FindRegion(entity, movable);
@@ -206,4 +186,24 @@ void Region::ReserveStationaryEntities(const size_t& size){
 
 void Region::ReserveMovableEntities(const size_t& size){
 	movableEntities.reserve(size);
+}
+
+void Region::InitRegionPool(const size_t& size){
+	if(regionPool.size()){
+		assert(false && "regionPool is not empty!");
+	}
+
+	regionPool.resize(size);
+	for(size_t i = 0; i < size; ++i){
+		regionPool[i] = new Region();
+	}
+}
+
+void Region::DestroyRegionPool(){
+	for(Region*& region: regionPool){
+		if(region){
+			delete region;
+			region = nullptr;
+		}
+	}
 }
