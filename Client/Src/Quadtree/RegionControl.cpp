@@ -94,33 +94,31 @@ void RegionControl::RenderEntities(ShaderProg& SP, const Cam& cam){
 }
 
 void RegionControl::RenderQSP(ShaderProg& SP, const Cam& cam){
-	//std::vector<Region*> leaves;
-	//rootRegion->GetLeaves(SP, leaves);
-	//const size_t size = leaves.size();
-	//if(!size){
-	//	return;
-	//}
+	std::vector<Region*> leaves;
+	rootRegion->GetLeaves(SP, leaves);
+	const size_t size = leaves.size();
+	if(!size){
+		return;
+	}
 
-	//SP.Set1i("noNormals", 1);
-	//SP.Set1i("useCustomColour", 1);
-	//SP.Set1i("useCustomDiffuseTexIndex", 1);
+	SP.Set1i("noNormals", 1);
+	SP.Set1i("useCustomDiffuseTexIndex", 0);
+	SP.Set1i("useCustomColour", 0);
 
-	//for(size_t i = 0; i < size; ++i){
-	//	modelStack.PushModel({
-	//		modelStack.Translate(entity->pos + glm::vec3(0.f, entity->scale.y / 2.f, 0.f)),
-	//		modelStack.Rotate(glm::vec4(0.f, 1.f, 0.f, glm::degrees(atan2(cam.GetPos().x - entity->pos.x, cam.GetPos().z - entity->pos.z)))),
-	//		modelStack.Scale(glm::vec3(entity->scale.x, entity->scale.y * 2.f, entity->scale.z)),
-	//	});
-	//		SP.Set1i("useCustomColour", 0);
-	//		SP.Set1i("useCustomDiffuseTexIndex", 0);
-	//		Meshes::meshes[(int)MeshType::FireSpriteAni]->SetModel(modelStack.GetTopModel());
-	//		Meshes::meshes[(int)MeshType::FireSpriteAni]->Render(SP);
-	//	modelStack.PopModel();
-	//}
+	for(size_t i = 0; i < size; ++i){
+		const Region* const leaf = leaves[i];
 
-	//SP.Set1i("useCustomDiffuseTexIndex", 0);
-	//SP.Set1i("useCustomColour", 0);
-	//SP.Set1i("noNormals", 0);
+		modelStack.PushModel({
+			modelStack.Translate(glm::vec3(leaf->origin[0], 20.0f, leaf->origin[1])),
+			modelStack.Rotate(glm::vec4(1.0f, 0.0f, 0.0f, 90.0f)),
+			modelStack.Scale(glm::vec3(leaf->origin[0], leaf->origin[1], 1.0f))
+		});
+			Meshes::meshes[(int)MeshType::Cube]->SetModel(modelStack.GetTopModel());
+			Meshes::meshes[(int)MeshType::Cube]->Render(SP);
+		modelStack.PopModel();
+	}
+
+	SP.Set1i("noNormals", 0);
 }
 
 const Region* RegionControl::FindRegion(Node* const& node, const bool movable){

@@ -19,5 +19,7 @@ Mesh* Meshes::meshes[(int)MeshType::Amt] = {
 	}),
 	new Terrain("Imgs/hMap.raw", 8.f, 8.f),
 	new SpriteAni(1, 6),
-	new SpriteAni(4, 8)
+	new SpriteAni(4, 8),
+	new Mesh(Mesh::MeshType::Quad, GL_LINES, {
+	}),
 };
