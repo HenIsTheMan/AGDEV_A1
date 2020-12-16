@@ -14,6 +14,7 @@
     <ClCompile Include="Src\Entity\Entities\Sniper.cpp" />
     <ClCompile Include="Src\Quadtree\Node.cpp" />
     <ClCompile Include="Src\Entity\EntityManager.cpp" />
+    <ClCompile Include="Src\Shared\Meshes.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Admin\App.h" />
@@ -28,6 +29,7 @@
     <ClInclude Include="Src\Entity\Entities\Sniper.h" />
     <ClInclude Include="Src\Quadtree\Node.h" />
     <ClInclude Include="Src\Entity\EntityManager.h" />
+    <ClInclude Include="Src\Shared\Meshes.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Blur.fragS" />

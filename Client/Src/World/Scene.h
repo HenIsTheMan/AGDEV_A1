@@ -9,6 +9,8 @@
 
 #include "../Entity/EntityManager.h"
 
+#include "../Shared/Meshes.h"
+
 #define BIT(x) 1 << x
 
 class Scene final{
@@ -32,18 +34,6 @@ private:
 	TextChief textChief;
 
 	int polyModes[2];
-
-	enum struct MeshType{
-		Quad = 0,
-		Cube,
-		Sphere,
-		Cylinder,
-		Terrain,
-		CoinSpriteAni,
-		FireSpriteAni,
-		Amt
-	};
-	Mesh* meshes[(int)MeshType::Amt];
 
 	enum struct ModelType{
 		Shotgun = 0,

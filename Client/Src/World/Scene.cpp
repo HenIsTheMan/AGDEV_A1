@@ -29,27 +29,6 @@ Scene::Scene():
 	coinSoundFX({}),
 	fireMusic({}),
 	fireSoundFX({}),
-	meshes{
-		new Mesh(Mesh::MeshType::Quad, GL_TRIANGLES, {
-			{"Imgs/BG.jpg", Mesh::TexType::Diffuse, 0},
-			{"Imgs/Scope.png", Mesh::TexType::Diffuse, 0},
-			{"Imgs/Heart.png", Mesh::TexType::Diffuse, 0},
-			{"Imgs/Slot.png", Mesh::TexType::Diffuse, 0},
-			{"Imgs/ReticleMain.png", Mesh::TexType::Diffuse, 0},
-			{"Imgs/ReticleShotgun.png", Mesh::TexType::Diffuse, 0},
-			{"Imgs/ReticleScar.png", Mesh::TexType::Diffuse, 0},
-		}),
-		new Mesh(Mesh::MeshType::Cube, GL_TRIANGLES, {
-		}),
-		new Mesh(Mesh::MeshType::Sphere, GL_TRIANGLE_STRIP, {
-			{"Imgs/Enemy.jpg", Mesh::TexType::Diffuse, 0},
-		}),
-		new Mesh(Mesh::MeshType::Cylinder, GL_TRIANGLE_STRIP, {
-		}),
-		new Terrain("Imgs/hMap.raw", 8.f, 8.f),
-		new SpriteAni(1, 6),
-		new SpriteAni(4, 8),
-	},
 	models{
 		new Model("ObjsAndMtls/Shotgun.obj", {
 			aiTextureType_DIFFUSE,
@@ -169,9 +148,9 @@ Scene::~Scene(){
 	}
 	
 	for(int i = 0; i < (int)MeshType::Amt; ++i){
-		if(meshes[i]){
-			delete meshes[i];
-			meshes[i] = nullptr;
+		if(Meshes::meshes[i]){
+			delete Meshes::meshes[i];
+			Meshes::meshes[i] = nullptr;
 		}
 	}
 	for(int i = 0; i < (int)ModelType::Amt; ++i){
@@ -203,7 +182,7 @@ void Scene::InitEntities(){
 		const float scaleFactor = 15.f;
 		const float xPos = PseudorandMinMax(-terrainXScale / 2.f + 5.f + scaleFactor, terrainXScale / 2.f - 5.f - scaleFactor);
 		const float zPos = PseudorandMinMax(-terrainZScale / 2.f + 5.f + scaleFactor, terrainZScale / 2.f - 5.f - scaleFactor);
-		const glm::vec3 pos = glm::vec3(xPos, terrainYScale * static_cast<Terrain*>(meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos / terrainXScale, zPos / terrainZScale) + scaleFactor, zPos);
+		const glm::vec3 pos = glm::vec3(xPos, terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos / terrainXScale, zPos / terrainZScale) + scaleFactor, zPos);
 		entityManager->CreateCoin({
 			pos,
 			glm::vec3(1.f, 0.f, 0.f),
@@ -241,7 +220,7 @@ void Scene::InitEntities(){
 		const float zPos = PseudorandMinMax(-terrainZScale * 0.5f, terrainZScale * 0.5f);
 		const glm::vec3 pos = glm::vec3(
 			xPos,
-			terrainYScale * static_cast<Terrain*>(meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos / terrainXScale, zPos / terrainZScale, false),
+			terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos / terrainXScale, zPos / terrainZScale, false),
 			zPos
 		);
 
@@ -299,15 +278,15 @@ bool Scene::Init(){
 	};
 	SetUpCubemap(cubemapRefID, faces);
 
-	meshes[(int)MeshType::CoinSpriteAni]->AddTexMap({"Imgs/Coin.png", Mesh::TexType::Diffuse, 0});
-	static_cast<SpriteAni*>(meshes[(int)MeshType::CoinSpriteAni])->AddAni("CoinSpriteAni", 0, 6);
-	static_cast<SpriteAni*>(meshes[(int)MeshType::CoinSpriteAni])->Play("CoinSpriteAni", -1, .5f);
+	Meshes::meshes[(int)MeshType::CoinSpriteAni]->AddTexMap({"Imgs/Coin.png", Mesh::TexType::Diffuse, 0});
+	static_cast<SpriteAni*>(Meshes::meshes[(int)MeshType::CoinSpriteAni])->AddAni("CoinSpriteAni", 0, 6);
+	static_cast<SpriteAni*>(Meshes::meshes[(int)MeshType::CoinSpriteAni])->Play("CoinSpriteAni", -1, .5f);
 
-	meshes[(int)MeshType::FireSpriteAni]->AddTexMap({"Imgs/Fire.png", Mesh::TexType::Diffuse, 0});
-	static_cast<SpriteAni*>(meshes[(int)MeshType::FireSpriteAni])->AddAni("FireSpriteAni", 0, 32);
-	static_cast<SpriteAni*>(meshes[(int)MeshType::FireSpriteAni])->Play("FireSpriteAni", -1, .5f);
+	Meshes::meshes[(int)MeshType::FireSpriteAni]->AddTexMap({"Imgs/Fire.png", Mesh::TexType::Diffuse, 0});
+	static_cast<SpriteAni*>(Meshes::meshes[(int)MeshType::FireSpriteAni])->AddAni("FireSpriteAni", 0, 32);
+	static_cast<SpriteAni*>(Meshes::meshes[(int)MeshType::FireSpriteAni])->Play("FireSpriteAni", -1, .5f);
 
-	meshes[(int)MeshType::Terrain]->AddTexMap({"Imgs/Floor.jpg", Mesh::TexType::Diffuse, 0});
+	Meshes::meshes[(int)MeshType::Terrain]->AddTexMap({"Imgs/Floor.jpg", Mesh::TexType::Diffuse, 0});
 
 	directionalLights.emplace_back(CreateLight(LightType::Directional)); //Simulate sunlight
 
@@ -512,7 +491,7 @@ void Scene::GameUpdate(GLFWwindow* const& win){
 		}
 	}
 
-	float yMin = terrainYScale * static_cast<Terrain*>(meshes[(int)MeshType::Terrain])->GetHeightAtPt(cam.GetPos().x / terrainXScale, cam.GetPos().z / terrainZScale);
+	float yMin = terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(cam.GetPos().x / terrainXScale, cam.GetPos().z / terrainZScale);
 	float yMax = yMin;
 
 	///Update player according to its states
@@ -599,8 +578,8 @@ void Scene::GameUpdate(GLFWwindow* const& win){
 	const glm::vec3& camFront = cam.CalcFront();
 	soundEngine->setListenerPosition(vec3df(camPos.x, camPos.y, camPos.z), vec3df(camFront.x, camFront.y, camFront.z));
 
-	static_cast<SpriteAni*>(meshes[(int)MeshType::CoinSpriteAni])->Update();
-	static_cast<SpriteAni*>(meshes[(int)MeshType::FireSpriteAni])->Update();
+	static_cast<SpriteAni*>(Meshes::meshes[(int)MeshType::CoinSpriteAni])->Update();
+	static_cast<SpriteAni*>(Meshes::meshes[(int)MeshType::FireSpriteAni])->Update();
 
 	static float polyModeBT = 0.f;
 	static float minimapViewBT = 0.f;
@@ -744,8 +723,8 @@ void Scene::MainMenuRender(){
 		Scale(glm::vec3(float(winWidth) / 2.f, float(winHeight) / 2.f, 1.f)),
 	});
 		forwardSP.Set1i("noNormals", 1);
-		meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
-		meshes[(int)MeshType::Quad]->Render(forwardSP);
+		Meshes::meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
+		Meshes::meshes[(int)MeshType::Quad]->Render(forwardSP);
 		forwardSP.Set1i("noNormals", 0);
 	PopModel();
 
@@ -816,8 +795,8 @@ void Scene::GameRender(){
 		forwardSP.Set4fv("customColour", glm::vec4(glm::vec3(1.f, 0.f, 0.f), 1.f));
 		forwardSP.Set1i("useCustomDiffuseTexIndex", 1);
 		forwardSP.Set1i("customDiffuseTexIndex", -1);
-		meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
-		meshes[(int)MeshType::Quad]->Render(forwardSP);
+		Meshes::meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
+		Meshes::meshes[(int)MeshType::Quad]->Render(forwardSP);
 		forwardSP.Set1i("useCustomDiffuseTexIndex", 0);
 		forwardSP.Set1i("useCustomColour", 0);
 		forwardSP.Set1i("noNormals", 0);
@@ -831,8 +810,8 @@ void Scene::GameRender(){
 		forwardSP.Set4fv("customColour", glm::vec4(glm::vec3(0.f, 1.f, 0.f), 1.f));
 		forwardSP.Set1i("useCustomDiffuseTexIndex", 1);
 		forwardSP.Set1i("customDiffuseTexIndex", -1);
-		meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
-		meshes[(int)MeshType::Quad]->Render(forwardSP);
+		Meshes::meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
+		Meshes::meshes[(int)MeshType::Quad]->Render(forwardSP);
 		forwardSP.Set1i("useCustomDiffuseTexIndex", 0);
 		forwardSP.Set1i("useCustomColour", 0);
 		forwardSP.Set1i("noNormals", 0);
@@ -904,8 +883,8 @@ void Scene::GameRender(){
 	forwardSP.Set1i("sky", 1);
 	forwardSP.Set1i("skybox", 1);
 	forwardSP.UseTex(cubemapRefID, "cubemapSampler", GL_TEXTURE_CUBE_MAP);
-	meshes[(int)MeshType::Cube]->SetModel(GetTopModel());
-	meshes[(int)MeshType::Cube]->Render(forwardSP);
+	Meshes::meshes[(int)MeshType::Cube]->SetModel(GetTopModel());
+	Meshes::meshes[(int)MeshType::Cube]->Render(forwardSP);
 	forwardSP.Set1i("skybox", 0);
 	forwardSP.Set1i("sky", 0);
 	glCullFace(GL_BACK);
@@ -969,8 +948,8 @@ void Scene::GameRender(){
 	PushModel({
 		Scale(glm::vec3(terrainXScale, terrainYScale, terrainZScale)),
 	});
-		meshes[(int)MeshType::Terrain]->SetModel(GetTopModel());
-		meshes[(int)MeshType::Terrain]->Render(forwardSP);
+		Meshes::meshes[(int)MeshType::Terrain]->SetModel(GetTopModel());
+		Meshes::meshes[(int)MeshType::Terrain]->Render(forwardSP);
 	PopModel();
 
 	models[(int)ModelType::Tree]->InstancedRender(forwardSP);
@@ -1010,8 +989,8 @@ void Scene::GameRender(){
 			Scale(glm::vec3(float(winHeight) * 0.7f, float(winHeight) * 0.7f, 1.f)),
 		});
 			forwardSP.Set1i("customDiffuseTexIndex", 1);
-			meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
-			meshes[(int)MeshType::Quad]->Render(forwardSP);
+			Meshes::meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
+			Meshes::meshes[(int)MeshType::Quad]->Render(forwardSP);
 		PopModel();
 		PushModel({
 			Translate(glm::vec3(0.f, 0.f, -9.1f)),
@@ -1020,8 +999,8 @@ void Scene::GameRender(){
 			forwardSP.Set1i("customDiffuseTexIndex", -1);
 			forwardSP.Set1i("useCustomColour", 1);
 			forwardSP.Set4fv("customColour", glm::vec4(glm::vec3(0.f), 1.f));
-			meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
-			meshes[(int)MeshType::Quad]->Render(forwardSP);
+			Meshes::meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
+			Meshes::meshes[(int)MeshType::Quad]->Render(forwardSP);
 			forwardSP.Set1i("useCustomColour", 0);
 		PopModel();
 
@@ -1041,8 +1020,8 @@ void Scene::GameRender(){
 				forwardSP.Set4fv("customColour", glm::vec4(1.f, 0.f, 0.f, 1.f));
 				forwardSP.Set1i("useCustomDiffuseTexIndex", 1);
 				forwardSP.Set1i("customDiffuseTexIndex", 2);
-					meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
-					meshes[(int)MeshType::Quad]->Render(forwardSP);
+					Meshes::meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
+					Meshes::meshes[(int)MeshType::Quad]->Render(forwardSP);
 				forwardSP.Set1i("useCustomDiffuseTexIndex", 0);
 				forwardSP.Set1i("useCustomColour", 0);
 				forwardSP.Set1i("noNormals", 0);
@@ -1060,8 +1039,8 @@ void Scene::GameRender(){
 				forwardSP.Set4fv("customColour", glm::vec4(glm::vec3(.3f), 1.f));
 				forwardSP.Set1i("useCustomDiffuseTexIndex", 1);
 				forwardSP.Set1i("customDiffuseTexIndex", 2);
-					meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
-					meshes[(int)MeshType::Quad]->Render(forwardSP);
+					Meshes::meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
+					Meshes::meshes[(int)MeshType::Quad]->Render(forwardSP);
 				forwardSP.Set1i("useCustomDiffuseTexIndex", 0);
 				forwardSP.Set1i("useCustomColour", 0);
 				forwardSP.Set1i("noNormals", 0);
@@ -1081,8 +1060,8 @@ void Scene::GameRender(){
 				}
 				forwardSP.Set1i("useCustomDiffuseTexIndex", 1);
 				forwardSP.Set1i("customDiffuseTexIndex", 3);
-					meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
-					meshes[(int)MeshType::Quad]->Render(forwardSP);
+					Meshes::meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
+					Meshes::meshes[(int)MeshType::Quad]->Render(forwardSP);
 				forwardSP.Set1i("useCustomDiffuseTexIndex", 0);
 				if(i == currSlot){
 					forwardSP.Set1i("useCustomColour", 0);
@@ -1101,8 +1080,8 @@ void Scene::GameRender(){
 				forwardSP.Set4fv("customColour", reticleColour);
 				forwardSP.Set1i("useCustomDiffuseTexIndex", 1);
 				forwardSP.Set1i("customDiffuseTexIndex", 4);
-					meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
-					meshes[(int)MeshType::Quad]->Render(forwardSP);
+					Meshes::meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
+					Meshes::meshes[(int)MeshType::Quad]->Render(forwardSP);
 				forwardSP.Set1i("useCustomDiffuseTexIndex", 0);
 				forwardSP.Set1i("useCustomColour", 0);
 				forwardSP.Set1i("noNormals", 0);
@@ -1120,8 +1099,8 @@ void Scene::GameRender(){
 					forwardSP.Set4fv("customColour", reticleColour);
 					forwardSP.Set1i("useCustomDiffuseTexIndex", 1);
 					forwardSP.Set1i("customDiffuseTexIndex", inv[currSlot] == ItemType::Shotgun ? 5 : 6);
-						meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
-						meshes[(int)MeshType::Quad]->Render(forwardSP);
+						Meshes::meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
+						Meshes::meshes[(int)MeshType::Quad]->Render(forwardSP);
 					forwardSP.Set1i("useCustomDiffuseTexIndex", 0);
 					forwardSP.Set1i("useCustomColour", 0);
 					forwardSP.Set1i("noNormals", 0);
@@ -1203,8 +1182,8 @@ void Scene::GameOverRender(){
 		Scale(glm::vec3(float(winWidth) / 2.f, float(winHeight) / 2.f, 1.f)),
 	});
 		forwardSP.Set1i("noNormals", 1);
-		meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
-		meshes[(int)MeshType::Quad]->Render(forwardSP);
+		Meshes::meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
+		Meshes::meshes[(int)MeshType::Quad]->Render(forwardSP);
 		forwardSP.Set1i("noNormals", 0);
 	PopModel();
 
@@ -1271,8 +1250,8 @@ void Scene::ScoreboardRender(){
 		Scale(glm::vec3(float(winWidth) / 2.f, float(winHeight) / 2.f, 1.f)),
 	});
 		forwardSP.Set1i("noNormals", 1);
-		meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
-		meshes[(int)MeshType::Quad]->Render(forwardSP);
+		Meshes::meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
+		Meshes::meshes[(int)MeshType::Quad]->Render(forwardSP);
 		forwardSP.Set1i("noNormals", 0);
 	PopModel();
 
@@ -1407,8 +1386,8 @@ void Scene::MinimapRender(){
 			Rotate(glm::vec4(0.f, 1.f, 0.f, glm::degrees(atan2(cam.CalcFront().x, cam.CalcFront().z)))),
 			Scale(glm::vec3(20.f)),
 		});
-			meshes[(int)MeshType::Sphere]->SetModel(GetTopModel());
-			meshes[(int)MeshType::Sphere]->Render(forwardSP);
+			Meshes::meshes[(int)MeshType::Sphere]->SetModel(GetTopModel());
+			Meshes::meshes[(int)MeshType::Sphere]->Render(forwardSP);
 		PopModel();
 	}
 }
@@ -1481,8 +1460,8 @@ void Scene::BlurRender(const uint& brightTexRefID, const bool& horizontal){
 	blurSP.Use();
 	blurSP.Set1i("horizontal", horizontal);
 	blurSP.UseTex(brightTexRefID, "texSampler");
-	meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
-	meshes[(int)MeshType::Quad]->Render(blurSP, false);
+	Meshes::meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
+	Meshes::meshes[(int)MeshType::Quad]->Render(blurSP, false);
 	blurSP.ResetTexUnits();
 }
 
@@ -1501,8 +1480,8 @@ void Scene::DefaultRender(const uint& screenTexRefID, const uint& blurTexRefID, 
 			Translate(translate),
 			Scale(scale),
 		});
-			meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
-			meshes[(int)MeshType::Quad]->Render(screenSP, false);
+			Meshes::meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
+			Meshes::meshes[(int)MeshType::Quad]->Render(screenSP, false);
 		PopModel();
 		screenSP.ResetTexUnits();
 	}
