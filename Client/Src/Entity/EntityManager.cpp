@@ -32,14 +32,16 @@ void EntityManager::Render(ShaderProg& SP) const{
 	regionControl->Render(SP);
 }
 
-void EntityManager::DoEntityProcedure(Entity* const entity){
+void EntityManager::ActivateEntityProcedure(Entity* const entity){
 	Node* const node = new Node();
 	node->SetEntity(entity);
 }
 
+void EntityManager::DeactivateEntityProcedure(Entity* const entity){
+}
+
 void EntityManager::CreateShotgunBullet(const glm::vec3& camPos, const glm::vec3& camFront){
 	Entity* const entity = ActivateEntity(true);
-	DoEntityProcedure(entity);
 
 	entity->type = Entity::EntityType::Bullet;
 	entity->life = 5.f;
@@ -76,6 +78,7 @@ void EntityManager::CreateScarBullet(const glm::vec3& camPos, const glm::vec3& c
 
 void EntityManager::CreateSniperBullet(const glm::vec3& camPos, const glm::vec3& camFront){
 	Entity* const entity = ActivateEntity(true);
+
 	entity->type = Entity::EntityType::Bullet;
 	entity->life = 5.f;
 	entity->maxLife = 5.f;
@@ -164,6 +167,8 @@ Entity* const EntityManager::ActivateEntity(const bool movable){
 		if(!entity->active){
 			entity->active = true;
 			entity->movable = movable;
+
+			ActivateEntityProcedure(entity);
 			return entity;
 		}
 	}
@@ -174,11 +179,14 @@ Entity* const EntityManager::ActivateEntity(const bool movable){
 	Entity* const entity = entityPool.back();
 	entity->active = true;
 	entity->movable = movable;
+
+	ActivateEntityProcedure(entity);
 	return entity;
 }
 
 void EntityManager::DeactivateEntity(Entity* const& entity, const bool movable){
 	entity->active = false;
+	DeactivateEntityProcedure(entity);
 }
 
 EntityManager::EntityManager():
