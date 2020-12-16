@@ -123,7 +123,7 @@ Scene::Scene():
 	elapsedTime(0.f),
 	modelStack(),
 	polyModes(),
-	regionControl(RegionControl::GetObjPtr())
+	entityManager(EntityManager::GetObjPtr())
 {
 }
 
@@ -193,7 +193,7 @@ Scene::~Scene(){
 		soundEngine->drop();
 	}
 
-	regionControl->Destroy();
+	entityManager->Destroy();
 }
 
 bool Scene::Init(){
@@ -216,6 +216,8 @@ bool Scene::Init(){
 	if(scores.size() > 1){
 		std::sort(scores.begin(), scores.end(), std::greater<int>());
 	}
+
+	entityManager->Init();
 
 	const std::vector<cstr> faces{
 		"Imgs/Skybox/Right.png",
@@ -268,10 +270,6 @@ bool Scene::Init(){
 			tree->AddDiffuseTexIndexForAll(0);
 		PopModel();
 	}
-
-	regionControl->InitRegionPool(100);
-	regionControl->ReserveStationaryEntities(999);
-	regionControl->ReserveMovableEntities(50);
 
 	directionalLights.emplace_back(CreateLight(LightType::Directional)); //Simulate sunlight
 
@@ -664,14 +662,15 @@ void Scene::GameUpdate(GLFWwindow* const& win){
 	///Control shooting and reloading of currGun
 	if(currGun){
 		if(LMB){
-			currGun->Shoot(elapsedTime, FetchEntity(), cam.GetPos(), cam.CalcFront(), soundEngine);
+			currGun->Shoot(elapsedTime, cam.GetPos(), cam.CalcFront(), soundEngine);
 		}
 		if(Key(GLFW_KEY_R)){
 			currGun->Reload(soundEngine);
 		}
 		currGun->Update();
 	}
-	regionControl->Update();
+
+	entityManager->Update();
 }
 
 void Scene::ScoreboardUpdate(GLFWwindow* const& win, const POINT& mousePos, float& buttonBT){
@@ -938,7 +937,7 @@ void Scene::GameRender(){
 
 	models[(int)ModelType::Tree]->InstancedRender(forwardSP);
 
-	regionControl->Render(forwardSP);
+	entityManager->Render(forwardSP);
 
 	const size_t& coinMusicSize = coinMusic.size();
 	for(size_t i = 0; i < coinMusicSize; ++i){
@@ -1363,7 +1362,7 @@ void Scene::MinimapRender(){
 		}
 		forwardSP.SetMat4fv("PV", &(projection * view)[0][0]);
 
-		regionControl->Render(forwardSP);
+		entityManager->Render(forwardSP);
 
 		PushModel({
 			Translate(glm::vec3(cam.GetPos().x, 0.f, cam.GetPos().z)),

@@ -7,6 +7,22 @@ EntityManager::~EntityManager(){
 			entity = nullptr;
 		}
 	}
+
+	regionControl->Destroy();
+}
+
+void EntityManager::Init(){
+	regionControl->InitRegionPool(100);
+	regionControl->ReserveStationaryEntities(999);
+	regionControl->ReserveMovableEntities(50);
+}
+
+void EntityManager::Update(){
+	regionControl->Update();
+}
+
+void EntityManager::Render(ShaderProg& SP) const{
+	regionControl->Render(SP);
 }
 
 void EntityManager::CreateAmmo(const Entity::EntityType type, const EntityCreationAttribs& attribs){
@@ -95,7 +111,8 @@ Entity* const& EntityManager::FetchEntity(){
 }
 
 EntityManager::EntityManager():
-	entityPool()
+	entityPool(),
+	regionControl(RegionControl::GetObjPtr())
 {
 	entityPool.resize(50);
 

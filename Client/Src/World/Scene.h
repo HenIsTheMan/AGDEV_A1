@@ -7,7 +7,7 @@
 #include "../Entity/Entities/Scar.h"
 #include "../Entity/Entities/Sniper.h"
 
-#include "../Quadtree/RegionControl.h"
+#include "../Entity/EntityManager.h"
 
 #define BIT(x) 1 << x
 
@@ -129,8 +129,6 @@ private:
 	Gun* guns[3];
 	glm::vec4 reticleColour;
 
-	void UpdateCollisionBetweenEntities(Entity* const& entity1, Entity* const& entity2);
-
 	void MainMenuAndGameOverUpdate(GLFWwindow* const& win, const POINT& mousePos, float& buttonBT);
 	void GameUpdate(GLFWwindow* const& win);
 	void ScoreboardUpdate(GLFWwindow* const& win, const POINT& mousePos, float& buttonBT);
@@ -143,7 +141,7 @@ private:
 	glm::mat4 view;
 	glm::mat4 projection;
 
-	RegionControl* regionControl;
+	EntityManager* entityManager;
 
 	float elapsedTime;
 	mutable std::stack<glm::mat4> modelStack;

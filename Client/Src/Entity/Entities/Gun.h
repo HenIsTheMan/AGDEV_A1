@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Entity.h"
+#include "../EntityManager.h"
 
 class Gun{
 public:
@@ -28,7 +28,7 @@ public:
 
 	void Update();
 	void Reload(ISoundEngine* const& soundEngine);
-	virtual void Shoot(const float& elapsedTime, Entity* const& entity, const glm::vec3& camPos, const glm::vec3& camFront, ISoundEngine* const& soundEngine) = 0;
+	virtual void Shoot(const float& elapsedTime, const glm::vec3& camPos, const glm::vec3& camFront, ISoundEngine* const& soundEngine) = 0;
 protected:
 	Gun();
 
@@ -40,6 +40,8 @@ protected:
 	int maxLoadedBullets;
 	int unloadedBullets;
 	int maxUnloadedBullets;
+
+	EntityManager* entityManager;
 private:
 	bool reloading;
 };

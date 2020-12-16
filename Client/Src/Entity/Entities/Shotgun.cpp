@@ -9,11 +9,12 @@ Shotgun::Shotgun(){
 	maxUnloadedBullets = 360;
 }
 
-void Shotgun::Shoot(const float& elapsedTime, Entity* const& entity, const glm::vec3& camPos, const glm::vec3& camFront, ISoundEngine* const& soundEngine){
+void Shotgun::Shoot(const float& elapsedTime, const glm::vec3& camPos, const glm::vec3& camFront, ISoundEngine* const& soundEngine){
 	static float bulletBT = 0.f;
 	if(canShoot && loadedBullets && bulletBT <= elapsedTime){
 		soundEngine->play2D("Audio/Sounds/Shotgun.wav", false);
 
+		Entity* const entity = entityManager->FetchEntity();
 		entity->type = Entity::EntityType::Bullet;
 		entity->active = true;
 		entity->life = 5.f;
