@@ -48,6 +48,7 @@ void EntityManager::ActivateEntityProcedure(Entity* const entity){
 }
 
 void EntityManager::DeactivateEntityProcedure(Entity* const entity){
+	//regionControl->RemoveNode(rootNode->DetachChild(entity), entity->movable);
 }
 
 void EntityManager::CreateShotgunBullet(const glm::vec3& camPos, const glm::vec3& camFront){

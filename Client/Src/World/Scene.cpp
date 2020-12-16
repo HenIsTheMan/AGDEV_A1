@@ -1508,6 +1508,9 @@ void Scene::DefaultRender(const uint& screenTexRefID, const uint& blurTexRefID, 
 	}
 }
 
+void Scene::RenderEntities(){
+}
+
 glm::mat4 Scene::Translate(const glm::vec3& translate){
 	return glm::translate(glm::mat4(1.f), translate);
 }

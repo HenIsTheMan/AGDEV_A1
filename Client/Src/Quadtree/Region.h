@@ -10,6 +10,8 @@ private:
 	Region();
 	~Region();
 
+	void Render(ShaderProg& SP) const;
+
 	const Region* FindRegion(Node* const node, const bool movable) const;
 	Region* FetchRegion();
 

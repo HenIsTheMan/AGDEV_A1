@@ -139,6 +139,7 @@ private:
 	void ScoreboardRender();
 
 	void InitEntities();
+	void RenderEntities();
 
 	glm::mat4 view;
 	glm::mat4 projection;

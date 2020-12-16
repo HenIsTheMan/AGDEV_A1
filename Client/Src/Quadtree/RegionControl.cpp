@@ -19,6 +19,8 @@ void RegionControl::Update(){
 void RegionControl::Render(ShaderProg& SP) const{
 	//Render lines or leaf nodes??
 	//Not visible if not active??
+
+	rootRegion->Render(SP);
 }
 
 const Region* RegionControl::FindRegion(Node* const& node, const bool movable){

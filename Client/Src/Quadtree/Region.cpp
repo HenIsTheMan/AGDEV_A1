@@ -32,6 +32,9 @@ Region::~Region(){
 	}
 }
 
+void Region::Render(ShaderProg& SP) const{
+}
+
 const Region* Region::FindRegion(Node* const node, const bool movable) const{
 	if(topLeft){
 		const Region* const& region = topLeft->FindRegion(node, movable);
