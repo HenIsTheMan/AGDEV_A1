@@ -11,20 +11,19 @@ public:
 
 	void AddChild(const Node* const child);
 	Node* DetachChild(const Node* const child);
-	void RemoveChild(const Node* const child);
-	void RemoveAllChildren();
+	void DestroyChild(const Node* const child);
+	void DestroyAllChildren();
 
 	///Getters
 	bool GetUseLocalTransformUpdates() const;
 	bool GetVisible() const;
-	const Node* GetChild(const Node* const child) const;
 	const Node* GetParent() const;
 	const Entity* GetEntity() const;
 
 	///Setters
 	void SetUseLocalTransformUpdates(const bool useLocalTransformUpdates);
 	void SetVisible(const bool visible);
-	void SetParent(const Node* const parent);
+	void SetParent(Node* const parent);
 	void SetEntity(Entity* const entity);
 
 	void SetLocalTranslate(const glm::vec3& localTranslate);
@@ -49,7 +48,7 @@ private:
 	glm::vec4 localRotate;
 	glm::vec3 localScale;
 
-	glm::vec3 localTranslateUpdate;
-	glm::vec4 localRotateUpdate;
-	glm::vec3 localScaleUpdate;
+	glm::vec3 localTranslationUpdate;
+	glm::vec4 localRotationUpdate;
+	glm::vec3 localScalingUpdate;
 };
