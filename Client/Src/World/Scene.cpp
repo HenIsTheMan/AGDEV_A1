@@ -224,15 +224,15 @@ void Scene::InitEntities(){
 			zPos
 		);
 
-		PushModel({
-			Translate(pos),
-			Rotate(glm::vec4(0.f, 1.f, 0.f, PseudorandMinMax(0.0f, 360.0f))),
-			Scale(glm::vec3(scaleFactor))
-			});
-		tree->AddModelMatForAll(GetTopModel());
-		tree->AddColorForAll(glm::rgbColor(glm::vec3(PseudorandMinMax(0.0f, 1.0f), 1.0f, PseudorandMinMax(0.0f, 1.0f))));
-		tree->AddDiffuseTexIndexForAll(0);
-		PopModel();
+		modelStack.PushModel({
+			modelStack.Translate(pos),
+			modelStack.Rotate(glm::vec4(0.f, 1.f, 0.f, PseudorandMinMax(0.0f, 360.0f))),
+			modelStack.Scale(glm::vec3(scaleFactor))
+		});
+			tree->AddModelMatForAll(modelStack.GetTopModel());
+			tree->AddColorForAll(glm::rgbColor(glm::vec3(PseudorandMinMax(0.0f, 1.0f), 1.0f, PseudorandMinMax(0.0f, 1.0f))));
+			tree->AddDiffuseTexIndexForAll(0);
+		modelStack.PopModel();
 	}
 	//*/
 
@@ -719,14 +719,14 @@ void Scene::ScoreboardUpdate(GLFWwindow* const& win, const POINT& mousePos, floa
 void Scene::MainMenuRender(){
 	forwardSP.Set1i("nightVision", 0);
 
-	PushModel({
-		Scale(glm::vec3(float(winWidth) / 2.f, float(winHeight) / 2.f, 1.f)),
+	modelStack.PushModel({
+		modelStack.Scale(glm::vec3(float(winWidth) / 2.f, float(winHeight) / 2.f, 1.f)),
 	});
 		forwardSP.Set1i("noNormals", 1);
-		Meshes::meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
+		Meshes::meshes[(int)MeshType::Quad]->SetModel(modelStack.GetTopModel());
 		Meshes::meshes[(int)MeshType::Quad]->Render(forwardSP);
 		forwardSP.Set1i("noNormals", 0);
-	PopModel();
+	modelStack.PopModel();
 
 	glDepthFunc(GL_GREATER);
 	textChief.RenderText(textSP, {
@@ -786,75 +786,75 @@ void Scene::GameRender(){
 
 	if(!(RMB && inv[currSlot] == ItemType::Sniper)){
 		///Render healthbar
-		PushModel({
-			Translate(glm::vec3(-float(winWidth) / 2.5f, float(winHeight) / 2.5f, -10.f)),
-			Scale(glm::vec3(float(winWidth) / 15.f, float(winHeight) / 50.f, 1.f)),
+		modelStack.PushModel({
+			modelStack.Translate(glm::vec3(-float(winWidth) / 2.5f, float(winHeight) / 2.5f, -10.f)),
+			modelStack.Scale(glm::vec3(float(winWidth) / 15.f, float(winHeight) / 50.f, 1.f)),
 		});
 		forwardSP.Set1i("noNormals", 1);
 		forwardSP.Set1i("useCustomColour", 1);
 		forwardSP.Set4fv("customColour", glm::vec4(glm::vec3(1.f, 0.f, 0.f), 1.f));
 		forwardSP.Set1i("useCustomDiffuseTexIndex", 1);
 		forwardSP.Set1i("customDiffuseTexIndex", -1);
-		Meshes::meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
+		Meshes::meshes[(int)MeshType::Quad]->SetModel(modelStack.GetTopModel());
 		Meshes::meshes[(int)MeshType::Quad]->Render(forwardSP);
 		forwardSP.Set1i("useCustomDiffuseTexIndex", 0);
 		forwardSP.Set1i("useCustomColour", 0);
 		forwardSP.Set1i("noNormals", 0);
 
-		PushModel({
-			Translate(glm::vec3(-(playerMaxHealth - playerHealth) / playerMaxHealth, 0.f, 1.f)),
-			Scale(glm::vec3(playerHealth / playerMaxHealth, 1.f, 1.f)),
+		modelStack.PushModel({
+			modelStack.Translate(glm::vec3(-(playerMaxHealth - playerHealth) / playerMaxHealth, 0.f, 1.f)),
+			modelStack.Scale(glm::vec3(playerHealth / playerMaxHealth, 1.f, 1.f)),
 		});
-		forwardSP.Set1i("noNormals", 1);
-		forwardSP.Set1i("useCustomColour", 1);
-		forwardSP.Set4fv("customColour", glm::vec4(glm::vec3(0.f, 1.f, 0.f), 1.f));
-		forwardSP.Set1i("useCustomDiffuseTexIndex", 1);
-		forwardSP.Set1i("customDiffuseTexIndex", -1);
-		Meshes::meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
-		Meshes::meshes[(int)MeshType::Quad]->Render(forwardSP);
-		forwardSP.Set1i("useCustomDiffuseTexIndex", 0);
-		forwardSP.Set1i("useCustomColour", 0);
-		forwardSP.Set1i("noNormals", 0);
-		PopModel();
-		PopModel();
+			forwardSP.Set1i("noNormals", 1);
+			forwardSP.Set1i("useCustomColour", 1);
+			forwardSP.Set4fv("customColour", glm::vec4(glm::vec3(0.f, 1.f, 0.f), 1.f));
+			forwardSP.Set1i("useCustomDiffuseTexIndex", 1);
+			forwardSP.Set1i("customDiffuseTexIndex", -1);
+			Meshes::meshes[(int)MeshType::Quad]->SetModel(modelStack.GetTopModel());
+			Meshes::meshes[(int)MeshType::Quad]->Render(forwardSP);
+			forwardSP.Set1i("useCustomDiffuseTexIndex", 0);
+			forwardSP.Set1i("useCustomColour", 0);
+			forwardSP.Set1i("noNormals", 0);
+		modelStack.PopModel();
+		modelStack.PopModel();
 
 		///Render items in inv
 		for(short i = 0; i < 5; ++i){
 			forwardSP.Set1i("noNormals", 1);
-			PushModel({
-				Translate(glm::vec3(float(i) * 100.f - 300.f, -float(winHeight) / 2.3f, -10.f)),
-				});
+			modelStack.PushModel({
+				modelStack.Translate(glm::vec3(float(i) * 100.f - 300.f, -float(winHeight) / 2.3f, -10.f)),
+			});
 			switch(inv[i]){
 				case ItemType::Shotgun:
-					PushModel({
-						Translate(glm::vec3(18.f, -18.f, 0.f)),
-						Rotate(glm::vec4(0.f, 0.f, 1.f, 45.f)),
-						Rotate(glm::vec4(0.f, 1.f, 0.f, 90.f)),
-						Scale(glm::vec3(21.f)),
-						});
-					models[(int)ModelType::Shotgun]->SetModelForAll(GetTopModel());
+					modelStack.PushModel({
+						modelStack.Translate(glm::vec3(18.f, -18.f, 0.f)),
+						modelStack.Rotate(glm::vec4(0.f, 0.f, 1.f, 45.f)),
+						modelStack.Rotate(glm::vec4(0.f, 1.f, 0.f, 90.f)),
+						modelStack.Scale(glm::vec3(21.f)),
+					});
+					models[(int)ModelType::Shotgun]->SetModelForAll(modelStack.GetTopModel());
 					models[(int)ModelType::Shotgun]->Render(forwardSP);
-					PopModel();
+					modelStack.PopModel();
 					break;
 				case ItemType::Scar:
-					PushModel({
-						Rotate(glm::vec4(0.f, 0.f, 1.f, 45.f)),
-						Rotate(glm::vec4(0.f, 1.f, 0.f, 90.f)),
-						Scale(glm::vec3(18.f)),
-						});
-					models[(int)ModelType::Scar]->SetModelForAll(GetTopModel());
-					models[(int)ModelType::Scar]->Render(forwardSP);
-					PopModel();
+					modelStack.PushModel({
+						modelStack.Rotate(glm::vec4(0.f, 0.f, 1.f, 45.f)),
+						modelStack.Rotate(glm::vec4(0.f, 1.f, 0.f, 90.f)),
+						modelStack.Scale(glm::vec3(18.f)),
+					});
+						models[(int)ModelType::Scar]->SetModelForAll(modelStack.GetTopModel());
+						models[(int)ModelType::Scar]->Render(forwardSP);
+					modelStack.PopModel();
 					break;
 				case ItemType::Sniper:
-					PushModel({
-						Translate(glm::vec3(16.f, -15.f, 0.f)),
-						Rotate(glm::vec4(0.f, 0.f, 1.f, 45.f)),
-						Scale(glm::vec3(10.f)),
-						});
-					models[(int)ModelType::Sniper]->SetModelForAll(GetTopModel());
-					models[(int)ModelType::Sniper]->Render(forwardSP);
-					PopModel();
+					modelStack.PushModel({
+						modelStack.Translate(glm::vec3(16.f, -15.f, 0.f)),
+						modelStack.Rotate(glm::vec4(0.f, 0.f, 1.f, 45.f)),
+						modelStack.Scale(glm::vec3(10.f)),
+					});
+						models[(int)ModelType::Sniper]->SetModelForAll(modelStack.GetTopModel());
+						models[(int)ModelType::Sniper]->Render(forwardSP);
+					modelStack.PopModel();
 					break;
 				case ItemType::ShotgunAmmo:
 					break;
@@ -865,7 +865,7 @@ void Scene::GameRender(){
 				case ItemType::HealthPack:
 					break;
 			}
-			PopModel();
+			modelStack.PopModel();
 			forwardSP.Set1i("noNormals", 0);
 		}
 	}
@@ -883,7 +883,7 @@ void Scene::GameRender(){
 	forwardSP.Set1i("sky", 1);
 	forwardSP.Set1i("skybox", 1);
 	forwardSP.UseTex(cubemapRefID, "cubemapSampler", GL_TEXTURE_CUBE_MAP);
-	Meshes::meshes[(int)MeshType::Cube]->SetModel(GetTopModel());
+	Meshes::meshes[(int)MeshType::Cube]->SetModel(modelStack.GetTopModel());
 	Meshes::meshes[(int)MeshType::Cube]->Render(forwardSP);
 	forwardSP.Set1i("skybox", 0);
 	forwardSP.Set1i("sky", 0);
@@ -901,56 +901,56 @@ void Scene::GameRender(){
 
 	switch(inv[currSlot]){
 		case ItemType::Shotgun: {
-			PushModel({
-				Translate(cam.GetPos() +
-				glm::vec3(rotationMat * glm::vec4(RotateVecIn2D(glm::vec3(5.5f, -7.f, -13.f), atan2(front.x, front.z) + glm::radians(180.f), Axis::y), 1.f))
+			modelStack.PushModel({
+				modelStack.Translate(cam.GetPos() +
+					glm::vec3(rotationMat * glm::vec4(RotateVecIn2D(glm::vec3(5.5f, -7.f, -13.f), atan2(front.x, front.z) + glm::radians(180.f), Axis::y), 1.f))
 			),
-				Rotate(glm::vec4(glm::vec3(-front.z, 0.f, front.x), sign * glm::degrees(acosf(glm::dot(front, glm::normalize(glm::vec3(front.x, 0.f, front.z))))))), 
-				Rotate(glm::vec4(0.f, 1.f, 0.f, glm::degrees(atan2(front.x, front.z)))), 
-				Scale(glm::vec3(3.f)),
+				modelStack.Rotate(glm::vec4(glm::vec3(-front.z, 0.f, front.x), sign * glm::degrees(acosf(glm::dot(front, glm::normalize(glm::vec3(front.x, 0.f, front.z))))))), 
+				modelStack.Rotate(glm::vec4(0.f, 1.f, 0.f, glm::degrees(atan2(front.x, front.z)))), 
+				modelStack.Scale(glm::vec3(3.f)),
 			});
-				models[(int)ModelType::Shotgun]->SetModelForAll(GetTopModel());
+				models[(int)ModelType::Shotgun]->SetModelForAll(modelStack.GetTopModel());
 				models[(int)ModelType::Shotgun]->Render(forwardSP);
-			PopModel();
+			modelStack.PopModel();
 			break;
 		}
 		case ItemType::Scar: {
-			PushModel({
-				Translate(cam.GetPos() +
-				glm::vec3(rotationMat * glm::vec4(RotateVecIn2D(glm::vec3(5.f, -4.f, -12.f), atan2(front.x, front.z) + glm::radians(180.f), Axis::y), 1.f))
+			modelStack.PushModel({
+				modelStack.Translate(cam.GetPos() +
+					glm::vec3(rotationMat * glm::vec4(RotateVecIn2D(glm::vec3(5.f, -4.f, -12.f), atan2(front.x, front.z) + glm::radians(180.f), Axis::y), 1.f))
 			),
-				Rotate(glm::vec4(glm::vec3(-front.z, 0.f, front.x), sign * glm::degrees(acosf(glm::dot(front, glm::normalize(glm::vec3(front.x, 0.f, front.z))))))), 
-				Rotate(glm::vec4(0.f, 1.f, 0.f, glm::degrees(atan2(front.x, front.z)))), 
-				Scale(glm::vec3(3.f)),
+				modelStack.Rotate(glm::vec4(glm::vec3(-front.z, 0.f, front.x), sign * glm::degrees(acosf(glm::dot(front, glm::normalize(glm::vec3(front.x, 0.f, front.z))))))), 
+				modelStack.Rotate(glm::vec4(0.f, 1.f, 0.f, glm::degrees(atan2(front.x, front.z)))), 
+				modelStack.Scale(glm::vec3(3.f)),
 			});
-				models[(int)ModelType::Scar]->SetModelForAll(GetTopModel());
+				models[(int)ModelType::Scar]->SetModelForAll(modelStack.GetTopModel());
 				models[(int)ModelType::Scar]->Render(forwardSP);
-			PopModel();
+				modelStack.PopModel();
 			break;
 		}
 		case ItemType::Sniper: {
-			PushModel({
-				Translate(cam.GetPos() +
+			modelStack.PushModel({
+				modelStack.Translate(cam.GetPos() +
 				glm::vec3(rotationMat * glm::vec4(RotateVecIn2D(glm::vec3(5.f, -6.f, -13.f), atan2(front.x, front.z) + glm::radians(180.f), Axis::y), 1.f))
 			),
-				Rotate(glm::vec4(glm::vec3(-front.z, 0.f, front.x), sign * glm::degrees(acosf(glm::dot(front, glm::normalize(glm::vec3(front.x, 0.f, front.z))))))), 
-				Rotate(glm::vec4(0.f, 1.f, 0.f, glm::degrees(atan2(front.x, front.z)) - 90.f)), 
-				Scale(glm::vec3(2.f)),
+				modelStack.Rotate(glm::vec4(glm::vec3(-front.z, 0.f, front.x), sign * glm::degrees(acosf(glm::dot(front, glm::normalize(glm::vec3(front.x, 0.f, front.z))))))), 
+				modelStack.Rotate(glm::vec4(0.f, 1.f, 0.f, glm::degrees(atan2(front.x, front.z)) - 90.f)), 
+				modelStack.Scale(glm::vec3(2.f)),
 			});
-				models[(int)ModelType::Sniper]->SetModelForAll(GetTopModel());
+				models[(int)ModelType::Sniper]->SetModelForAll(modelStack.GetTopModel());
 				models[(int)ModelType::Sniper]->Render(forwardSP);
-			PopModel();
+				modelStack.PopModel();
 			break;
 		}
 	}
 
 	///Terrain
-	PushModel({
-		Scale(glm::vec3(terrainXScale, terrainYScale, terrainZScale)),
+	modelStack.PushModel({
+		modelStack.Scale(glm::vec3(terrainXScale, terrainYScale, terrainZScale)),
 	});
-		Meshes::meshes[(int)MeshType::Terrain]->SetModel(GetTopModel());
+		Meshes::meshes[(int)MeshType::Terrain]->SetModel(modelStack.GetTopModel());
 		Meshes::meshes[(int)MeshType::Terrain]->Render(forwardSP);
-	PopModel();
+	modelStack.PopModel();
 
 	models[(int)ModelType::Tree]->InstancedRender(forwardSP);
 
@@ -984,25 +984,25 @@ void Scene::GameRender(){
 		forwardSP.Set1i("useCustomDiffuseTexIndex", 1);
 		forwardSP.Set1i("noNormals", 1);
 
-		PushModel({
-			Translate(glm::vec3(0.f, 0.f, -9.f)),
-			Scale(glm::vec3(float(winHeight) * 0.7f, float(winHeight) * 0.7f, 1.f)),
+		modelStack.PushModel({
+			modelStack.Translate(glm::vec3(0.f, 0.f, -9.f)),
+			modelStack.Scale(glm::vec3(float(winHeight) * 0.7f, float(winHeight) * 0.7f, 1.f)),
 		});
 			forwardSP.Set1i("customDiffuseTexIndex", 1);
-			Meshes::meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
+			Meshes::meshes[(int)MeshType::Quad]->SetModel(modelStack.GetTopModel());
 			Meshes::meshes[(int)MeshType::Quad]->Render(forwardSP);
-		PopModel();
-		PushModel({
-			Translate(glm::vec3(0.f, 0.f, -9.1f)),
-			Scale(glm::vec3(float(winWidth) / 2.f, float(winHeight) / 2.f, 1.f)),
+		modelStack.PopModel();
+		modelStack.PushModel({
+			modelStack.Translate(glm::vec3(0.f, 0.f, -9.1f)),
+			modelStack.Scale(glm::vec3(float(winWidth) / 2.f, float(winHeight) / 2.f, 1.f)),
 		});
 			forwardSP.Set1i("customDiffuseTexIndex", -1);
 			forwardSP.Set1i("useCustomColour", 1);
 			forwardSP.Set4fv("customColour", glm::vec4(glm::vec3(0.f), 1.f));
-			Meshes::meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
+			Meshes::meshes[(int)MeshType::Quad]->SetModel(modelStack.GetTopModel());
 			Meshes::meshes[(int)MeshType::Quad]->Render(forwardSP);
 			forwardSP.Set1i("useCustomColour", 0);
-		PopModel();
+		modelStack.PopModel();
 
 		forwardSP.Set1i("noNormals", 0);
 		forwardSP.Set1i("useCustomDiffuseTexIndex", 0);
@@ -1011,47 +1011,47 @@ void Scene::GameRender(){
 
 		///Render red hearts
 		for(int i = 0; i < playerLives; ++i){
-			PushModel({
-				Translate(glm::vec3(-float(winWidth) / 2.2f + 75.f * float(i), float(winHeight) / 2.2f, -9.f)),
-				Scale(glm::vec3(25.f, 25.f, 1.f)),
+			modelStack.PushModel({
+				modelStack.Translate(glm::vec3(-float(winWidth) / 2.2f + 75.f * float(i), float(winHeight) / 2.2f, -9.f)),
+				modelStack.Scale(glm::vec3(25.f, 25.f, 1.f)),
 			});
 				forwardSP.Set1i("noNormals", 1);
 				forwardSP.Set1i("useCustomColour", 1);
 				forwardSP.Set4fv("customColour", glm::vec4(1.f, 0.f, 0.f, 1.f));
 				forwardSP.Set1i("useCustomDiffuseTexIndex", 1);
 				forwardSP.Set1i("customDiffuseTexIndex", 2);
-					Meshes::meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
+					Meshes::meshes[(int)MeshType::Quad]->SetModel(modelStack.GetTopModel());
 					Meshes::meshes[(int)MeshType::Quad]->Render(forwardSP);
 				forwardSP.Set1i("useCustomDiffuseTexIndex", 0);
 				forwardSP.Set1i("useCustomColour", 0);
 				forwardSP.Set1i("noNormals", 0);
-			PopModel();
+			modelStack.PopModel();
 		}
 
 		///Render grey hearts
 		for(int i = 0; i < playerMaxLives; ++i){
-			PushModel({
-				Translate(glm::vec3(-float(winWidth) / 2.2f + 75.f * float(i), float(winHeight) / 2.2f, -10.f)),
-				Scale(glm::vec3(25.f, 25.f, 1.f)),
+			modelStack.PushModel({
+				modelStack.Translate(glm::vec3(-float(winWidth) / 2.2f + 75.f * float(i), float(winHeight) / 2.2f, -10.f)),
+				modelStack.Scale(glm::vec3(25.f, 25.f, 1.f)),
 			});
 				forwardSP.Set1i("noNormals", 1);
 				forwardSP.Set1i("useCustomColour", 1);
 				forwardSP.Set4fv("customColour", glm::vec4(glm::vec3(.3f), 1.f));
 				forwardSP.Set1i("useCustomDiffuseTexIndex", 1);
 				forwardSP.Set1i("customDiffuseTexIndex", 2);
-					Meshes::meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
+					Meshes::meshes[(int)MeshType::Quad]->SetModel(modelStack.GetTopModel());
 					Meshes::meshes[(int)MeshType::Quad]->Render(forwardSP);
 				forwardSP.Set1i("useCustomDiffuseTexIndex", 0);
 				forwardSP.Set1i("useCustomColour", 0);
 				forwardSP.Set1i("noNormals", 0);
-			PopModel();
+			modelStack.PopModel();
 		}
 
 		///Render inv slots
 		for(short i = 0; i < 5; ++i){
-			PushModel({
-				Translate(glm::vec3(float(i) * 100.f - 300.f, -float(winHeight) / 2.3f, -10.f)),
-				Scale(glm::vec3(50.f, 50.f, 1.f)),
+			modelStack.PushModel({
+				modelStack.Translate(glm::vec3(float(i) * 100.f - 300.f, -float(winHeight) / 2.3f, -10.f)),
+				modelStack.Scale(glm::vec3(50.f, 50.f, 1.f)),
 			});
 				forwardSP.Set1i("noNormals", 1);
 				if(i == currSlot){
@@ -1060,38 +1060,38 @@ void Scene::GameRender(){
 				}
 				forwardSP.Set1i("useCustomDiffuseTexIndex", 1);
 				forwardSP.Set1i("customDiffuseTexIndex", 3);
-					Meshes::meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
+					Meshes::meshes[(int)MeshType::Quad]->SetModel(modelStack.GetTopModel());
 					Meshes::meshes[(int)MeshType::Quad]->Render(forwardSP);
 				forwardSP.Set1i("useCustomDiffuseTexIndex", 0);
 				if(i == currSlot){
 					forwardSP.Set1i("useCustomColour", 0);
 				}
 				forwardSP.Set1i("noNormals", 0);
-			PopModel();
+			modelStack.PopModel();
 		}
 
 		///Render reticle
 		if(inv[currSlot] == ItemType::Shotgun || inv[currSlot] == ItemType::Scar){
-			PushModel({
-				Scale(glm::vec3(40.f, 40.f, 1.f)),
+			modelStack.PushModel({
+				modelStack.Scale(glm::vec3(40.f, 40.f, 1.f)),
 			});
 				forwardSP.Set1i("noNormals", 1);
 				forwardSP.Set1i("useCustomColour", 1);
 				forwardSP.Set4fv("customColour", reticleColour);
 				forwardSP.Set1i("useCustomDiffuseTexIndex", 1);
 				forwardSP.Set1i("customDiffuseTexIndex", 4);
-					Meshes::meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
+					Meshes::meshes[(int)MeshType::Quad]->SetModel(modelStack.GetTopModel());
 					Meshes::meshes[(int)MeshType::Quad]->Render(forwardSP);
 				forwardSP.Set1i("useCustomDiffuseTexIndex", 0);
 				forwardSP.Set1i("useCustomColour", 0);
 				forwardSP.Set1i("noNormals", 0);
 
-				PushModel({
-					Translate(glm::vec3(0.f, 0.f, 1.f)),
+				modelStack.PushModel({
+					modelStack.Translate(glm::vec3(0.f, 0.f, 1.f)),
 				});
 				if(RMB){
-					PushModel({
-						Scale(glm::vec3(.7f, .7f, 1.f)),
+					modelStack.PushModel({
+						modelStack.Scale(glm::vec3(.7f, .7f, 1.f)),
 					});
 				}
 					forwardSP.Set1i("noNormals", 1);
@@ -1099,14 +1099,14 @@ void Scene::GameRender(){
 					forwardSP.Set4fv("customColour", reticleColour);
 					forwardSP.Set1i("useCustomDiffuseTexIndex", 1);
 					forwardSP.Set1i("customDiffuseTexIndex", inv[currSlot] == ItemType::Shotgun ? 5 : 6);
-						Meshes::meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
+						Meshes::meshes[(int)MeshType::Quad]->SetModel(modelStack.GetTopModel());
 						Meshes::meshes[(int)MeshType::Quad]->Render(forwardSP);
 					forwardSP.Set1i("useCustomDiffuseTexIndex", 0);
 					forwardSP.Set1i("useCustomColour", 0);
 					forwardSP.Set1i("noNormals", 0);
-				PopModel();
-				PopModel();
-			PopModel();
+				modelStack.PopModel();
+				modelStack.PopModel();
+			modelStack.PopModel();
 		}
 	}
 
@@ -1178,14 +1178,14 @@ void Scene::GameRender(){
 void Scene::GameOverRender(){
 	forwardSP.Set1i("nightVision", 0);
 
-	PushModel({
-		Scale(glm::vec3(float(winWidth) / 2.f, float(winHeight) / 2.f, 1.f)),
+	modelStack.PushModel({
+		modelStack.Scale(glm::vec3(float(winWidth) / 2.f, float(winHeight) / 2.f, 1.f)),
 	});
 		forwardSP.Set1i("noNormals", 1);
-		Meshes::meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
+		Meshes::meshes[(int)MeshType::Quad]->SetModel(modelStack.GetTopModel());
 		Meshes::meshes[(int)MeshType::Quad]->Render(forwardSP);
 		forwardSP.Set1i("noNormals", 0);
-	PopModel();
+		modelStack.PopModel();
 
 	glDepthFunc(GL_GREATER);
 	textChief.RenderText(textSP, {
@@ -1246,14 +1246,14 @@ void Scene::GameOverRender(){
 void Scene::ScoreboardRender(){
 	forwardSP.Set1i("nightVision", 0);
 
-	PushModel({
-		Scale(glm::vec3(float(winWidth) / 2.f, float(winHeight) / 2.f, 1.f)),
+	modelStack.PushModel({
+		modelStack.Scale(glm::vec3(float(winWidth) / 2.f, float(winHeight) / 2.f, 1.f)),
 	});
 		forwardSP.Set1i("noNormals", 1);
-		Meshes::meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
+		Meshes::meshes[(int)MeshType::Quad]->SetModel(modelStack.GetTopModel());
 		Meshes::meshes[(int)MeshType::Quad]->Render(forwardSP);
 		forwardSP.Set1i("noNormals", 0);
-	PopModel();
+	modelStack.PopModel();
 
 	glDepthFunc(GL_GREATER);
 	textChief.RenderText(textSP, {
@@ -1381,14 +1381,14 @@ void Scene::MinimapRender(){
 
 		entityManager->Render(forwardSP);
 
-		PushModel({
-			Translate(glm::vec3(cam.GetPos().x, 0.f, cam.GetPos().z)),
-			Rotate(glm::vec4(0.f, 1.f, 0.f, glm::degrees(atan2(cam.CalcFront().x, cam.CalcFront().z)))),
-			Scale(glm::vec3(20.f)),
+		modelStack.PushModel({
+			modelStack.Translate(glm::vec3(cam.GetPos().x, 0.f, cam.GetPos().z)),
+			modelStack.Rotate(glm::vec4(0.f, 1.f, 0.f, glm::degrees(atan2(cam.CalcFront().x, cam.CalcFront().z)))),
+			modelStack.Scale(glm::vec3(20.f)),
 		});
-			Meshes::meshes[(int)MeshType::Sphere]->SetModel(GetTopModel());
+			Meshes::meshes[(int)MeshType::Sphere]->SetModel(modelStack.GetTopModel());
 			Meshes::meshes[(int)MeshType::Sphere]->Render(forwardSP);
-		PopModel();
+		modelStack.PopModel();
 	}
 }
 
@@ -1460,7 +1460,7 @@ void Scene::BlurRender(const uint& brightTexRefID, const bool& horizontal){
 	blurSP.Use();
 	blurSP.Set1i("horizontal", horizontal);
 	blurSP.UseTex(brightTexRefID, "texSampler");
-	Meshes::meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
+	Meshes::meshes[(int)MeshType::Quad]->SetModel(modelStack.GetTopModel());
 	Meshes::meshes[(int)MeshType::Quad]->Render(blurSP, false);
 	blurSP.ResetTexUnits();
 }
@@ -1476,46 +1476,16 @@ void Scene::DefaultRender(const uint& screenTexRefID, const uint& blurTexRefID, 
 		} else{
 			screenSP.Set1i("nightVision", 0);
 		}
-		PushModel({
-			Translate(translate),
-			Scale(scale),
+		modelStack.PushModel({
+			modelStack.Translate(translate),
+			modelStack.Scale(scale),
 		});
-			Meshes::meshes[(int)MeshType::Quad]->SetModel(GetTopModel());
+			Meshes::meshes[(int)MeshType::Quad]->SetModel(modelStack.GetTopModel());
 			Meshes::meshes[(int)MeshType::Quad]->Render(screenSP, false);
-		PopModel();
+		modelStack.PopModel();
 		screenSP.ResetTexUnits();
 	}
 }
 
 void Scene::RenderEntities(){
-}
-
-glm::mat4 Scene::Translate(const glm::vec3& translate){
-	return glm::translate(glm::mat4(1.f), translate);
-}
-
-glm::mat4 Scene::Rotate(const glm::vec4& rotate){
-	return glm::rotate(glm::mat4(1.f), glm::radians(rotate.w), glm::vec3(rotate));
-}
-
-glm::mat4 Scene::Scale(const glm::vec3& scale){
-	return glm::scale(glm::mat4(1.f), scale);
-}
-
-glm::mat4 Scene::GetTopModel() const{
-	return modelStack.empty() ? glm::mat4(1.f) : modelStack.top();
-}
-
-void Scene::PushModel(const std::vector<glm::mat4>& vec) const{
-	modelStack.push(modelStack.empty() ? glm::mat4(1.f) : modelStack.top());
-	const size_t& size = vec.size();
-	for(size_t i = 0; i < size; ++i){
-		modelStack.top() *= vec[i];
-	}
-}
-
-void Scene::PopModel() const{
-	if(!modelStack.empty()){
-		modelStack.pop();
-	}
 }

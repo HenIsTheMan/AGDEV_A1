@@ -205,6 +205,7 @@
     <ClCompile Include="Src\Quadtree\RegionControl.cpp" />
     <ClCompile Include="Src\Shared\Meshes.cpp" />
     <ClCompile Include="Src\World\Cam.cpp" />
+    <ClCompile Include="Src\World\ModelStack.cpp" />
     <ClCompile Include="Src\World\Scene.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -220,6 +221,7 @@
     <ClInclude Include="Src\Quadtree\RegionControl.h" />
     <ClInclude Include="Src\Shared\Meshes.h" />
     <ClInclude Include="Src\World\Cam.h" />
+    <ClInclude Include="Src\World\ModelStack.h" />
     <ClInclude Include="Src\World\Scene.h" />
   </ItemGroup>
   <ItemGroup>

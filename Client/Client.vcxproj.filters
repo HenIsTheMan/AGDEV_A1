@@ -15,6 +15,7 @@
     <ClCompile Include="Src\Quadtree\Node.cpp" />
     <ClCompile Include="Src\Entity\EntityManager.cpp" />
     <ClCompile Include="Src\Shared\Meshes.cpp" />
+    <ClCompile Include="Src\World\ModelStack.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Admin\App.h" />
@@ -30,6 +31,7 @@
     <ClInclude Include="Src\Quadtree\Node.h" />
     <ClInclude Include="Src\Entity\EntityManager.h" />
     <ClInclude Include="Src\Shared\Meshes.h" />
+    <ClInclude Include="Src\World\ModelStack.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Blur.fragS" />

@@ -11,6 +11,8 @@
 
 #include "../Shared/Meshes.h"
 
+#include "ModelStack.h"
+
 #define BIT(x) 1 << x
 
 class Scene final{
@@ -137,13 +139,8 @@ private:
 	EntityManager* entityManager;
 
 	float elapsedTime;
-	mutable std::stack<glm::mat4> modelStack;
-	glm::mat4 Translate(const glm::vec3& translate);
-	glm::mat4 Rotate(const glm::vec4& rotate);
-	glm::mat4 Scale(const glm::vec3& scale);
-	glm::mat4 GetTopModel() const;
-	void PushModel(const std::vector<glm::mat4>& vec) const;
-	void PopModel() const;
+
+	ModelStack modelStack;
 };
 
 enum struct Axis{
