@@ -123,7 +123,8 @@ Scene::Scene():
 	projection(glm::mat4(1.f)),
 	elapsedTime(0.f),
 	modelStack(),
-	polyModes()
+	polyModes(),
+	regionControl(RegionControl::GetObjPtr())
 {
 }
 
@@ -198,6 +199,8 @@ Scene::~Scene(){
 	if(soundEngine){
 		soundEngine->drop();
 	}
+
+	regionControl->Destroy();
 }
 
 bool Scene::Init(){

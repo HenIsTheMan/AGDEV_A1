@@ -1,8 +1,12 @@
 #pragma once
 #include <Engine.h>
+
 #include "Cam.h"
+
 #include "../AGDEV/Entity.h"
 #include "../AGDEV/Gun.h"
+
+#include "../Quadtree/RegionControl.h"
 
 #define BIT(x) 1 << x
 
@@ -158,7 +162,8 @@ private:
 
 	glm::mat4 view;
 	glm::mat4 projection;
-	//std::vector<Mesh::BatchRenderParams> params;
+
+	RegionControl* regionControl;
 
 	float elapsedTime;
 	mutable std::stack<glm::mat4> modelStack;
