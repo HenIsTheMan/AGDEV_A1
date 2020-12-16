@@ -2,7 +2,7 @@
 
 #include <Core.h>
 
-#include "../Entity/Entity.h"
+#include "Node.h"
 
 class Region final{
 	friend class RegionControl;
@@ -10,17 +10,17 @@ private:
 	Region();
 	~Region();
 
-	const Region* FindRegion(Entity* const entity, const bool movable) const;
+	const Region* FindRegion(Node* const node, const bool movable) const;
 	Region* FetchRegion();
 
-	void AddEntity(Entity* const entity, const bool movable);
-	void RemoveEntity(Entity* const entity, const bool movable);
+	void AddNode(Node* const node, const bool movable);
+	void RemoveNode(Node* const node, const bool movable);
 
 	void ClearMovableAndDeactivateChildren();
 	void Partition(const bool movable);
 
-	void ReserveStationaryEntities(const size_t& size);
-	void ReserveMovableEntities(const size_t& size);
+	void ReserveStationaryNodes(const size_t& size);
+	void ReserveMovableNodes(const size_t& size);
 
 	void InitRegionPool(const size_t& size);
 	void DestroyRegionPool();
@@ -35,8 +35,8 @@ private:
 	Region* bottomLeft;
 	Region* bottomRight;
 
-	std::vector<Entity*> stationaryEntities;
-	std::vector<Entity*> movableEntities;
+	std::vector<Node*> stationaryNodes;
+	std::vector<Node*> movableNodes;
 
 	static std::vector<Region*> regionPool;
 };

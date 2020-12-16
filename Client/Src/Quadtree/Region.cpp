@@ -11,54 +11,54 @@ Region::Region():
 	topRight(nullptr),
 	bottomLeft(nullptr),
 	bottomRight(nullptr),
-	stationaryEntities(),
-	movableEntities()
+	stationaryNodes(),
+	movableNodes()
 {
 }
 
 Region::~Region(){
-	for(Entity*& entity: stationaryEntities){
-		if(entity){ //Deleted elsewhere
-			entity = nullptr;
+	for(Node*& node: stationaryNodes){
+		if(node){ //Deleted elsewhere
+			node = nullptr;
 		}
 	}
 
-	for(Entity*& entity: movableEntities){
-		if(entity){ //Deleted elsewhere
-			entity = nullptr;
+	for(Node*& node: movableNodes){
+		if(node){ //Deleted elsewhere
+			node = nullptr;
 		}
 	}
 }
 
-const Region* Region::FindRegion(Entity* const entity, const bool movable) const{
+const Region* Region::FindRegion(Node* const node, const bool movable) const{
 	if(topLeft){
-		const Region* const& region = topLeft->FindRegion(entity, movable);
+		const Region* const& region = topLeft->FindRegion(node, movable);
 		if(region){
 			return region;
 		}
 	}
 	if(topRight){
-		const Region* const& region = topRight->FindRegion(entity, movable);
+		const Region* const& region = topRight->FindRegion(node, movable);
 		if(region){
 			return region;
 		}
 	}
 	if(bottomLeft){
-		const Region* const& region = bottomLeft->FindRegion(entity, movable);
+		const Region* const& region = bottomLeft->FindRegion(node, movable);
 		if(region){
 			return region;
 		}
 	}
 	if(bottomRight){
-		const Region* const& region = bottomRight->FindRegion(entity, movable);
+		const Region* const& region = bottomRight->FindRegion(node, movable);
 		if(region){
 			return region;
 		}
 	}
 
-	const std::vector<Entity*>& entities = movable ? movableEntities : stationaryEntities;
-	for(const Entity* const& myEntity: entities){
-		if(myEntity == entity){
+	const std::vector<Node*>& nodes = movable ? movableNodes : stationaryNodes;
+	for(const Node* const& myNode: nodes){
+		if(myNode == node){
 			return this;
 		}
 	}
@@ -79,49 +79,49 @@ Region* Region::FetchRegion(){
 	return regionPool.back();
 }
 
-void Region::AddEntity(Entity* const entity, const bool movable){
-	(movable ? movableEntities : stationaryEntities).emplace_back(entity);
+void Region::AddNode(Node* const node, const bool movable){
+	(movable ? movableNodes : stationaryNodes).emplace_back(node);
 }
 
-void Region::RemoveEntity(Entity* const entity, const bool movable){
-	std::vector<Entity*>& entities = movable ? movableEntities : stationaryEntities;
-	const std::vector<Entity*>::iterator iter = std::find(entities.begin(), entities.end(), entity);
+void Region::RemoveNode(Node* const node, const bool movable){
+	std::vector<Node*>& nodes = movable ? movableNodes : stationaryNodes;
+	const std::vector<Node*>::iterator iter = std::find(nodes.begin(), nodes.end(), node);
 
-	if(iter != entities.end()){
+	if(iter != nodes.end()){
 		return assert(false && "Entity could not be found!");
 	}
 
-	entities.erase(iter);
+	nodes.erase(iter);
 }
 
 void Region::ClearMovableAndDeactivateChildren(){
 	if(topLeft){
-		topLeft->movableEntities.clear();
+		topLeft->movableNodes.clear();
 		topLeft->active = false;
 		topLeft->ClearMovableAndDeactivateChildren();
 	}
 	if(topRight){
-		topRight->movableEntities.clear();
+		topRight->movableNodes.clear();
 		topRight->active = false;
 		topRight->ClearMovableAndDeactivateChildren();
 	}
 	if(bottomLeft){
-		bottomLeft->movableEntities.clear();
+		bottomLeft->movableNodes.clear();
 		bottomLeft->active = false;
 		bottomLeft->ClearMovableAndDeactivateChildren();
 	}
 	if(bottomRight){
-		bottomRight->movableEntities.clear();
+		bottomRight->movableNodes.clear();
 		bottomRight->active = false;
 		bottomRight->ClearMovableAndDeactivateChildren();
 	}
 }
 
 void Region::Partition(const bool movable){
-	const std::vector<Entity*>& entities = movable ? movableEntities : stationaryEntities;
-	if(entities.size() <= (size_t)1){
-		return;
-	}
+	//const std::vector<Entity*>& entities = movable ? movableEntities : stationaryEntities;
+	//if(entities.size() <= (size_t)1){
+	//	return;
+	//}
 
 	//if(topLeft){
 	//	topLeft->ReserveStationaryEntities(size);
@@ -206,12 +206,12 @@ void Region::Partition(const bool movable){
 	//bottomRight->Partition();
 }
 
-void Region::ReserveStationaryEntities(const size_t& size){
-	stationaryEntities.reserve(size);
+void Region::ReserveStationaryNodes(const size_t& size){
+	stationaryNodes.reserve(size);
 }
 
-void Region::ReserveMovableEntities(const size_t& size){
-	movableEntities.reserve(size);
+void Region::ReserveMovableNodes(const size_t& size){
+	movableNodes.reserve(size);
 }
 
 void Region::InitRegionPool(const size_t& size){

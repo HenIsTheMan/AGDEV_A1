@@ -22,7 +22,6 @@ void RegionControl::Render(ShaderProg& SP) const{
 	//Not visible if not active??
 }
 
-
 const Region* RegionControl::FindRegion(Entity* const& entity, const bool movable){
 	return root->FindRegion(entity, movable);
 }

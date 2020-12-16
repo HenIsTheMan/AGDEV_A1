@@ -5,6 +5,7 @@
 #include "../Entity/Entity.h"
 
 class Node final{
+	friend class Region;
 public:
 	Node();
 	~Node();
