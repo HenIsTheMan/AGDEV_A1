@@ -123,6 +123,32 @@ void Region::Partition(const bool movable){
 		return;
 	}
 
+	//if(topLeft){
+	//	topLeft->ReserveStationaryEntities(size);
+	//}
+	//if(topRight){
+	//	topRight->ReserveStationaryEntities(size);
+	//}
+	//if(bottomLeft){
+	//	bottomLeft->ReserveStationaryEntities(size);
+	//}
+	//if(bottomRight){
+	//	bottomRight->ReserveStationaryEntities(size);
+	//}
+
+	//if(topLeft){
+	//	topLeft->ReserveMovableEntities(size);
+	//}
+	//if(topRight){
+	//	topRight->ReserveMovableEntities(size);
+	//}
+	//if(bottomLeft){
+	//	bottomLeft->ReserveMovableEntities(size);
+	//}
+	//if(bottomRight){
+	//	bottomRight->ReserveMovableEntities(size);
+	//}
+
 	topLeft = FetchRegion();
 	topLeft->active = true;
 	topLeft->parent = this;
@@ -182,36 +208,10 @@ void Region::Partition(const bool movable){
 
 void Region::ReserveStationaryEntities(const size_t& size){
 	stationaryEntities.reserve(size);
-
-	if(topLeft){
-		topLeft->ReserveStationaryEntities(size);
-	}
-	if(topRight){
-		topRight->ReserveStationaryEntities(size);
-	}
-	if(bottomLeft){
-		bottomLeft->ReserveStationaryEntities(size);
-	}
-	if(bottomRight){
-		bottomRight->ReserveStationaryEntities(size);
-	}
 }
 
 void Region::ReserveMovableEntities(const size_t& size){
 	movableEntities.reserve(size);
-
-	if(topLeft){
-		topLeft->ReserveMovableEntities(size);
-	}
-	if(topRight){
-		topRight->ReserveMovableEntities(size);
-	}
-	if(bottomLeft){
-		bottomLeft->ReserveMovableEntities(size);
-	}
-	if(bottomRight){
-		bottomRight->ReserveMovableEntities(size);
-	}
 }
 
 void Region::InitRegionPool(const size_t& size){

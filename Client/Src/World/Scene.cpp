@@ -281,6 +281,10 @@ bool Scene::Init(){
 		PopModel();
 	}
 
+	regionControl->InitRegionPool(100);
+	regionControl->ReserveStationaryEntities(999);
+	regionControl->ReserveMovableEntities(50);
+
 	directionalLights.emplace_back(CreateLight(LightType::Directional)); //Simulate sunlight
 
 	return true;
