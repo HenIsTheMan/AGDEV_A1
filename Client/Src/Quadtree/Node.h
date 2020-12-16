@@ -9,9 +9,9 @@ public:
 	Node();
 	~Node();
 
-	void AddChild(const Node* const child);
+	void AddChild(Node* const child);
 	Node* DetachChild(const Node* const child);
-	void DestroyChild(const Node* const child);
+	bool DestroyChild(const Node* const child);
 	void DestroyAllChildren();
 
 	///Getters

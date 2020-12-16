@@ -27,16 +27,61 @@ Node::~Node(){
 	delete this;
 }
 
-void Node::AddChild(const Node* const child){
+void Node::AddChild(Node* const child){
+	if(child == nullptr){
+		return (void)printf("Var 'child' is a nullptr");
+	}
+
+	child->parent = this;
+	children.emplace_back(child);
 }
 
 Node* Node::DetachChild(const Node* const child){
+	for(std::vector<Node*>::iterator iter = children.begin(); iter != children.end(); ++iter){
+		Node* const node = *iter;
+		if(node == child){
+			node->parent = nullptr;
+			children.erase(iter);
+			return node;
+		} else{
+			Node* childNode = node->DetachChild(child);
+			if(childNode != nullptr){
+				return childNode;
+			}
+		}
+	}
+	return nullptr;
 }
 
-void Node::DestroyChild(const Node* const child){
+bool Node::DestroyChild(const Node* const child){
+	if(!children.size()){
+		return false;
+	}
+
+	for(std::vector<Node*>::iterator iter = children.begin(); iter != children.end(); ++iter){
+		Node* node = *iter;
+		if(node && node == child){
+			delete node;
+			node = nullptr;
+			children.erase(iter);
+			return true;
+		} else if(node->DestroyChild(child)){
+			return true;
+		}
+	}
+
+	return false;
 }
 
 void Node::DestroyAllChildren(){
+	for(std::vector<Node*>::iterator iter = children.begin(); iter != children.end(); ++iter){
+		Node* node = *iter;
+		if(node){
+			node->DestroyAllChildren();
+			delete node;
+			node = nullptr;
+		}
+	}
 }
 
 bool Node::GetUseLocalTransformUpdates() const{
