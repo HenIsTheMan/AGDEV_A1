@@ -3,7 +3,9 @@
 
 #include "Cam.h"
 
-#include "../Entity/Entities/Gun.h"
+#include "../Entity/Entities/Shotgun.h"
+#include "../Entity/Entities/Scar.h"
+#include "../Entity/Entities/Sniper.h"
 
 #include "../Quadtree/RegionControl.h"
 
