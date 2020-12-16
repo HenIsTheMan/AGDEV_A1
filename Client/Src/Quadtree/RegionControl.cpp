@@ -11,6 +11,7 @@ RegionControl::~RegionControl(){
 	}
 }
 
+
 void RegionControl::Update(){
 	root->ClearMovableAndDeactivateChildren();
 	root->Partition(true);
@@ -249,6 +250,7 @@ void RegionControl::Render(ShaderProg& SP) const{
 	//	PopModel();
 	//}
 }
+
 
 const Region* RegionControl::FindRegion(Entity* const& entity, const bool movable){
 	return root->FindRegion(entity, movable);
