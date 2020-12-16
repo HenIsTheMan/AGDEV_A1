@@ -1,5 +1,6 @@
 #pragma once
-#include "Entity.h"
+
+#include "../Entity.h"
 
 class Gun{
 public:

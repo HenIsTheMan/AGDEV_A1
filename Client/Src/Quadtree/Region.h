@@ -2,7 +2,7 @@
 
 #include <Core.h>
 
-#include "../AGDEV/Entity.h"
+#include "../Entity/Entity.h"
 
 class RegionControl;
 

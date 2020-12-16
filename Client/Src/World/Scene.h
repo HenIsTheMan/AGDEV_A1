@@ -3,8 +3,8 @@
 
 #include "Cam.h"
 
-#include "../AGDEV/Entity.h"
-#include "../AGDEV/Gun.h"
+#include "../Entity/Entity.h"
+#include "../Entity/Entities/Gun.h"
 
 #include "../Quadtree/RegionControl.h"
 
