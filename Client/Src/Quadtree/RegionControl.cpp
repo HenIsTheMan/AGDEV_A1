@@ -22,7 +22,7 @@ void RegionControl::Render() const{
 }
 
 const Region* RegionControl::FindRegion(Entity* const& entity, const bool movable){
-	root->FindRegion(entity, movable);
+	return root->FindRegion(entity, movable);
 }
 
 void RegionControl::AddEntity(Entity* const& entity, const bool movable){
@@ -41,12 +41,14 @@ void RegionControl::ReserveMovableEntities(const size_t& size){
 	root->ReserveMovableEntities(size);
 }
 
+void RegionControl::InitRegionPool(const size_t& size){
+	root->InitRegionPool(size);
+}
+
 RegionControl::RegionControl():
 	root(new Region())
 {
 	root->active = true;
 	root->origin = glm::vec2(0.0f);
 	root->size = glm::vec2(terrainXScale, terrainZScale);
-
-	root->InitRegionPool(80);
 }

@@ -2,9 +2,9 @@
 #include "Vendor/stb_image.h"
 #include <glm/gtx/color_space.hpp>
 
-constexpr float terrainXScale = 1500.f;
-constexpr float terrainYScale = 200.f;
-constexpr float terrainZScale = 1500.f;
+float terrainXScale = 1500.f;
+float terrainYScale = 200.f;
+float terrainZScale = 1500.f;
 
 //#define DEBUGGING
 
@@ -253,11 +253,11 @@ bool Scene::Init(){
 	}
 
 	Model* const tree = models[(int)ModelType::Tree];
-	tree->ReserveModelMatsForAll(9999);
-	tree->ReserveColorsForAll(9999);
-	tree->ReserveDiffuseTexIndicesForAll(9999);
+	tree->ReserveModelMatsForAll(999);
+	tree->ReserveColorsForAll(999);
+	tree->ReserveDiffuseTexIndicesForAll(999);
 
-	for(int i = 0; i < 9999; ++i){
+	for(int i = 0; i < 999; ++i){
 		const float scaleFactor = 50.0f;
 		const float xPos = PseudorandMinMax(-terrainXScale * 0.5f, terrainXScale * 0.5f);
 		const float zPos = PseudorandMinMax(-terrainZScale * 0.5f, terrainZScale * 0.5f);

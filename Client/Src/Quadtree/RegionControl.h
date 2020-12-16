@@ -20,6 +20,8 @@ public:
 	void ReserveStationaryEntities(const size_t& size);
 	void ReserveMovableEntities(const size_t& size);
 
+	void InitRegionPool(const size_t& size);
+
 	// Collision Check for an entity against Spatial Partition's entities
 	//virtual bool CheckForCollisionWithEntity(CEntity3D* cEntity3D);
 
