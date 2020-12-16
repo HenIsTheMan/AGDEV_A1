@@ -18,6 +18,7 @@ private:
 		ShotgunAmmo,
 		ScarAmmo,
 		SniperAmmo,
+		Tree,
 		Amt
 	};
 

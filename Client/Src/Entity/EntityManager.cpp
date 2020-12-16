@@ -166,6 +166,23 @@ void EntityManager::CreateEnemy(const EntityCreationAttribs& attribs){
 	entity->force = glm::vec3(0.f);
 }
 
+void EntityManager::CreateTree(const EntityCreationAttribs& attribs){
+	Entity* const& entity = ActivateEntity(false);
+
+	entity->type = Entity::EntityType::Tree;
+	entity->life = 0.f;
+	entity->maxLife = 0.f;
+	entity->colour = attribs.colour;
+	entity->diffuseTexIndex = attribs.diffuseTexIndex;
+	entity->collisionNormal = attribs.collisionNormal;
+	entity->scale = attribs.scale;
+
+	entity->pos = attribs.pos;
+	entity->vel = glm::vec3(0.f);
+	entity->mass = 5.f;
+	entity->force = glm::vec3(0.f);
+}
+
 Entity* const EntityManager::ActivateEntity(const bool movable){
 	for(Entity* const& entity: entityPool){
 		if(!entity->active){
