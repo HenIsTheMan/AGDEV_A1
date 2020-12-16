@@ -178,8 +178,8 @@ void Scene::InitEntities(){
 
 	for(short i = 0; i < 20; ++i){
 		const float scaleFactor = 15.f;
-		const float xPos = PseudorandMinMax(-terrainXScale / 2.f + 5.f + scaleFactor, terrainXScale / 2.f - 5.f - scaleFactor);
-		const float zPos = PseudorandMinMax(-terrainZScale / 2.f + 5.f + scaleFactor, terrainZScale / 2.f - 5.f - scaleFactor);
+		const float xPos = PseudorandMinMax(-terrainXScale * 0.5f + 5.f, terrainXScale * 0.5f - 5.f);
+		const float zPos = PseudorandMinMax(-terrainZScale * 0.5f + 5.f, terrainZScale * 0.5f - 5.f);
 		const glm::vec3 pos = glm::vec3(xPos, terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos / terrainXScale, zPos / terrainZScale) + scaleFactor, zPos);
 		entityManager->CreateCoin({
 			pos,
@@ -208,14 +208,14 @@ void Scene::InitEntities(){
 
 	//* Create trees
 	Model* const tree = models[(int)ModelType::Tree];
-	tree->ReserveModelMatsForAll(999);
-	tree->ReserveColorsForAll(999);
-	tree->ReserveDiffuseTexIndicesForAll(999);
+	tree->ReserveModelMatsForAll(400);
+	tree->ReserveColorsForAll(400);
+	tree->ReserveDiffuseTexIndicesForAll(400);
 
-	for(int i = 0; i < 999; ++i){
+	for(int i = 0; i < 400; ++i){
 		const float scaleFactor = 50.0f;
-		const float xPos = PseudorandMinMax(-terrainXScale * 0.5f, terrainXScale * 0.5f);
-		const float zPos = PseudorandMinMax(-terrainZScale * 0.5f, terrainZScale * 0.5f);
+		const float xPos = PseudorandMinMax(-terrainXScale * 0.5f + 2.f, terrainXScale * 0.5f - 2.f);
+		const float zPos = PseudorandMinMax(-terrainZScale * 0.5f + 2.f, terrainZScale * 0.5f - 2.f);
 		const glm::vec3 pos = glm::vec3(
 			xPos,
 			terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos / terrainXScale, zPos / terrainZScale, false),

@@ -31,17 +31,12 @@ Region::~Region(){
 }
 
 void Region::GetEntitiesToRender(std::map<int, Entity*>& entitiesOpaque, std::map<int, Entity*>& entitiesNotOpaque, const Cam& cam){
-	if(topLeft){
+	if(topLeft || topRight || bottomLeft || bottomRight){
 		topLeft->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
-	}
-	if(topRight){
 		topRight->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
-	}
-	if(bottomLeft){
 		bottomLeft->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
-	}
-	if(bottomRight){
 		bottomRight->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
+		return;
 	}
 
 	const glm::vec3& camPos = cam.GetPos();
@@ -111,11 +106,15 @@ const Region* Region::FindRegion(Node* const node, const bool movable) const{
 Region* Region::FetchRegion(){
 	for(Region* const region: regionPool){
 		if(!region->active){
+			region->active = true;
 			return region;
 		}
 	}
 
-	regionPool.emplace_back(new Region());
+	Region* const region = new Region();
+	region->active = true;
+
+	regionPool.emplace_back(region);
 	(void)puts("A region was added to regionPool!");
 
 	return regionPool.back();
@@ -139,23 +138,27 @@ void Region::RemoveNode(Node* const node, const bool movable){
 void Region::ClearMovableAndDeactivateChildren(){
 	if(topLeft){
 		topLeft->movableNodes.clear();
-		topLeft->active = false;
+		topLeft->active = false; //So region can be used elsewhere
 		topLeft->ClearMovableAndDeactivateChildren();
+		topLeft = nullptr; //For condition checking
 	}
 	if(topRight){
 		topRight->movableNodes.clear();
-		topRight->active = false;
+		topRight->active = false; //So region can be used elsewhere
 		topRight->ClearMovableAndDeactivateChildren();
+		topRight = nullptr; //For condition checking
 	}
 	if(bottomLeft){
 		bottomLeft->movableNodes.clear();
-		bottomLeft->active = false;
+		bottomLeft->active = false; //So region can be used elsewhere
 		bottomLeft->ClearMovableAndDeactivateChildren();
+		bottomLeft = nullptr; //For condition checking
 	}
 	if(bottomRight){
 		bottomRight->movableNodes.clear();
-		bottomRight->active = false;
+		bottomRight->active = false; //So region can be used elsewhere
 		bottomRight->ClearMovableAndDeactivateChildren();
+		bottomRight = nullptr; //For condition checking
 	}
 }
 
