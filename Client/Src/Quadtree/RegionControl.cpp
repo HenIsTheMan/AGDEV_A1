@@ -24,10 +24,12 @@ void RegionControl::Render(ShaderProg& SP, const Cam& cam){
 	SP.Set1i("useCustomColour", 1);
 	SP.Set1i("useCustomDiffuseTexIndex", 1);
 
+	///Use std::map so render order is correct
 	std::map<int, Entity*> entitiesOpaque;
 	std::map<int, Entity*> entitiesNotOpaque;
 	rootRegion->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
 
+	///Render opaque entities 1st
 	for(std::map<int, Entity*>::reverse_iterator iter = entitiesOpaque.rbegin(); iter != entitiesOpaque.rend(); ++iter){
 		Entity* const& entity = iter->second;
 
@@ -58,6 +60,7 @@ void RegionControl::Render(ShaderProg& SP, const Cam& cam){
 		modelStack.PopModel();
 	}
 
+	///Then render non-opaque entities
 	for(std::map<int, Entity*>::reverse_iterator iter = entitiesNotOpaque.rbegin(); iter != entitiesNotOpaque.rend(); ++iter){
 		Entity* const& entity = iter->second;
 

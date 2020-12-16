@@ -8,6 +8,7 @@ EntityManager::~EntityManager(){
 		}
 	}
 
+	rootNode->DestroyAllChildren();
 	if(rootNode){
 		delete rootNode;
 		rootNode = nullptr;
@@ -43,7 +44,7 @@ void EntityManager::SetUpRegionsForStationary(){
 void EntityManager::ActivateEntityProcedure(Entity* const entity){
 	Node* const node = new Node();
 	node->SetEntity(entity);
-	node->SetParent(rootNode);
+	rootNode->AddChild(node);
 	regionControl->AddNode(node, entity->movable);
 }
 
