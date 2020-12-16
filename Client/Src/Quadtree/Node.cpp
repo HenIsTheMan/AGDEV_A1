@@ -83,6 +83,10 @@ void Node::DestroyAllChildren(){
 	}
 }
 
+Entity* Node::RetrieveEntity(){
+	return entity;
+}
+
 bool Node::GetUseLocalTransformUpdates() const{
 	return useLocalTransformUpdates;
 }

@@ -15,6 +15,8 @@ public:
 	bool DestroyChild(const Node* const child);
 	void DestroyAllChildren();
 
+	Entity* RetrieveEntity();
+
 	///Getters
 	bool GetUseLocalTransformUpdates() const;
 	bool GetVisible() const;

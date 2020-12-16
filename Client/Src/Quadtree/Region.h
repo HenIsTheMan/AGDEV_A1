@@ -15,7 +15,7 @@ private:
 	Region();
 	~Region();
 
-	void Render(ShaderProg& SP, const Cam& cam);
+	void GetEntitiesToRender(std::map<int, Entity*>& entitiesOpaque, std::map<int, Entity*>& entitiesNotOpaque, const Cam& cam);
 
 	const Region* FindRegion(Node* const node, const bool movable) const;
 	Region* FetchRegion();
@@ -46,6 +46,4 @@ private:
 	std::vector<Node*> movableNodes;
 
 	static std::vector<Region*> regionPool;
-
-	ModelStack modelStack;
 };

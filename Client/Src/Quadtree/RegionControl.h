@@ -10,7 +10,7 @@ public:
 	~RegionControl();
 
 	void Update();
-	void Render(ShaderProg& SP, const Cam& cam) const;
+	void Render(ShaderProg& SP, const Cam& cam);
 
 	const Region* FindRegion(Node* const& node, const bool movable);
 
@@ -26,5 +26,6 @@ public:
 private:
 	RegionControl();
 
+	ModelStack modelStack;
 	Region* rootRegion;
 };

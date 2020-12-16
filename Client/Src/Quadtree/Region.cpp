@@ -32,65 +32,45 @@ Region::~Region(){
 	}
 }
 
-void Region::Render(ShaderProg& SP, const Cam& cam){
-	SP.Use();
+void Region::GetEntitiesToRender(std::map<int, Entity*>& entitiesOpaque, std::map<int, Entity*>& entitiesNotOpaque, const Cam& cam){
+	if(topLeft){
+		topLeft->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
+	}
+	if(topRight){
+		topRight->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
+	}
+	if(bottomLeft){
+		bottomLeft->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
+	}
+	if(bottomRight){
+		bottomRight->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
+	}
+
+	const glm::vec3& camPos = cam.GetPos();
+	const glm::vec3& camFront = cam.CalcFront();
 
 	for(int i = 0; i < stationaryNodes.size(); ++i){
-		const Entity* const entity = stationaryNodes[i]->GetEntity();
+		Entity* const entity = stationaryNodes[i]->RetrieveEntity();
 
-		SP.Set1i("noNormals", 1);
-		SP.Set1i("useCustomColour", 1);
-		SP.Set4fv("customColour", entity->colour);
-		SP.Set1i("useCustomDiffuseTexIndex", 1);
-		SP.Set1i("customDiffuseTexIndex", entity->diffuseTexIndex);
-		switch(entity->type){
-			case Entity::EntityType::Bullet:
-			case Entity::EntityType::Enemy:
-				modelStack.PushModel({
-					modelStack.Translate(entity->pos),
-					modelStack.Scale(entity->scale),
-				});
-					Meshes::meshes[(int)MeshType::Sphere]->SetModel(modelStack.GetTopModel());
-					Meshes::meshes[(int)MeshType::Sphere]->Render(SP);
-				break;
-			case Entity::EntityType::ShotgunAmmo:
-			case Entity::EntityType::ScarAmmo:
-			case Entity::EntityType::SniperAmmo:
-				modelStack.PushModel({
-					modelStack.Translate(entity->pos),
-					//modelStack.Rotate(glm::vec4(0.f, 1.f, 0.f, glm::degrees(atan2(entity->collisionNormal.z, entity->collisionNormal.x)))),
-					modelStack.Scale(entity->scale),
-				});
-					Meshes::meshes[(int)MeshType::Cube]->SetModel(modelStack.GetTopModel());
-					Meshes::meshes[(int)MeshType::Cube]->Render(SP);
-				break;
-			case Entity::EntityType::Coin:
-				modelStack.PushModel({
-					modelStack.Translate(entity->pos),
-					modelStack.Rotate(glm::vec4(0.f, 1.f, 0.f, glm::degrees(atan2(cam.GetPos().x - entity->pos.x, cam.GetPos().z - entity->pos.z)))),
-					modelStack.Scale(entity->scale),
-				});
-					SP.Set1i("useCustomColour", 0);
-					SP.Set1i("useCustomDiffuseTexIndex", 0);
-					Meshes::meshes[(int)MeshType::CoinSpriteAni]->SetModel(modelStack.GetTopModel());
-					Meshes::meshes[(int)MeshType::CoinSpriteAni]->Render(SP);
-				break;
-			case Entity::EntityType::Fire:
-				modelStack.PushModel({
-					modelStack.Translate(entity->pos + glm::vec3(0.f, entity->scale.y / 2.f, 0.f)),
-					modelStack.Rotate(glm::vec4(0.f, 1.f, 0.f, glm::degrees(atan2(cam.GetPos().x - entity->pos.x, cam.GetPos().z - entity->pos.z)))),
-					modelStack.Scale(glm::vec3(entity->scale.x, entity->scale.y * 2.f, entity->scale.z)),
-				});
-					SP.Set1i("useCustomColour", 0);
-					SP.Set1i("useCustomDiffuseTexIndex", 0);
-					Meshes::meshes[(int)MeshType::FireSpriteAni]->SetModel(modelStack.GetTopModel());
-					Meshes::meshes[(int)MeshType::FireSpriteAni]->Render(SP);
-				break;
+		if(entity && entity->active){
+			glm::vec3 displacementVec = entity->pos - camPos;
+			if(glm::dot(displacementVec, camFront) > 0.f){
+
+				switch(entity->type){
+					case Entity::EntityType::Bullet:
+					case Entity::EntityType::Enemy:
+					case Entity::EntityType::ShotgunAmmo:
+					case Entity::EntityType::ScarAmmo:
+					case Entity::EntityType::SniperAmmo:
+						entitiesOpaque.insert(std::make_pair((int)glm::dot(displacementVec, displacementVec), entity));
+						break;
+					case Entity::EntityType::Coin:
+					case Entity::EntityType::Fire:
+						entitiesNotOpaque.insert(std::make_pair((int)glm::dot(displacementVec, displacementVec), entity));
+						break;
+				}
+			}
 		}
-		SP.Set1i("useCustomDiffuseTexIndex", 0);
-		SP.Set1i("useCustomColour", 0);
-		SP.Set1i("noNormals", 0);
-		modelStack.PopModel();
 	}
 }
 
