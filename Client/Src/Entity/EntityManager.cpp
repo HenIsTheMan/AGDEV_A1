@@ -33,7 +33,7 @@ void EntityManager::Render(ShaderProg& SP) const{
 }
 
 void EntityManager::CreateAmmo(const Entity::EntityType type, const EntityCreationAttribs& attribs){
-	Entity* const& entity = FetchEntity();
+	Entity* const& entity = ActivateEntity(false);
 
 	entity->type = type;
 	entity->life = 0.f;
@@ -50,7 +50,7 @@ void EntityManager::CreateAmmo(const Entity::EntityType type, const EntityCreati
 }
 
 void EntityManager::CreateCoin(const EntityCreationAttribs& attribs){
-	Entity* const& entity = FetchEntity();
+	Entity* const& entity = ActivateEntity(false);
 
 	entity->type = Entity::EntityType::Coin;
 	entity->life = 0.f;
@@ -67,7 +67,7 @@ void EntityManager::CreateCoin(const EntityCreationAttribs& attribs){
 }
 
 void EntityManager::CreateFire(const EntityCreationAttribs& attribs){
-	Entity* const& entity = FetchEntity();
+	Entity* const& entity = ActivateEntity(false);
 
 	entity->type = Entity::EntityType::Fire;
 	entity->life = 0.f;
@@ -84,7 +84,7 @@ void EntityManager::CreateFire(const EntityCreationAttribs& attribs){
 }
 
 void EntityManager::CreateEnemy(const EntityCreationAttribs& attribs){
-	Entity* const& entity = FetchEntity();
+	Entity* const& entity = ActivateEntity(true);
 
 	entity->type = Entity::EntityType::Enemy;
 	entity->life = 100.f;
@@ -100,10 +100,11 @@ void EntityManager::CreateEnemy(const EntityCreationAttribs& attribs){
 	entity->force = glm::vec3(0.f);
 }
 
-Entity* const EntityManager::FetchEntity(){
+Entity* const EntityManager::ActivateEntity(const bool movable){
 	for(Entity* const& entity: entityPool){
 		if(!entity->active){
 			entity->active = true;
+			entity->movable = movable;
 			return entity;
 		}
 	}
@@ -114,6 +115,9 @@ Entity* const EntityManager::FetchEntity(){
 	Entity* const entity = entityPool.back();
 	entity->active = true;
 	return entity;
+}
+
+void DeactivateEntity(const bool movable){
 }
 
 EntityManager::EntityManager():

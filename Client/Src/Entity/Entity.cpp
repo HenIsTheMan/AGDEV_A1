@@ -3,6 +3,7 @@
 Entity::Entity():
 	type(EntityType::Amt),
 	active(false),
+	movable(false),
 	life(0.f),
 	maxLife(0.f),
 	colour(glm::vec4(.7f, .4f, .1f, 1.f)),

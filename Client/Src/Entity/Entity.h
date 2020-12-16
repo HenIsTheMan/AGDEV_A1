@@ -25,6 +25,7 @@ private:
 
 	EntityType type;
 	bool active;
+	bool movable;
 	float life;
 	float maxLife;
 	glm::vec4 colour;

@@ -25,7 +25,8 @@ public:
 	void CreateFire(const EntityCreationAttribs& attribs);
 	void CreateEnemy(const EntityCreationAttribs& attribs);
 
-	Entity* const FetchEntity();
+	Entity* const ActivateEntity(const bool movable);
+	void DeactivateEntity(const bool movable);
 private:
 	EntityManager();
 

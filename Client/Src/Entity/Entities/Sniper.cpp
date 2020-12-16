@@ -14,7 +14,7 @@ void Sniper::Shoot(const float& elapsedTime, const glm::vec3& camPos, const glm:
 	if(canShoot && loadedBullets && bulletBT <= elapsedTime){
 		soundEngine->play2D("Audio/Sounds/Sniper.wav", false);
 
-		Entity* const entity = entityManager->FetchEntity();
+		Entity* const entity = entityManager->ActivateEntity(true);
 		entity->type = Entity::EntityType::Bullet;
 		entity->life = 5.f;
 		entity->maxLife = 5.f;
