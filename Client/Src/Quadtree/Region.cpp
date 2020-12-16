@@ -32,7 +32,7 @@ Region::~Region(){
 	}
 }
 
-void Region::Render(ShaderProg& SP){
+void Region::Render(ShaderProg& SP, const Cam& cam){
 	SP.Use();
 
 	for(int i = 0; i < stationaryNodes.size(); ++i){
@@ -67,7 +67,7 @@ void Region::Render(ShaderProg& SP){
 			case Entity::EntityType::Coin:
 				modelStack.PushModel({
 					modelStack.Translate(entity->pos),
-					//modelStack.Rotate(glm::vec4(0.f, 1.f, 0.f, glm::degrees(atan2(cam.GetPos().x - entity->pos.x, cam.GetPos().z - entity->pos.z)))),
+					modelStack.Rotate(glm::vec4(0.f, 1.f, 0.f, glm::degrees(atan2(cam.GetPos().x - entity->pos.x, cam.GetPos().z - entity->pos.z)))),
 					modelStack.Scale(entity->scale),
 				});
 					SP.Set1i("useCustomColour", 0);
@@ -78,7 +78,7 @@ void Region::Render(ShaderProg& SP){
 			case Entity::EntityType::Fire:
 				modelStack.PushModel({
 					modelStack.Translate(entity->pos + glm::vec3(0.f, entity->scale.y / 2.f, 0.f)),
-					//modelStack.Rotate(glm::vec4(0.f, 1.f, 0.f, glm::degrees(atan2(cam.GetPos().x - entity->pos.x, cam.GetPos().z - entity->pos.z)))),
+					modelStack.Rotate(glm::vec4(0.f, 1.f, 0.f, glm::degrees(atan2(cam.GetPos().x - entity->pos.x, cam.GetPos().z - entity->pos.z)))),
 					modelStack.Scale(glm::vec3(entity->scale.x, entity->scale.y * 2.f, entity->scale.z)),
 				});
 					SP.Set1i("useCustomColour", 0);

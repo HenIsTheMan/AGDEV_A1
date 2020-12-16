@@ -5,6 +5,8 @@
 #include "Node.h"
 
 #include "../Shared/Meshes.h"
+
+#include "../World/Cam.h"
 #include "../World/ModelStack.h"
 
 class Region final{
@@ -13,7 +15,7 @@ private:
 	Region();
 	~Region();
 
-	void Render(ShaderProg& SP);
+	void Render(ShaderProg& SP, const Cam& cam);
 
 	const Region* FindRegion(Node* const node, const bool movable) const;
 	Region* FetchRegion();

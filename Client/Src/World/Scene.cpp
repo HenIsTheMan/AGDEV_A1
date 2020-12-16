@@ -952,7 +952,7 @@ void Scene::GameRender(){
 
 	models[(int)ModelType::Tree]->InstancedRender(forwardSP);
 
-	entityManager->Render(forwardSP);
+	entityManager->Render(forwardSP, cam);
 
 	const size_t& coinMusicSize = coinMusic.size();
 	for(size_t i = 0; i < coinMusicSize; ++i){
@@ -1377,7 +1377,7 @@ void Scene::MinimapRender(){
 		}
 		forwardSP.SetMat4fv("PV", &(projection * view)[0][0]);
 
-		entityManager->Render(forwardSP);
+		entityManager->Render(forwardSP, minimapCam);
 
 		modelStack.PushModel({
 			modelStack.Translate(glm::vec3(cam.GetPos().x, 0.f, cam.GetPos().z)),

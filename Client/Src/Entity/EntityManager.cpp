@@ -32,8 +32,8 @@ void EntityManager::Update(){
 	regionControl->Update();
 }
 
-void EntityManager::Render(ShaderProg& SP) const{
-	regionControl->Render(SP);
+void EntityManager::Render(ShaderProg& SP, const Cam& cam) const{
+	regionControl->Render(SP, cam);
 }
 
 void EntityManager::SetUpRegionsForStationary(){

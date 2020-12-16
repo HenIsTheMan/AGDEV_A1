@@ -16,11 +16,11 @@ void RegionControl::Update(){
 	rootRegion->Partition(true);
 }
 
-void RegionControl::Render(ShaderProg& SP){
+void RegionControl::Render(ShaderProg& SP, const Cam& cam) const{
 	//Render lines or leaf nodes??
 	//Not visible if not active??
 
-	rootRegion->Render(SP);
+	rootRegion->Render(SP, cam);
 }
 
 const Region* RegionControl::FindRegion(Node* const& node, const bool movable){

@@ -18,7 +18,7 @@ public:
 
 	void Init();
 	void Update();
-	void Render(ShaderProg& SP) const;
+	void Render(ShaderProg& SP, const Cam& cam) const;
 
 	void CreateShotgunBullet(const glm::vec3& camPos, const glm::vec3& camFront);
 	void CreateScarBullet(const glm::vec3& camPos, const glm::vec3& camFront);
