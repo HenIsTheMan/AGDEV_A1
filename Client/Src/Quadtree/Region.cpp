@@ -1,203 +1,209 @@
 #include "Region.h"
 
+std::vector<Region*> Region::regionPool;
+
 Region::Region():
+	active(false),
 	parent(nullptr),
-	origin(glm::vec3(0.f)),
-	size(glm::vec3(0.f)),
-	UL(nullptr),
-	UR(nullptr),
-	DL(nullptr),
-	DR(nullptr),
-	entities(new std::vector<Entity*>()),
-	active(false)
+	origin(glm::vec2()),
+	size(glm::vec2()),
+	topLeft(nullptr),
+	topRight(nullptr),
+	bottomLeft(nullptr),
+	bottomRight(nullptr),
+	stationaryEntities(),
+	movableEntities()
 {
 }
 
 Region::~Region(){
-	if(entities){
-		for(Entity*& entity: *entities){
-			if(entity){ //Deleted in EntityManager
-				entity = nullptr;
-			}
-		}
-		delete entities;
-		entities = nullptr;
-	}
-}
-
-void Region::AddEntity(Entity* const entity){
-	entities->emplace_back(entity);
-}
-
-void Region::DeactivateAndClear(){
-	if(UL){
-		UL->active = false;
-		UL->entities->clear();
-		UL->DeactivateAndClear();
-	}
-	if(UR){
-		UR->active = false;
-		UR->entities->clear();
-		UR->DeactivateAndClear();
-	}
-	if(DL){
-		DL->active = false;
-		DL->entities->clear();
-		DL->DeactivateAndClear();
-	}
-	if(DR){
-		DR->active = false;
-		DR->entities->clear();
-		DR->DeactivateAndClear();
-	}
-}
-
-void Region::Partition(){
-	if(entities->size() > 7){
-		///Set up UL
-		UL = FetchRegion();
-		UL->active = true;
-		UL->SetParent(this);
-		UL->SetOrigin(glm::vec3(origin.x - size.x / 4.f, origin.y, origin.z - size.z / 4.f));
-		UL->SetSize(glm::vec3(size.x / 2.f, size.y, size.z / 2.f));
-
-		///Set up UR
-		UR = FetchRegion();
-		UR->active = true;
-		UR->SetParent(this);
-		UR->SetOrigin(glm::vec3(origin.x + size.x / 4.f, origin.y, origin.z - size.z / 4.f));
-		UR->SetSize(glm::vec3(size.x / 2.f, size.y, size.z / 2.f));
-
-		///Set up DL
-		DL = FetchRegion();
-		DL->active = true;
-		DL->SetParent(this);
-		DL->SetOrigin(glm::vec3(origin.x - size.x / 4.f, origin.y, origin.z + size.z / 4.f));
-		DL->SetSize(glm::vec3(size.x / 2.f, size.y, size.z / 2.f));
-
-		///Set up DR
-		DR = FetchRegion();
-		DR->active = true;
-		DR->SetParent(this);
-		DR->SetOrigin(glm::vec3(origin.x + size.x / 4.f, origin.y, origin.z + size.z / 4.f));
-		DR->SetSize(glm::vec3(size.x / 2.f, size.y, size.z / 2.f));
-
-		for(Entity*& entity: *entities){
-			if(entity && entity->active
-				&& entity->pos.x + entity->scale.x <= origin.x + size.x / 2.f && entity->pos.x - entity->scale.x >= origin.x - size.x / 2.f
-				&& entity->pos.y + entity->scale.y <= origin.y + size.y / 2.f && entity->pos.y - entity->scale.y >= origin.y - size.y / 2.f
-				&& entity->pos.z + entity->scale.z <= origin.z + size.z / 2.f && entity->pos.z - entity->scale.z >= origin.z - size.z / 2.f
-				){
-				if(entity->pos.z - entity->scale.z <= origin.z){
-					if(entity->pos.x - entity->scale.x <= origin.x){
-						UR->AddEntity(entity);
-					}
-					if(entity->pos.x + entity->scale.x >= origin.x){
-						UL->AddEntity(entity);
-					}
-				}
-				if(entity->pos.z + entity->scale.z >= origin.z){
-					if(entity->pos.x - entity->scale.x <= origin.x){
-						DR->AddEntity(entity);
-					}
-					if(entity->pos.x + entity->scale.x >= origin.x){
-						DL->AddEntity(entity);
-					}
-				}
-			}
-		}
-
-		///Use recursion to continue forming the Quadtree
-		UL->Partition();
-		UR->Partition();
-		DL->Partition();
-		DR->Partition();
-	}
-}
-
-const Region* Region::FindEntity(Entity* const entity) const{ //Search children 1st
-	if(UL){ //If UL exists...
-		const Region* const& Region = UL->FindEntity(entity);
-		if(Region){ //If entity was found in a Region...
-			return Region;
+	for(Entity*& entity: stationaryEntities){
+		if(entity){ //Deleted elsewhere
+			entity = nullptr;
 		}
 	}
-	if(UR){ //If UR exists...
-		const Region* const& Region = UR->FindEntity(entity);
-		if(Region){ //If entity was found in a Region...
-			return Region;
+
+	for(Entity*& entity: movableEntities){
+		if(entity){ //Deleted elsewhere
+			entity = nullptr;
 		}
 	}
-	if(DL){ //If DL exists...
-		const Region* const& Region = DL->FindEntity(entity);
-		if(Region){ //If entity was found in a Region...
-			return Region;
-		}
+}
+
+void Region::InitRegionPool(const size_t& size){
+	if(regionPool.size()){
+		assert(false && "regionPool is not empty!");
 	}
-	if(DR){ //If DR exists...
-		const Region* const& Region = DR->FindEntity(entity);
-		if(Region){ //If entity was found in a Region...
-			return Region;
-		}
-	}
-	if(entities){
-		for(Entity*& myEntity: *entities){
-			if(myEntity == entity){
-				return this;
-			}
-		}
-	}
-	return nullptr;
-}
 
-const glm::vec3& Region::GetOrigin() const{
-	return origin;
-}
-
-const glm::vec3& Region::GetSize() const{
-	return size;
-}
-
-void Region::SetParent(Region* const parent){
-	this->parent = parent;
-}
-
-void Region::SetOrigin(const glm::vec3& origin){
-	this->origin = origin;
-}
-
-void Region::SetSize(const glm::vec3& size){
-	this->size = size;
-}
-
-void Region::SetActive(const bool active){
-	this->active = active;
-}
-
-void Region::InitRegionPool(const int& amt){
-	RegionPool = std::vector<Region*>(amt);
-	for(int i = 0; i < amt; ++i){
-		RegionPool[i] = new Region();
+	regionPool.resize(size);
+	for(size_t i = 0; i < size; ++i){
+		regionPool[i] = new Region();
 	}
 }
 
 void Region::DestroyRegionPool(){
-	const size_t& size = RegionPool.size();
-	for(size_t i = 0; i < size; ++i){
-		if(RegionPool[i]){
-			delete RegionPool[i];
-			RegionPool[i] = nullptr;
+	for(Region*& region: regionPool){
+		if(region){
+			delete region;
+			region = nullptr;
 		}
 	}
 }
 
-Region* const& Region::FetchRegion(){
-	for(Region* const& Region: RegionPool){
-		if(!Region->active){
-			return Region;
+const Region* Region::FindEntity(Entity* const entity, const bool movable) const{
+	if(topLeft){
+		const Region* const& region = topLeft->FindEntity(entity, movable);
+		if(region){
+			return region;
 		}
 	}
-	RegionPool.emplace_back(new Region());
-	(void)puts("1 cube section was added to RegionPool!");
-	return RegionPool.back();
+	if(topRight){
+		const Region* const& region = topRight->FindEntity(entity, movable);
+		if(region){
+			return region;
+		}
+	}
+	if(bottomLeft){
+		const Region* const& region = bottomLeft->FindEntity(entity, movable);
+		if(region){
+			return region;
+		}
+	}
+	if(bottomRight){
+		const Region* const& region = bottomRight->FindEntity(entity, movable);
+		if(region){
+			return region;
+		}
+	}
+
+	const std::vector<Entity*>& entities = movable ? movableEntities : stationaryEntities;
+	for(const Entity* const& myEntity: entities){
+		if(myEntity == entity){
+			return this;
+		}
+	}
+
+	return nullptr;
+}
+
+Region* Region::FetchRegion(){
+	for(Region* const region: regionPool){
+		if(!region->active){
+			return region;
+		}
+	}
+
+	regionPool.emplace_back(new Region());
+	(void)puts("A region was added to regionPool!");
+
+	return regionPool.back();
+}
+
+void Region::AddEntity(Entity* const entity, const bool movable){
+	(movable ? movableEntities : stationaryEntities).emplace_back(entity);
+}
+
+void Region::RemoveEntity(Entity* const entity, const bool movable){
+	std::vector<Entity*>& entities = movable ? movableEntities : stationaryEntities;
+	const std::vector<Entity*>::iterator iter = std::find(entities.begin(), entities.end(), entity);
+
+	if(iter != entities.end()){
+		return assert(false && "Entity could not be found!");
+	}
+
+	entities.erase(iter);
+}
+
+void Region::ClearMovableAndDeactivateChildren(){
+	if(topLeft){
+		topLeft->movableEntities.clear();
+		topLeft->active = false;
+		topLeft->ClearMovableAndDeactivateChildren();
+	}
+	if(topRight){
+		topRight->movableEntities.clear();
+		topRight->active = false;
+		topRight->ClearMovableAndDeactivateChildren();
+	}
+	if(bottomLeft){
+		bottomLeft->movableEntities.clear();
+		bottomLeft->active = false;
+		bottomLeft->ClearMovableAndDeactivateChildren();
+	}
+	if(bottomRight){
+		bottomRight->movableEntities.clear();
+		bottomRight->active = false;
+		bottomRight->ClearMovableAndDeactivateChildren();
+	}
+}
+
+void Region::Partition(const bool movable){
+	const std::vector<Entity*>& entities = movable ? movableEntities : stationaryEntities;
+	if(entities.size() <= (size_t)1){
+		return;
+	}
+
+	topLeft = FetchRegion();
+	topLeft->active = true;
+	topLeft->parent = this;
+	topLeft->origin = glm::vec2(origin[0] - size[0] * 0.25f, origin[1] - size[1] * 0.25f);
+	topLeft->size = glm::vec2(size[0] * 0.5f, size[1] * 0.5f);
+
+	topRight = FetchRegion();
+	topRight->active = true;
+	topRight->parent = this;
+	topRight->origin = glm::vec2(origin[0] + size[0] * 0.25f, origin[1] - size[1] * 0.25f);
+	topRight->size = topLeft->size;
+
+	bottomLeft = FetchRegion();
+	bottomLeft->active = true;
+	bottomLeft->parent = this;
+	bottomLeft->origin = glm::vec2(origin[0] - size[0] * 0.25f, origin[1] + size[1] * 0.25f);
+	bottomLeft->size = topLeft->size;
+
+	bottomRight = FetchRegion();
+	bottomRight->active = true;
+	bottomRight->parent = this;
+	bottomRight->origin = glm::vec2(origin[0] + size[0] * 0.25f, origin[1] + size[1] * 0.25f);
+	bottomRight->size = topLeft->size;
+
+	//for(Entity*& entity: entities){
+	//	if(entity
+	//		&& entity->active
+	//		&& entity->pos.x + entity->scale.x <= origin.x + size.x / 2.f && entity->pos.x - entity->scale.x >= origin.x - size.x / 2.f
+	//		&& entity->pos.y + entity->scale.y <= origin.y + size.y / 2.f && entity->pos.y - entity->scale.y >= origin.y - size.y / 2.f
+	//		&& entity->pos.z + entity->scale.z <= origin.z + size.z / 2.f && entity->pos.z - entity->scale.z >= origin.z - size.z / 2.f
+	//	){
+	//		if(entity->pos.z - entity->scale.z <= origin.z){
+	//			if(entity->pos.x - entity->scale.x <= origin.x){
+	//				topRight->AddEntity(entity);
+	//			}
+	//			if(entity->pos.x + entity->scale.x >= origin.x){
+	//				topLeft->AddEntity(entity);
+	//			}
+	//		}
+	//		if(entity->pos.z + entity->scale.z >= origin.z){
+	//			if(entity->pos.x - entity->scale.x <= origin.x){
+	//				bottomRight->AddEntity(entity);
+	//			}
+	//			if(entity->pos.x + entity->scale.x >= origin.x){
+	//				bottomLeft->AddEntity(entity);
+	//			}
+	//		}
+	//	}
+	//}
+
+	/////Use recursion to continue forming the Quadtree
+	//topLeft->Partition();
+	//topRight->Partition();
+	//bottomLeft->Partition();
+	//bottomRight->Partition();
+}
+
+void Region::ReserveStationaryEntities(const size_t& size){
+	stationaryEntities.reserve(size);
+}
+
+void Region::ReserveMovableEntities(const size_t& size){
+	movableEntities.reserve(size);
 }

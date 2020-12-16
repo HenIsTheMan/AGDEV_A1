@@ -19,6 +19,10 @@ public:
 	void InitRegionPool(const int& amt);
 	void DestroyRegionPool();
 
+	Region* FetchRegion();
+
+	static void Partition();
+
 	// Collision Check for an entity against Spatial Partition's entities
 	//virtual bool CheckForCollisionWithEntity(CEntity3D* cEntity3D);
 
@@ -26,9 +30,7 @@ public:
 	// as we may detach the camera from the player.
 	//glm::mat4 frustumCullingView;
 private:
-
 	//CFrustumCulling* cFrustumCulling;
 
-	std::vector<Region*> regionPool;
 	Region* root;
 };

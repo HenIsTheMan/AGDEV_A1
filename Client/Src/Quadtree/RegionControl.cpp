@@ -20,6 +20,18 @@ RegionControl::~RegionControl(){
 	}*/
 }
 
+void Update();
+void Render() const;
+
+void AddEntity(Entity* const& entity);
+void RemoveEntity(Entity* const& entity);
+void DeactivateAndClear();
+
+const Region* FindRegion(Entity* const& entity);
+
+void InitRegionPool(const int& amt);
+void DestroyRegionPool();
+
 //Entity* const& EntityManager::FetchEntity(){
 //	for(Entity* const& entity: entityList){
 //		if(!entity->active){

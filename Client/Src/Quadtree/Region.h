@@ -4,43 +4,41 @@
 
 #include "../AGDEV/Entity.h"
 
+class RegionControl;
+
 class Region final{
-public:
+	friend RegionControl;
+private:
 	Region();
 	~Region();
 
-	const Region* FindEntity(Entity* const entity) const;
+	static void InitRegionPool(const size_t& size);
+	static void DestroyRegionPool();
 
-	void CalcTopRight() const;
-	void CalcBottomLeft() const;
+	const Region* FindEntity(Entity* const entity, const bool movable) const;
+	Region* FetchRegion();
 
-	void AddEntity(Entity* const entity);
-	void RemoveEntity(Entity* const entity);
+	void AddEntity(Entity* const entity, const bool movable);
+	void RemoveEntity(Entity* const entity, const bool movable);
 
-	void DeactivateAndClear();
-	void Partition();
+	void ClearMovableAndDeactivateChildren();
+	void Partition(const bool movable);
 
-	///Getters
-	const glm::vec3& GetOrigin() const;
-	const glm::vec3& GetSize() const;
+	void ReserveStationaryEntities(const size_t& size);
+	void ReserveMovableEntities(const size_t& size);
 
-	///Setters
-	void SetParent(Region* const parent);
-	void SetOrigin(const glm::vec3& origin);
-	void SetSize(const glm::vec3& size);
-	void SetActive(const bool active);;
-private:
-	static std::vector<Region*> RegionPool;
-	static Region* const& FetchRegion();
-
-	Region* parent;
-	glm::vec3 origin;
-	glm::vec3 size;
-
-	Region* UL;
-	Region* UR;
-	Region* DL;
-	Region* DR;
-	std::vector<Entity*>* entities;
 	bool active;
+	Region* parent;
+	glm::vec2 origin;
+	glm::vec2 size;
+
+	Region* topLeft;
+	Region* topRight;
+	Region* bottomLeft;
+	Region* bottomRight;
+
+	std::vector<Entity*> stationaryEntities;
+	std::vector<Entity*> movableEntities;
+
+	static std::vector<Region*> regionPool;
 };
