@@ -97,9 +97,6 @@ void RegionControl::RenderQSP(ShaderProg& SP, const Cam& cam){
 	std::vector<Region*> leaves;
 	rootRegion->GetLeaves(SP, leaves);
 	const size_t size = leaves.size();
-
-	std::cout << "leaves size: " << size << '\n';
-
 	if(!size){
 		return;
 	}
