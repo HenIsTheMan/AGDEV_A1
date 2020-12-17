@@ -68,8 +68,6 @@ Scene::Scene():
 	},
 	playerStates((int)PlayerState::NoMovement | (int)PlayerState::Standing),
 	screen(Screen::MainMenu),
-	score(0),
-	scores({}),
 	textScaleFactors{
 		1.f,
 		1.f,
@@ -99,23 +97,6 @@ Scene::Scene():
 }
 
 Scene::~Scene(){
-	///Create save
-	str line;
-	try{
-		std::ofstream stream("Data/scores.dat", std::ios::out);
-		if(stream.is_open()){
-			const size_t& mySize = scores.size();
-			for(size_t i = 0; i < mySize; ++i){
-				stream << (!i ? "" : "\n") + std::to_string(scores[i]);
-			}
-			stream.close();
-		} else{
-			throw("Failed to save scores!");
-		}
-	} catch(cstr const& errorMsg){
-		(void)puts(errorMsg);
-	}
-
 	for(short i = 0; i < 3; ++i){
 		if(guns[i]){
 			delete guns[i];
@@ -263,24 +244,6 @@ bool Scene::Init(){
 
 	InitEntities();
 
-	///Load save
-	cstr const& fPath = "Data/scores.dat";
-	str line;
-	std::ifstream stream(fPath, std::ios::in);
-	if(stream.is_open()){
-		while(getline(stream, line)){
-			try{
-				scores.emplace_back(stoi(line));
-			} catch(const std::invalid_argument& e){
-				(void)puts(e.what());
-			}
-		}
-		stream.close();
-	}
-	if(scores.size() > 1){
-		std::sort(scores.begin(), scores.end(), std::greater<int>());
-	}
-
 	const std::vector<cstr> faces{
 		"Imgs/Skybox/Right.png",
 		"Imgs/Skybox/Left.png",
@@ -329,9 +292,6 @@ void Scene::Update(GLFWwindow* const& win){
 		case Screen::Game:
 			GameUpdate(win);
 			break;
-		case Screen::Scoreboard:
-			ScoreboardUpdate(win, mousePos, buttonBT);
-			break;
 	}
 }
 
@@ -352,7 +312,6 @@ void Scene::MainMenuUpdate(GLFWwindow* const& win, const POINT& mousePos, float&
 		}
 		if(leftRightMB > 0.f && buttonBT <= elapsedTime){
 			soundEngine->play2D("Audio/Sounds/Select.wav", false);
-			score = 0;
 			if(guns[0]){
 				delete guns[0];
 				guns[0] = nullptr;
@@ -386,7 +345,6 @@ void Scene::MainMenuUpdate(GLFWwindow* const& win, const POINT& mousePos, float&
 		}
 		if(leftRightMB > 0.f && buttonBT <= elapsedTime){
 			soundEngine->play2D("Audio/Sounds/Select.wav", false);
-			screen = Screen::Scoreboard;
 			buttonBT = elapsedTime + .3f;
 		}
 	} else{
@@ -618,10 +576,6 @@ void Scene::GameUpdate(GLFWwindow* const& win){
 		polyModeBT = elapsedTime + .5f;
 	}
 
-	if(score < 0){
-		score = 0;
-	}
-
 	///Control soundFX
 	const size_t& coinSoundFXSize = coinSoundFX.size();
 	for(size_t i = 0; i < coinSoundFXSize; ++i){
@@ -680,32 +634,6 @@ void Scene::GameUpdate(GLFWwindow* const& win){
 	}
 
 	entityManager->Update();
-}
-
-void Scene::ScoreboardUpdate(GLFWwindow* const& win, const POINT& mousePos, float& buttonBT){
-	glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-
-	cam.SetPos(glm::vec3(0.f, 0.f, 5.f));
-	cam.SetTarget(glm::vec3(0.f));
-	cam.SetUp(glm::vec3(0.f, 1.f, 0.f));
-	view = cam.LookAt();
-	projection = glm::ortho(-float(winWidth) / 2.f, float(winWidth) / 2.f, -float(winHeight) / 2.f, float(winHeight) / 2.f, .1f, 9999.f);
-
-	if(mousePos.x >= 25.f && mousePos.x <= 110.f && mousePos.y >= winHeight - 60.f && mousePos.y <= winHeight - 25.f){
-		if(textScaleFactors[2] != 1.1f){
-			soundEngine->play2D("Audio/Sounds/Pop.flac", false);
-			textScaleFactors[2] = 1.1f;
-			textColours[2] = glm::vec4(1.f, 1.f, 0.f, 1.f);
-		}
-		if(leftRightMB > 0.f && buttonBT <= elapsedTime){
-			soundEngine->play2D("Audio/Sounds/Select.wav", false);
-			screen = Screen::MainMenu;
-			buttonBT = elapsedTime + .3f;
-		}
-	} else{
-		textScaleFactors[2] = 1.f;
-		textColours[2] = glm::vec4(1.f);
-	}
 }
 
 void Scene::MainMenuRender(){
@@ -1065,14 +993,6 @@ void Scene::GameRender(){
 			0,
 		});
 	}
-	textChief.RenderText(textSP, {
-		"Score: " + std::to_string(score),
-		25.f,
-		75.f,
-		1.f,
-		glm::vec4(1.f, 1.f, 0.f, 1.f),
-		0,
-	});
 	#endif
 
 	const float FPS = 1.0f / dt;
@@ -1137,52 +1057,6 @@ void Scene::GameRender(){
 	Mesh::polygonCount = 0;
 }
 
-void Scene::ScoreboardRender(){
-	forwardSP.Set1i("nightVision", 0);
-
-	modelStack.PushModel({
-		modelStack.Scale(glm::vec3(float(winWidth) / 2.f, float(winHeight) / 2.f, 1.f)),
-	});
-		forwardSP.Set1i("noNormals", 1);
-		Meshes::meshes[(int)MeshType::Quad]->SetModel(modelStack.GetTopModel());
-		Meshes::meshes[(int)MeshType::Quad]->Render(forwardSP);
-		forwardSP.Set1i("noNormals", 0);
-	modelStack.PopModel();
-
-	glDepthFunc(GL_GREATER);
-	textChief.RenderText(textSP, {
-		"Back",
-		25.f,
-		25.f,
-		textScaleFactors[2],
-		textColours[2],
-		0,
-	});
-
-	float currOffset = 0.f;
-	textChief.RenderText(textSP, {
-		"Scores",
-		30.f,
-		float(winHeight) / 1.2f,
-		1.f,
-		glm::vec4(1.f, .5f, 0.f, 1.f),
-		0,
-	});
-	const size_t& mySize = scores.size();
-	for(size_t i = 0; i < mySize; ++i){
-		currOffset += 80.f;
-		textChief.RenderText(textSP, {
-			std::to_string(scores[i]),
-			30.f,
-			float(winHeight) / 1.2f - currOffset,
-			1.f,
-			glm::vec4(1.f, .5f, 0.f, 1.f),
-			0,
-		});
-	}
-	glDepthFunc(GL_LESS);
-}
-
 void Scene::ForwardRender(){
 	forwardSP.Use();
 	const int& pAmt = (int)ptLights.size();
@@ -1235,10 +1109,6 @@ void Scene::ForwardRender(){
 		case Screen::Game:
 			GameRender();
 			break;
-		case Screen::Scoreboard: {
-			ScoreboardRender();
-			break;
-		}
 	}
 
 	glBlendFunc(GL_ONE, GL_ZERO);

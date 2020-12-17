@@ -85,13 +85,10 @@ private:
 	enum struct Screen{
 		MainMenu = 0,
 		Game,
-		Scoreboard,
 		Amt
 	};
 
 	Screen screen;
-	int score;
-	std::vector<int> scores;
 	float textScaleFactors[3];
 	glm::vec4 textColours[3];
 	bool sprintOn;
@@ -101,11 +98,9 @@ private:
 
 	void MainMenuUpdate(GLFWwindow* const& win, const POINT& mousePos, float& buttonBT);
 	void GameUpdate(GLFWwindow* const& win);
-	void ScoreboardUpdate(GLFWwindow* const& win, const POINT& mousePos, float& buttonBT);
 
 	void MainMenuRender();
 	void GameRender();
-	void ScoreboardRender();
 
 	void InitEntities();
 	void RenderEntities();
