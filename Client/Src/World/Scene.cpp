@@ -47,7 +47,13 @@ Scene::Scene():
 		new Model("ObjsAndMtls/Tree.obj", {
 			aiTextureType_DIFFUSE,
 		}),
-		new Model("ObjsAndMtls/Dragon.obj", {
+		new Model("ObjsAndMtls/Dragon_Low.obj", {
+			aiTextureType_DIFFUSE,
+		}),
+		new Model("ObjsAndMtls/Dragon_Medium.obj", {
+			aiTextureType_DIFFUSE,
+		}),
+		new Model("ObjsAndMtls/Dragon_High.obj", {
 			aiTextureType_DIFFUSE,
 		}),
 	},
@@ -662,8 +668,8 @@ void Scene::GameRender(){
 		modelStack.Translate(pos),
 		modelStack.Scale(glm::vec3(scaleFactor))
 	});
-	models[(int)ModelType::Dragon]->SetModelForAll(modelStack.GetTopModel());
-	models[(int)ModelType::Dragon]->Render(forwardSP);
+	models[(int)ModelType::Dragon_Low]->SetModelForAll(modelStack.GetTopModel());
+	models[(int)ModelType::Dragon_Low]->Render(forwardSP);
 	modelStack.PopModel();
 
 	models[(int)ModelType::Tree]->InstancedRender(forwardSP);

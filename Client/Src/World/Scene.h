@@ -41,7 +41,9 @@ private:
 		Grass,
 		Rock,
 		Tree,
-		Dragon,
+		Dragon_Low,
+		Dragon_Medium,
+		Dragon_High,
 		Amt
 	};
 	Model* models[(int)ModelType::Amt];
