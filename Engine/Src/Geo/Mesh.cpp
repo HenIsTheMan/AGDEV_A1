@@ -3,6 +3,9 @@
 
 int Mesh::normalDrawCalls = 0;
 int Mesh::instancedDrawCalls = 0;
+int Mesh::vertexCount = 0;
+int Mesh::indexCount = 0;
+int Mesh::polygonCount = 0;
 
 Mesh::Mesh():
 	type(MeshType::Amt),
@@ -298,8 +301,14 @@ void Mesh::InstancedRender(ShaderProg& SP, const bool& autoConfig){
 
 	indices ? glDrawElementsInstanced(primitive, (int)indices->size(), GL_UNSIGNED_INT, nullptr, (int)modelMats.size()) : glDrawArraysInstanced(primitive, 0, (int)vertices->size(), (int)modelMats.size());
 	++instancedDrawCalls;
-	glBindVertexArray(0);
+	const int amtOfVertices = int(vertices->size() * modelMats.size());
+	Mesh::vertexCount += amtOfVertices;
+	if(indices){
+		Mesh::indexCount += int(indices->size() * modelMats.size());
+	}
+	Mesh::polygonCount += amtOfVertices / 3;
 
+	glBindVertexArray(0);
 	if(autoConfig){
 		SP.ResetTexUnits();
 	}
@@ -405,8 +414,14 @@ void Mesh::Render(ShaderProg& SP, const bool& autoConfig){
 
 	indices ? glDrawElements(primitive, (int)indices->size(), GL_UNSIGNED_INT, nullptr) : glDrawArrays(primitive, 0, (int)vertices->size());
 	++normalDrawCalls;
-	glBindVertexArray(0);
+	const int amtOfVertices = (int)vertices->size();
+	Mesh::vertexCount += amtOfVertices;
+	if(indices){
+		Mesh::indexCount += (int)indices->size();
+	}
+	Mesh::polygonCount += amtOfVertices / 3;
 
+	glBindVertexArray(0);
 	if(autoConfig){
 		SP.ResetTexUnits();
 	}

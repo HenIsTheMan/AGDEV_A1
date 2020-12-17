@@ -32,7 +32,6 @@
     <ClInclude Include="Src\Entity\EntityManager.h" />
     <ClInclude Include="Src\Shared\Meshes.h" />
     <ClInclude Include="Src\World\ModelStack.h" />
-    <ClInclude Include="Src\Shared\Stats.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Blur.fragS" />

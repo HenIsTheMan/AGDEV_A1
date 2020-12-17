@@ -38,6 +38,9 @@ public:
 
 	static int normalDrawCalls;
 	static int instancedDrawCalls;
+	static int vertexCount;
+	static int indexCount;
+	static int polygonCount;
 
 	void AddModelMat(const glm::mat4& modelMat);
 	void AddColor(const glm::vec3& color);

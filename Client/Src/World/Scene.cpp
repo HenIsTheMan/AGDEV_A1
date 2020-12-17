@@ -1229,8 +1229,38 @@ void Scene::GameRender(){
 		0,
 	});
 
+	textChief.RenderText(textSP, {
+		"Polygon count: " + std::to_string(Mesh::polygonCount),
+		25.f,
+		350.0f,
+		1.f,
+		glm::vec4(1.0f, 0.0f, 1.0f, 1.0f),
+		0,
+	});
+
+	textChief.RenderText(textSP, {
+		"Index count: " + std::to_string(Mesh::indexCount),
+		25.f,
+		400.0f,
+		1.f,
+		glm::vec4(1.0f, 0.0f, 1.0f, 1.0f),
+		0,
+	});
+
+	textChief.RenderText(textSP, {
+		"Vertex count: " + std::to_string(Mesh::vertexCount),
+		25.f,
+		450.0f,
+		1.f,
+		glm::vec4(1.0f, 0.0f, 1.0f, 1.0f),
+		0,
+	});
+
 	Mesh::instancedDrawCalls = 0;
 	Mesh::normalDrawCalls = 0;
+	Mesh::vertexCount = 0;
+	Mesh::indexCount = 0;
+	Mesh::polygonCount = 0;
 }
 
 void Scene::GameOverRender(){

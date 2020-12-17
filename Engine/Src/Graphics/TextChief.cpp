@@ -71,6 +71,8 @@ bool TextChief::Init(){
     return true;
 }
 
+#include <iostream>
+
 void TextChief::RenderText(ShaderProg& SP, const TextAttribs& attribs){
     if(!ft && !Init()){
         puts("Failed to init TextChief!\n");
@@ -120,8 +122,13 @@ void TextChief::RenderText(ShaderProg& SP, const TextAttribs& attribs){
         glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices); 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-        ++Mesh::normalDrawCalls;
         glDrawArrays(GL_TRIANGLES, 0, 6);
+
+        ++Mesh::normalDrawCalls;
+        const int amtOfVertices = int(sizeof(vertices) / sizeof(vertices[0]));
+        Mesh::vertexCount += amtOfVertices;
+        Mesh::indexCount += 0;
+        Mesh::polygonCount += amtOfVertices / 3;
 
         SP.ResetTexUnits();
         const_cast<float&>(attribs.x) += (ch.advance >> 6) * attribs.scaleFactor; // now advance cursors for next glyph (note that advance is number of 1/64 pixels) // bitshift by 6 to get value in pixels (2^6 = 64)

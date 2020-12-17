@@ -225,6 +225,12 @@ void SpriteAni::Render(ShaderProg& SP, const bool& autoConfig){
 	
 	glDrawElements(primitive, 6, GL_UNSIGNED_INT, (const void*)(long long(this->currFrame) * 6 * sizeof(GLuint))); //more??
 	++Mesh::normalDrawCalls;
+	const int amtOfVertices = (int)vertices->size();
+	Mesh::vertexCount += amtOfVertices;
+	if(indices){
+		Mesh::indexCount += (int)indices->size();
+	}
+	Mesh::polygonCount += amtOfVertices / 3;
 
 	glBindVertexArray(0);
 	if(autoConfig){
