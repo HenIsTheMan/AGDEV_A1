@@ -87,6 +87,11 @@ Scene::Scene():
 }
 
 Scene::~Scene(){
+	if(dLight){
+		delete dLight;
+		dLight = nullptr;
+	}
+
 	for(short i = 0; i < 3; ++i){
 		if(guns[i]){
 			delete guns[i];
@@ -415,52 +420,6 @@ void Scene::GameUpdate(GLFWwindow* const& win){
 		polyModes[0] += polyModes[0] == GL_FILL ? -2 : 1;
 		glPolygonMode(GL_FRONT_AND_BACK, polyModes[0]);
 		polyModeBT = elapsedTime + .5f;
-	}
-
-	///Control soundFX
-	const size_t& coinSoundFXSize = coinSoundFX.size();
-	for(size_t i = 0; i < coinSoundFXSize; ++i){
-		ISoundEffectControl* soundFX = coinSoundFX[i];
-		if(soundFX){
-			if(Key(KEY_I) && distortionBT <= elapsedTime){
-				soundFX->isDistortionSoundEffectEnabled() ? soundFX->disableDistortionSoundEffect() : (void)soundFX->enableDistortionSoundEffect();
-				distortionBT = elapsedTime + .5f;
-			}
-			if(Key(KEY_O) && echoBT <= elapsedTime){
-				soundFX->isEchoSoundEffectEnabled() ? soundFX->disableEchoSoundEffect() : (void)soundFX->enableEchoSoundEffect();
-				echoBT = elapsedTime + .5f;
-			}
-			if(Key(KEY_P) && wavesReverbBT <= elapsedTime){
-				soundFX->isWavesReverbSoundEffectEnabled() ? soundFX->disableWavesReverbSoundEffect() : (void)soundFX->enableWavesReverbSoundEffect();
-				wavesReverbBT = elapsedTime + .5f;
-			}
-			if(Key(KEY_L) && resetSoundFXBT <= elapsedTime){
-				soundFX->disableAllEffects();
-				resetSoundFXBT = elapsedTime + .5f;
-			}
-		}
-	}
-	const size_t& fireSoundFXSize = fireSoundFX.size();
-	for(size_t i = 0; i < fireSoundFXSize; ++i){
-		ISoundEffectControl* soundFX = fireSoundFX[i];
-		if(soundFX){
-			if(Key(KEY_I) && distortionBT <= elapsedTime){
-				soundFX->isDistortionSoundEffectEnabled() ? soundFX->disableDistortionSoundEffect() : (void)soundFX->enableDistortionSoundEffect();
-				distortionBT = elapsedTime + .5f;
-			}
-			if(Key(KEY_O) && echoBT <= elapsedTime){
-				soundFX->isEchoSoundEffectEnabled() ? soundFX->disableEchoSoundEffect() : (void)soundFX->enableEchoSoundEffect();
-				echoBT = elapsedTime + .5f;
-			}
-			if(Key(KEY_P) && wavesReverbBT <= elapsedTime){
-				soundFX->isWavesReverbSoundEffectEnabled() ? soundFX->disableWavesReverbSoundEffect() : (void)soundFX->enableWavesReverbSoundEffect();
-				wavesReverbBT = elapsedTime + .5f;
-			}
-			if(Key(KEY_L) && resetSoundFXBT <= elapsedTime){
-				soundFX->disableAllEffects();
-				resetSoundFXBT = elapsedTime + .5f;
-			}
-		}
 	}
 
 	///Control shooting and reloading of currGun
@@ -898,7 +857,4 @@ void Scene::ForwardRender(){
 	}
 
 	glBlendFunc(GL_ONE, GL_ZERO);
-}
-
-void Scene::RenderEntities(){
 }
