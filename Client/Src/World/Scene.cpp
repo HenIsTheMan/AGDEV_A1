@@ -44,7 +44,13 @@ Scene::Scene():
 		new Model("ObjsAndMtls/Rock.obj", {
 			aiTextureType_DIFFUSE,
 		}),
-		new Model("ObjsAndMtls/Tree.obj", {
+		new Model("ObjsAndMtls/Tree_Low.obj", {
+			aiTextureType_DIFFUSE,
+		}),
+		new Model("ObjsAndMtls/Tree_Medium.obj", {
+			aiTextureType_DIFFUSE,
+		}),
+		new Model("ObjsAndMtls/Tree_High.obj", {
 			aiTextureType_DIFFUSE,
 		}),
 		new Model("ObjsAndMtls/Dragon_Low.obj", {
@@ -191,10 +197,20 @@ void Scene::InitEntities(){
 	//*/
 
 	//* Create trees
-	Model* const tree = models[(int)ModelType::Tree];
-	tree->ReserveModelMatsForAll(9999);
-	tree->ReserveColorsForAll(9999);
-	tree->ReserveDiffuseTexIndicesForAll(9999);
+	Model* const treeHigh = models[(int)ModelType::Tree_High];
+	treeHigh->ReserveModelMatsForAll(9999);
+	treeHigh->ReserveColorsForAll(9999);
+	treeHigh->ReserveDiffuseTexIndicesForAll(9999);
+
+	Model* const treeMedium = models[(int)ModelType::Tree_Medium];
+	treeMedium->ReserveModelMatsForAll(9999);
+	treeMedium->ReserveColorsForAll(9999);
+	treeMedium->ReserveDiffuseTexIndicesForAll(9999);
+
+	Model* const treeLow = models[(int)ModelType::Tree_Low];
+	treeLow->ReserveModelMatsForAll(9999);
+	treeLow->ReserveColorsForAll(9999);
+	treeLow->ReserveDiffuseTexIndicesForAll(9999);
 
 	for(int i = 0; i < 9999; ++i){
 		const float scaleFactor = 50.0f;
@@ -211,16 +227,28 @@ void Scene::InitEntities(){
 			modelStack.Rotate(glm::vec4(0.f, 1.f, 0.f, PseudorandMinMax(0.0f, 360.0f))),
 			modelStack.Scale(glm::vec3(scaleFactor))
 		});
-			tree->AddModelMatForAll(modelStack.GetTopModel());
-			tree->AddColorForAll(glm::vec3(PseudorandMinMax(0.1f, 1.0f), 0.0f, 0.0f));
-			tree->AddDiffuseTexIndexForAll(0);
+			const glm::mat4& modelMat = modelStack.GetTopModel();
+			const glm::vec3& color = glm::vec3(PseudorandMinMax(0.1f, 1.0f), 0.0f, 0.0f);
+			const int diffuseTexIndex = 0;
+
+			treeHigh->AddModelMatForAll(modelMat);
+			treeHigh->AddColorForAll(color);
+			treeHigh->AddDiffuseTexIndexForAll(diffuseTexIndex);
+
+			treeMedium->AddModelMatForAll(modelMat);
+			treeMedium->AddColorForAll(color);
+			treeMedium->AddDiffuseTexIndexForAll(diffuseTexIndex);
+
+			treeLow->AddModelMatForAll(modelMat);
+			treeLow->AddColorForAll(color);
+			treeLow->AddDiffuseTexIndexForAll(diffuseTexIndex);
 		modelStack.PopModel();
 	}
 	//*/
 
-	dragonLOD.SetDistAndModel(DetailLvl::High, 5000.0f,  models[(int)ModelType::Dragon_High]);
-	dragonLOD.SetDistAndModel(DetailLvl::Medium, 10000.0f,  models[(int)ModelType::Dragon_Medium]);
-	dragonLOD.SetDistAndModel(DetailLvl::Low, 15000.0f, models[(int)ModelType::Dragon_Low]);
+	treeLOD.SetDistAndModel(DetailLvl::High, 5000.0f,  models[(int)ModelType::Tree_High]);
+	treeLOD.SetDistAndModel(DetailLvl::Medium, 10000.0f,  models[(int)ModelType::Tree_Medium]);
+	treeLOD.SetDistAndModel(DetailLvl::Low, 15000.0f, models[(int)ModelType::Tree_Low]);
 
 	entityManager->SetUpRegionsForStationary();
 }
@@ -598,13 +626,13 @@ void Scene::GameRender(){
 
 	glDepthFunc(GL_LEQUAL); //Modify comparison operators used for depth test such that frags with depth <= 1.f are shown
 	glCullFace(GL_FRONT);
-	forwardSP.Set1i("sky", 1);
-	forwardSP.Set1i("skybox", 1);
-	forwardSP.UseTex(cubemapRefID, "cubemapSampler", GL_TEXTURE_CUBE_MAP);
-	Meshes::meshes[(int)MeshType::Cube]->SetModel(modelStack.GetTopModel());
-	Meshes::meshes[(int)MeshType::Cube]->Render(forwardSP);
-	forwardSP.Set1i("skybox", 0);
-	forwardSP.Set1i("sky", 0);
+		forwardSP.Set1i("sky", 1);
+		forwardSP.Set1i("skybox", 1);
+		forwardSP.UseTex(cubemapRefID, "cubemapSampler", GL_TEXTURE_CUBE_MAP);
+		Meshes::meshes[(int)MeshType::Cube]->SetModel(modelStack.GetTopModel());
+		Meshes::meshes[(int)MeshType::Cube]->Render(forwardSP);
+		forwardSP.Set1i("skybox", 0);
+		forwardSP.Set1i("sky", 0);
 	glCullFace(GL_BACK);
 	glDepthFunc(GL_LESS);
 
@@ -674,27 +702,7 @@ void Scene::GameRender(){
 
 
 
-	const float scaleFactor = 5.0f;
-	const float xPos = 0.0f;
-	const float zPos = 0.0f;
-	const glm::vec3 pos = glm::vec3(
-		xPos,
-		terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos / terrainXScale, zPos / terrainZScale),
-		zPos
-	);
-	Model* dragon = dragonLOD.GetModel(glm::length(cam.GetPos() - pos)); //playerPos?? //lenSquared??
-
-	if(dragon != nullptr){
-		modelStack.PushModel({
-			modelStack.Translate(pos),
-			modelStack.Scale(glm::vec3(scaleFactor))
-		});
-		dragon->SetModelForAll(modelStack.GetTopModel());
-		dragon->Render(forwardSP);
-		modelStack.PopModel();
-	}
-
-	models[(int)ModelType::Tree]->InstancedRender(forwardSP);
+	treeLOD.GetModel(glm::length(cam.GetPos() - glm::vec3()))->InstancedRender(forwardSP); //playerPos?? //lenSquared??
 
 	entityManager->Render(forwardSP, cam);
 

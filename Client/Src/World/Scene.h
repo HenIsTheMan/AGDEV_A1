@@ -35,7 +35,7 @@ private:
 
 	int polyModes[2];
 
-	LOD dragonLOD;
+	LOD treeLOD;
 
 	enum struct ModelType{
 		Shotgun = 0,
@@ -44,7 +44,9 @@ private:
 		Flower,
 		Grass,
 		Rock,
-		Tree,
+		Tree_Low,
+		Tree_Medium,
+		Tree_High,
 		Dragon_Low,
 		Dragon_Medium,
 		Dragon_High,
