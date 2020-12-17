@@ -24,7 +24,7 @@ void EntityManager::Init(){
 		entityPool[i] = new Entity();
 	}
 
-	regionControl->InitRegionPool(100);
+	regionControl->InitRegionPool(500);
 	regionControl->ReserveStationaryNodes(999);
 	regionControl->ReserveMovableNodes(500);
 }

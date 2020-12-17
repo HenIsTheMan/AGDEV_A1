@@ -27,7 +27,7 @@ void RegionControl::RenderEntities(ShaderProg& SP, const Cam& cam){
 	std::map<int, Entity*> entitiesNotOpaque;
 	rootRegion->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
 
-	std::cout << "entitiesNotOpaque size: " << entitiesNotOpaque.size() << '\n';
+	//std::cout << "entitiesNotOpaque size: " << entitiesNotOpaque.size() << '\n'; //No. varies due to optimisation
 
 	///Render opaque entities 1st
 	for(std::map<int, Entity*>::reverse_iterator iter = entitiesOpaque.rbegin(); iter != entitiesOpaque.rend(); ++iter){
