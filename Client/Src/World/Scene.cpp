@@ -82,10 +82,6 @@ Scene::Scene():
 		glm::vec4(1.f),
 	},
 	sprintOn(false),
-	playerHealth(0.f),
-	playerMaxHealth(100.f),
-	playerLives(0),
-	playerMaxLives(5),
 	currGun(nullptr),
 	guns{
 		nullptr,
@@ -360,8 +356,6 @@ void Scene::MainMenuAndGameOverUpdate(GLFWwindow* const& win, const POINT& mouse
 			soundEngine->play2D("Audio/Sounds/Select.wav", false);
 			timeLeft = 60.f;
 			score = 0;
-			playerHealth = playerMaxHealth;
-			playerLives = playerMaxLives;
 			if(guns[0]){
 				delete guns[0];
 				guns[0] = nullptr;
@@ -420,15 +414,6 @@ void Scene::MainMenuAndGameOverUpdate(GLFWwindow* const& win, const POINT& mouse
 }
 
 void Scene::GameUpdate(GLFWwindow* const& win){
-	if(playerHealth <= 0.f){
-		--playerLives;
-		playerHealth = playerMaxHealth;
-	}
-	if(playerLives <= 0){
-		timeLeft = 0.f;
-	} else{
-		timeLeft -= dt;
-	}
 	if(timeLeft <= 0.f){
 		screen = Screen::GameOver;
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -812,39 +797,6 @@ void Scene::GameRender(){
 	forwardSP.SetMat4fv("PV", &(projection * view)[0][0]);
 
 	if(!(RMB && inv[currSlot] == ItemType::Sniper)){
-		///Render healthbar
-		modelStack.PushModel({
-			modelStack.Translate(glm::vec3(-float(winWidth) / 2.5f, float(winHeight) / 2.5f, -10.f)),
-			modelStack.Scale(glm::vec3(float(winWidth) / 15.f, float(winHeight) / 50.f, 1.f)),
-		});
-		forwardSP.Set1i("noNormals", 1);
-		forwardSP.Set1i("useCustomColour", 1);
-		forwardSP.Set4fv("customColour", glm::vec4(glm::vec3(1.f, 0.f, 0.f), 1.f));
-		forwardSP.Set1i("useCustomDiffuseTexIndex", 1);
-		forwardSP.Set1i("customDiffuseTexIndex", -1);
-		Meshes::meshes[(int)MeshType::Quad]->SetModel(modelStack.GetTopModel());
-		Meshes::meshes[(int)MeshType::Quad]->Render(forwardSP);
-		forwardSP.Set1i("useCustomDiffuseTexIndex", 0);
-		forwardSP.Set1i("useCustomColour", 0);
-		forwardSP.Set1i("noNormals", 0);
-
-		modelStack.PushModel({
-			modelStack.Translate(glm::vec3(-(playerMaxHealth - playerHealth) / playerMaxHealth, 0.f, 1.f)),
-			modelStack.Scale(glm::vec3(playerHealth / playerMaxHealth, 1.f, 1.f)),
-		});
-			forwardSP.Set1i("noNormals", 1);
-			forwardSP.Set1i("useCustomColour", 1);
-			forwardSP.Set4fv("customColour", glm::vec4(glm::vec3(0.f, 1.f, 0.f), 1.f));
-			forwardSP.Set1i("useCustomDiffuseTexIndex", 1);
-			forwardSP.Set1i("customDiffuseTexIndex", -1);
-			Meshes::meshes[(int)MeshType::Quad]->SetModel(modelStack.GetTopModel());
-			Meshes::meshes[(int)MeshType::Quad]->Render(forwardSP);
-			forwardSP.Set1i("useCustomDiffuseTexIndex", 0);
-			forwardSP.Set1i("useCustomColour", 0);
-			forwardSP.Set1i("noNormals", 0);
-		modelStack.PopModel();
-		modelStack.PopModel();
-
 		///Render items in inv
 		for(short i = 0; i < 5; ++i){
 			forwardSP.Set1i("noNormals", 1);
@@ -888,8 +840,6 @@ void Scene::GameRender(){
 				case ItemType::ScarAmmo:
 					break;
 				case ItemType::SniperAmmo:
-					break;
-				case ItemType::HealthPack:
 					break;
 			}
 			modelStack.PopModel();
@@ -1035,44 +985,6 @@ void Scene::GameRender(){
 		forwardSP.Set1i("useCustomDiffuseTexIndex", 0);
 	} else{
 		forwardSP.Set1i("nightVision", 0);
-
-		///Render red hearts
-		for(int i = 0; i < playerLives; ++i){
-			modelStack.PushModel({
-				modelStack.Translate(glm::vec3(-float(winWidth) / 2.2f + 75.f * float(i), float(winHeight) / 2.2f, -9.f)),
-				modelStack.Scale(glm::vec3(25.f, 25.f, 1.f)),
-			});
-				forwardSP.Set1i("noNormals", 1);
-				forwardSP.Set1i("useCustomColour", 1);
-				forwardSP.Set4fv("customColour", glm::vec4(1.f, 0.f, 0.f, 1.f));
-				forwardSP.Set1i("useCustomDiffuseTexIndex", 1);
-				forwardSP.Set1i("customDiffuseTexIndex", 2);
-					Meshes::meshes[(int)MeshType::Quad]->SetModel(modelStack.GetTopModel());
-					Meshes::meshes[(int)MeshType::Quad]->Render(forwardSP);
-				forwardSP.Set1i("useCustomDiffuseTexIndex", 0);
-				forwardSP.Set1i("useCustomColour", 0);
-				forwardSP.Set1i("noNormals", 0);
-			modelStack.PopModel();
-		}
-
-		///Render grey hearts
-		for(int i = 0; i < playerMaxLives; ++i){
-			modelStack.PushModel({
-				modelStack.Translate(glm::vec3(-float(winWidth) / 2.2f + 75.f * float(i), float(winHeight) / 2.2f, -10.f)),
-				modelStack.Scale(glm::vec3(25.f, 25.f, 1.f)),
-			});
-				forwardSP.Set1i("noNormals", 1);
-				forwardSP.Set1i("useCustomColour", 1);
-				forwardSP.Set4fv("customColour", glm::vec4(glm::vec3(.3f), 1.f));
-				forwardSP.Set1i("useCustomDiffuseTexIndex", 1);
-				forwardSP.Set1i("customDiffuseTexIndex", 2);
-					Meshes::meshes[(int)MeshType::Quad]->SetModel(modelStack.GetTopModel());
-					Meshes::meshes[(int)MeshType::Quad]->Render(forwardSP);
-				forwardSP.Set1i("useCustomDiffuseTexIndex", 0);
-				forwardSP.Set1i("useCustomColour", 0);
-				forwardSP.Set1i("noNormals", 0);
-			modelStack.PopModel();
-		}
 
 		///Render inv slots
 		for(short i = 0; i < 5; ++i){

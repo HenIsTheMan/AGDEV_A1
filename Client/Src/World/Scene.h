@@ -66,7 +66,7 @@ private:
 		ShotgunAmmo,
 		ScarAmmo,
 		SniperAmmo,
-		HealthPack,
+		Amt
 	};
 	int currSlot;
 	ItemType inv[5];
@@ -97,10 +97,6 @@ private:
 	float textScaleFactors[3];
 	glm::vec4 textColours[3];
 	bool sprintOn;
-	float playerHealth;
-	float playerMaxHealth;
-	int playerLives;
-	int playerMaxLives;
 	Gun* currGun;
 	Gun* guns[3];
 	glm::vec4 reticleColour;
