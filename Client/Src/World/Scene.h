@@ -24,10 +24,8 @@ public:
 	void ForwardRender();
 	void BlurRender(const uint& brightTexRefID, const bool& horizontal);
 	void DefaultRender(const uint& screenTexRefID, const uint& blurTexRefID, const glm::vec3& translate, const glm::vec3& scale);
-	void MinimapRender();
 private:
 	Cam cam;
-	Cam minimapCam;
 	ISoundEngine* soundEngine;
 	std::vector<ISound*> coinMusic;
 	std::vector<ISoundEffectControl*> coinSoundFX;
@@ -60,20 +58,6 @@ private:
 	std::vector<Light*> spotlights;
 	uint cubemapRefID;
 
-	enum struct MinimapViewType{
-		TopFollowingOrtho = 0,
-		TopFollowingPerspective,
-		TopStaticOrtho,
-		TopStaticPerspective,
-		IsometricOrtho,
-		IsometricPerspective,
-		ThirdPersonFollowingOrtho,
-		ThirdPersonFollowingPerspective,
-		ThirdPersonStaticOrtho,
-		ThirdPersonStaticPerspective,
-		Amt
-	};
-	MinimapViewType minimapView;
 	enum struct ItemType{
 		None = -1,
 		Shotgun,

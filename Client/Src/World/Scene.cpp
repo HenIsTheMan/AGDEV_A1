@@ -21,7 +21,6 @@ glm::vec3 Light::globalAmbient = glm::vec3(.2f);
 
 Scene::Scene():
 	cam(glm::vec3(0.f, 0.f, 5.f), glm::vec3(0.f), glm::vec3(0.f, 1.f, 0.f), 0.f, 150.f),
-	minimapCam(glm::vec3(0.f), glm::vec3(0.f), glm::vec3(0.f), 0.f, 0.f),
 	soundEngine(nullptr),
 	coinMusic({}),
 	coinSoundFX({}),
@@ -59,7 +58,6 @@ Scene::Scene():
 	directionalLights({}),
 	spotlights({}),
 	cubemapRefID(0),
-	minimapView(MinimapViewType::TopFollowingOrtho),
 	currSlot(0),
 	inv{
 		ItemType::Shotgun,
@@ -653,14 +651,6 @@ void Scene::GameUpdate(GLFWwindow* const& win){
 		polyModes[0] += polyModes[0] == GL_FILL ? -2 : 1;
 		glPolygonMode(GL_FRONT_AND_BACK, polyModes[0]);
 		polyModeBT = elapsedTime + .5f;
-	}
-
-	if(Key(VK_F3) && minimapViewBT <= elapsedTime){
-		minimapView = MinimapViewType((int)minimapView + 1);
-		if(minimapView == MinimapViewType::Amt){
-			minimapView = MinimapViewType(0);
-		}
-		minimapViewBT = elapsedTime + .5f;
 	}
 
 	if(score < 0){
@@ -1375,109 +1365,6 @@ void Scene::ScoreboardRender(){
 		});
 	}
 	glDepthFunc(GL_LESS);
-}
-
-void Scene::MinimapRender(){
-	static float Divisor = 5.f;
-
-	if(screen == Screen::Game){
-		forwardSP.Use();
-		const int& pAmt = 0;
-		const int& dAmt = 0;
-		const int& sAmt = 0;
-		forwardSP.Set1i("nightVision", 0);
-		forwardSP.Set1f("shininess", 32.f); //More light scattering if lower
-		forwardSP.Set3fv("globalAmbient", Light::globalAmbient);
-		forwardSP.Set3fv("camPos", cam.GetPos());
-		forwardSP.Set1i("pAmt", pAmt);
-		forwardSP.Set1i("dAmt", dAmt);
-		forwardSP.Set1i("sAmt", sAmt);
-
-		switch(minimapView){
-			case MinimapViewType::TopFollowingOrtho:
-				minimapCam.SetPos(glm::vec3(cam.GetPos().x, 1000.f, cam.GetPos().z));
-				minimapCam.SetTarget(glm::vec3(cam.GetPos().x, 0.f, cam.GetPos().z));
-				minimapCam.SetUp(glm::vec3(0.f, 0.f, -1.f));
-				view = minimapCam.LookAt();
-				projection = glm::ortho(-float(winWidth) / Divisor, float(winWidth) / Divisor, -float(winHeight) / Divisor, float(winHeight) / Divisor, .1f, 99999.f);
-				break;
-			case MinimapViewType::TopFollowingPerspective:
-				minimapCam.SetPos(glm::vec3(cam.GetPos().x, 1000.f, cam.GetPos().z));
-				minimapCam.SetTarget(glm::vec3(cam.GetPos().x, 0.f, cam.GetPos().z));
-				minimapCam.SetUp(glm::vec3(0.f, 0.f, -1.f));
-				view = minimapCam.LookAt();
-				projection = glm::perspective(angularFOV, cam.GetAspectRatio(), .1f, 99999.f);
-				break;
-			case MinimapViewType::TopStaticOrtho:
-				minimapCam.SetPos(glm::vec3(0.f, 1000.f, 0.f));
-				minimapCam.SetTarget(glm::vec3(0.f));
-				minimapCam.SetUp(glm::vec3(0.f, 0.f, -1.f));
-				view = minimapCam.LookAt();
-				projection = glm::ortho(-float(winWidth) * .9f, float(winWidth) * .9f, -float(winHeight) * .9f, float(winHeight) * .9f, .1f, 99999.f);
-				break;
-			case MinimapViewType::TopStaticPerspective:
-				minimapCam.SetPos(glm::vec3(0.f, 2000.f, 0.f));
-				minimapCam.SetTarget(glm::vec3(0.f));
-				minimapCam.SetUp(glm::vec3(0.f, 0.f, -1.f));
-				view = minimapCam.LookAt();
-				projection = glm::perspective(angularFOV, cam.GetAspectRatio(), .1f, 99999.f);
-				break;
-			case MinimapViewType::IsometricOrtho:
-				minimapCam.SetPos(glm::vec3(1000.f));
-				minimapCam.SetTarget(glm::vec3(0.f));
-				minimapCam.SetUp(glm::normalize(glm::vec3(-1.f, 1.f, -1.f)));
-				view = minimapCam.LookAt();
-				projection = glm::ortho(-float(winWidth) * .9f, float(winWidth) * .9f, -float(winHeight) * .9f, float(winHeight) * .9f, .1f, 99999.f);
-				break;
-			case MinimapViewType::IsometricPerspective:
-				minimapCam.SetPos(glm::vec3(1000.f));
-				minimapCam.SetTarget(glm::vec3(0.f));
-				minimapCam.SetUp(glm::normalize(glm::vec3(-1.f, 1.f, -1.f)));
-				view = minimapCam.LookAt();
-				projection = glm::perspective(angularFOV, cam.GetAspectRatio(), .1f, 99999.f);
-				break;
-			case MinimapViewType::ThirdPersonFollowingOrtho:
-				minimapCam.SetPos(glm::vec3(cam.GetPos().x, 500.f, cam.GetPos().z + 500.f));
-				minimapCam.SetTarget(glm::vec3(cam.GetPos().x, 0.f, cam.GetPos().z));
-				minimapCam.SetUp(glm::normalize(glm::vec3(0.f, 1.f, -1.f)));
-				view = minimapCam.LookAt();
-				projection = glm::ortho(-float(winWidth) * .8f, float(winWidth) * .8f, -float(winHeight) * .8f, float(winHeight) * .8f, .1f, 99999.f);
-				break;
-			case MinimapViewType::ThirdPersonFollowingPerspective:
-				minimapCam.SetPos(glm::vec3(cam.GetPos().x, 500.f, cam.GetPos().z + 500.f));
-				minimapCam.SetTarget(glm::vec3(cam.GetPos().x, 0.f, cam.GetPos().z));
-				minimapCam.SetUp(glm::normalize(glm::vec3(0.f, 1.f, -1.f)));
-				view = minimapCam.LookAt();
-				projection = glm::perspective(angularFOV, cam.GetAspectRatio(), .1f, 99999.f);
-				break;
-			case MinimapViewType::ThirdPersonStaticOrtho:
-				minimapCam.SetPos(glm::vec3(0.f, 1000.f, 1000.f));
-				minimapCam.SetTarget(glm::vec3(0.f));
-				minimapCam.SetUp(glm::normalize(glm::vec3(0.f, 1.f, -1.f)));
-				view = minimapCam.LookAt();
-				projection = glm::ortho(-float(winWidth) * .8f, float(winWidth) * .8f, -float(winHeight) * .8f, float(winHeight) * .8f, .1f, 99999.f);
-				break;
-			case MinimapViewType::ThirdPersonStaticPerspective:
-				minimapCam.SetPos(glm::vec3(0.f, 1000.f, 1000.f));
-				minimapCam.SetTarget(glm::vec3(0.f));
-				minimapCam.SetUp(glm::normalize(glm::vec3(0.f, 1.f, -1.f)));
-				view = minimapCam.LookAt();
-				projection = glm::perspective(angularFOV, cam.GetAspectRatio(), .1f, 99999.f);
-				break;
-		}
-		forwardSP.SetMat4fv("PV", &(projection * view)[0][0]);
-
-		entityManager->Render(forwardSP, minimapCam);
-
-		modelStack.PushModel({
-			modelStack.Translate(glm::vec3(cam.GetPos().x, 0.f, cam.GetPos().z)),
-			modelStack.Rotate(glm::vec4(0.f, 1.f, 0.f, glm::degrees(atan2(cam.CalcFront().x, cam.CalcFront().z)))),
-			modelStack.Scale(glm::vec3(20.f)),
-		});
-			Meshes::meshes[(int)MeshType::Sphere]->SetModel(modelStack.GetTopModel());
-			Meshes::meshes[(int)MeshType::Sphere]->Render(forwardSP);
-		modelStack.PopModel();
-	}
 }
 
 void Scene::ForwardRender(){
