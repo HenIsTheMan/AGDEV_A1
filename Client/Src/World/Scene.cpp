@@ -182,28 +182,17 @@ void Scene::InitEntities(){
 		const float scaleFactor = 15.f;
 		const float xPos = 0.0f;
 		const float zPos = 0.0f;
-		const glm::vec3 pos = glm::vec3(xPos, terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos / terrainXScale, zPos / terrainZScale) + scaleFactor, zPos);
 		entityManager->CreatePlayer({
-			pos,
-			glm::vec3(1.f, 0.f, 0.f),
+			glm::vec3(
+				xPos,
+				terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos / terrainXScale, zPos / terrainZScale) + scaleFactor,
+				zPos
+			),
+			glm::vec3(0.0f, 0.0f, -1.0f),
 			glm::vec3(scaleFactor),
-			glm::vec4(5.f * glm::rgbColor(glm::vec3(PseudorandMinMax(0.f, 255.f), 1.f, 1.f)), .99f),
+			glm::vec4(1.0f),
 			-1,
 		});
-		//const float xPos = cam.GetPos().x;
-		//const float zPos = cam.GetPos().z;
-
-		//entityManager->CreatePlayer({
-		//	glm::vec3(
-		//		xPos,
-		//		terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos / terrainXScale, zPos / terrainZScale, false),
-		//		zPos
-		//	),
-		//	cam.CalcFront(),
-		//	glm::vec3(5.0f, 30.0f, 5.0f),
-		//	glm::vec4(),
-		//	-1,
-		//});
 	}
 	//*/
 
@@ -217,7 +206,7 @@ void Scene::InitEntities(){
 			pos,
 			glm::vec3(1.f, 0.f, 0.f),
 			glm::vec3(scaleFactor),
-			glm::vec4(),
+			glm::vec4(1.0f),
 			-1,
 		});
 
