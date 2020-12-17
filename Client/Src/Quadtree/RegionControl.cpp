@@ -13,8 +13,8 @@ RegionControl::~RegionControl(){
 }
 
 void RegionControl::Update(){
-	rootRegion->ClearMovableAndDeactivateChildren();
-	rootRegion->Partition(true);
+	//rootRegion->ClearMovableAndDeactivateChildren();
+	//rootRegion->Partition(true);
 }
 
 void RegionControl::RenderEntities(ShaderProg& SP, const Cam& cam){

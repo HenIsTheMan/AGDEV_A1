@@ -222,22 +222,22 @@ void Region::Partition(const bool movable){
 		const Entity* const entity = node->GetEntity();
 
 		if(entity && entity->active
-			&& entity->pos[0] + entity->scale[0] <= origin[0] + size[0] * 0.5f && entity->pos[0] - entity->scale[0] >= origin[0] - size[0] * 0.5f
-			&& entity->pos[1] + entity->scale[1] <= origin[1] + size[1] * 0.5f && entity->pos[1] - entity->scale[1] >= origin[1] - size[1] * 0.5f
+			&& entity->pos[0] + entity->scale[0] * 0.5f <= origin[0] + size[0] * 0.5f && entity->pos[0] - entity->scale[0] * 0.5f >= origin[0] - size[0] * 0.5f
+			&& entity->pos[1] + entity->scale[1] * 0.5f <= origin[1] + size[1] * 0.5f && entity->pos[1] - entity->scale[1] * 0.5f >= origin[1] - size[1] * 0.5f
 		){
-			if(entity->pos[1] - entity->scale[1] <= origin[1]){
-				if(entity->pos[0] - entity->scale[0] <= origin[0]){
+			if(entity->pos[1] - entity->scale[1] * 0.5f <= origin[1]){
+				if(entity->pos[0] - entity->scale[0] * 0.5f <= origin[0]){
 					topRight->AddNode(node, entity->movable);
 				}
-				if(entity->pos[0] + entity->scale[0] >= origin[0]){
+				if(entity->pos[0] + entity->scale[0] * 0.5f >= origin[0]){
 					topLeft->AddNode(node, entity->movable);
 				}
 			}
-			if(entity->pos[1] + entity->scale[1] >= origin[1]){
-				if(entity->pos[0] - entity->scale[0] <= origin[0]){
+			if(entity->pos[1] + entity->scale[1] * 0.5f >= origin[1]){
+				if(entity->pos[0] - entity->scale[0] * 0.5f <= origin[0]){
 					bottomRight->AddNode(node, entity->movable);
 				}
-				if(entity->pos[0] + entity->scale[0] >= origin[0]){
+				if(entity->pos[0] + entity->scale[0] * 0.5f >= origin[0]){
 					bottomLeft->AddNode(node, entity->movable);
 				}
 			}
