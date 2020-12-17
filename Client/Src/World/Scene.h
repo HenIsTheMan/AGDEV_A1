@@ -89,8 +89,8 @@ private:
 	};
 
 	Screen screen;
-	float textScaleFactors[3];
-	glm::vec4 textColours[3];
+	float textScaleFactors[2];
+	glm::vec4 textColours[2];
 	bool sprintOn;
 	Gun* currGun;
 	Gun* guns[3];

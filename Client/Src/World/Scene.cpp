@@ -71,10 +71,8 @@ Scene::Scene():
 	textScaleFactors{
 		1.f,
 		1.f,
-		1.f,
 	},
 	textColours{
-		glm::vec4(1.f),
 		glm::vec4(1.f),
 		glm::vec4(1.f),
 	},
@@ -337,7 +335,7 @@ void Scene::MainMenuUpdate(GLFWwindow* const& win, const POINT& mousePos, float&
 		textScaleFactors[0] = 1.f;
 		textColours[0] = glm::vec4(1.f);
 	}
-	if(mousePos.x >= 25.f && mousePos.x <= 230.f && mousePos.y >= winHeight - 110.f && mousePos.y <= winHeight - 75.f){
+	if(mousePos.x >= 25.f && mousePos.x <= 100.f && mousePos.y >= winHeight - 60.f && mousePos.y <= winHeight - 25.f){
 		if(textScaleFactors[1] != 1.1f){
 			soundEngine->play2D("Audio/Sounds/Pop.flac", false);
 			textScaleFactors[1] = 1.1f;
@@ -345,26 +343,12 @@ void Scene::MainMenuUpdate(GLFWwindow* const& win, const POINT& mousePos, float&
 		}
 		if(leftRightMB > 0.f && buttonBT <= elapsedTime){
 			soundEngine->play2D("Audio/Sounds/Select.wav", false);
+			endLoop = true;
 			buttonBT = elapsedTime + .3f;
 		}
 	} else{
 		textScaleFactors[1] = 1.f;
 		textColours[1] = glm::vec4(1.f);
-	}
-	if(mousePos.x >= 25.f && mousePos.x <= 100.f && mousePos.y >= winHeight - 60.f && mousePos.y <= winHeight - 25.f){
-		if(textScaleFactors[2] != 1.1f){
-			soundEngine->play2D("Audio/Sounds/Pop.flac", false);
-			textScaleFactors[2] = 1.1f;
-			textColours[2] = glm::vec4(1.f, 1.f, 0.f, 1.f);
-		}
-		if(leftRightMB > 0.f && buttonBT <= elapsedTime){
-			soundEngine->play2D("Audio/Sounds/Select.wav", false);
-			endLoop = true;
-			buttonBT = elapsedTime + .3f;
-		}
-	} else{
-		textScaleFactors[2] = 1.f;
-		textColours[2] = glm::vec4(1.f);
 	}
 }
 
@@ -658,19 +642,11 @@ void Scene::MainMenuRender(){
 		0,
 	});
 	textChief.RenderText(textSP, {
-		"Scores",
-		25.f,
-		75.f,
-		textScaleFactors[1],
-		textColours[1],
-		0,
-	});
-	textChief.RenderText(textSP, {
 		"Quit",
 		25.f,
 		25.f,
-		textScaleFactors[2],
-		textColours[2],
+		textScaleFactors[1],
+		textColours[1],
 		0,
 	});
 	textChief.RenderText(textSP, {
@@ -964,24 +940,6 @@ void Scene::GameRender(){
 	projection = glm::perspective(glm::radians(angularFOV), cam.GetAspectRatio(), .1f, 9999.f);
 	forwardSP.SetMat4fv("PV", &(projection * view)[0][0]);
 
-	#ifdef DEBUGGING
-	textChief.RenderText(textSP, {
-		"CamTarget: " + std::to_string(cam.GetTarget().x) + " " + std::to_string(cam.GetTarget().y) + " " + std::to_string(cam.GetTarget().z),
-		25.f,
-		25.f,
-		.5f,
-		glm::vec4(1.f, 1.f, 0.f, 1.f),
-		0,
-	});
-	textChief.RenderText(textSP, {
-		"CamFront: " + std::to_string(cam.CalcFront().x) + " " + std::to_string(cam.CalcFront().y) + " " + std::to_string(cam.CalcFront().z),
-		25.f,
-		75.f,
-		.5f,
-		glm::vec4(1.f, 1.f, 0.f, 1.f),
-		0,
-	});
-	#else
 	///Render bullet info
 	if(currGun){
 		textChief.RenderText(textSP, {
@@ -993,7 +951,6 @@ void Scene::GameRender(){
 			0,
 		});
 	}
-	#endif
 
 	const float FPS = 1.0f / dt;
 	textChief.RenderText(textSP, {
