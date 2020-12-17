@@ -1,5 +1,6 @@
 #pragma once
 #include "../Core.h"
+
 #include "../Global/GlobalFuncs.h"
 #include "ShaderProg.h"
 

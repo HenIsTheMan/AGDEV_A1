@@ -224,6 +224,8 @@ void SpriteAni::Render(ShaderProg& SP, const bool& autoConfig){
 	}
 	
 	glDrawElements(primitive, 6, GL_UNSIGNED_INT, (const void*)(long long(this->currFrame) * 6 * sizeof(GLuint))); //more??
+	++Mesh::normalDrawCalls;
+
 	glBindVertexArray(0);
 	if(autoConfig){
 		SP.ResetTexUnits();

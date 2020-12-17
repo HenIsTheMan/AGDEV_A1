@@ -1,5 +1,7 @@
 #include "TextChief.h"
 
+#include "../Geo/Mesh.h"
+
 ///Can be improved
 
 extern int winWidth;
@@ -117,6 +119,8 @@ void TextChief::RenderText(ShaderProg& SP, const TextAttribs& attribs){
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
         glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices); 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+        ++Mesh::normalDrawCalls;
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
         SP.ResetTexUnits();
