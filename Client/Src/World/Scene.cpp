@@ -283,7 +283,10 @@ void Scene::MainMenuUpdate(GLFWwindow* const& win, const POINT& mousePos, float&
 	view = cam.LookAt();
 	projection = glm::ortho(-float(winWidth) / 2.f, float(winWidth) / 2.f, -float(winHeight) / 2.f, float(winHeight) / 2.f, .1f, 9999.f);
 
-	if(mousePos.x >= 25.f && mousePos.x <= (screen == Screen::MainMenu ? 100.f : 230.f) && mousePos.y >= winHeight - 160.f && mousePos.y <= winHeight - 125.f){
+	if(mousePos.x >= (float)winWidth * 0.47f
+		&& mousePos.x <= (float)winWidth * 0.53f
+		&& mousePos.y >= (float)winHeight * 0.77f
+		&& mousePos.y <= (float)winHeight * 0.83f){
 		if(textScaleFactors[0] != 1.1f){
 			soundEngine->play2D("Audio/Sounds/Pop.flac", false);
 			textScaleFactors[0] = 1.1f;
@@ -316,7 +319,11 @@ void Scene::MainMenuUpdate(GLFWwindow* const& win, const POINT& mousePos, float&
 		textScaleFactors[0] = 1.f;
 		textColours[0] = glm::vec4(1.f);
 	}
-	if(mousePos.x >= 25.f && mousePos.x <= 100.f && mousePos.y >= winHeight - 60.f && mousePos.y <= winHeight - 25.f){
+
+	if(mousePos.x >= (float)winWidth * 0.47f
+		&& mousePos.x <= (float)winWidth * 0.53f
+		&& mousePos.y >= (float)winHeight * 0.87f
+		&& mousePos.y <= (float)winHeight * 0.93f){
 		if(textScaleFactors[1] != 1.1f){
 			soundEngine->play2D("Audio/Sounds/Pop.flac", false);
 			textScaleFactors[1] = 1.1f;
@@ -449,38 +456,45 @@ void Scene::MainMenuRender(){
 	modelStack.PopModel();
 
 	glDepthFunc(GL_GREATER);
+
 	textChief.RenderText(textSP, {
 		"Play",
-		25.f,
-		125.f,
+		(float)winWidth * 0.5f,
+		(float)winHeight * 0.2f,
 		textScaleFactors[0],
 		textColours[0],
 		0,
+		TextChief::TextAlignment::Center
 	});
 	textChief.RenderText(textSP, {
 		"Quit",
-		25.f,
-		25.f,
+		(float)winWidth * 0.5f, 
+		(float)winHeight * 0.1f,
 		textScaleFactors[1],
 		textColours[1],
 		0,
+		TextChief::TextAlignment::Center
 	});
+
 	textChief.RenderText(textSP, {
 		"ANOTHER",
-		30.f,
-		float(winHeight) / 1.1f,
-		2.f,
+		(float)winWidth * 0.5f, 
+		(float)winHeight * 0.8f,
+		4.0f,
 		glm::vec4(glm::vec3(1.f, 0.f, 1.f), 1.f),
 		0,
+		TextChief::TextAlignment::Center
 	});
 	textChief.RenderText(textSP, {
 		"WORLD",
-		30.f,
-		float(winHeight) / 1.1f - 100.f,
-		2.f,
+		(float)winWidth * 0.5f,
+		(float)winHeight * 0.6f,
+		4.0f,
 		glm::vec4(glm::vec3(1.f, 0.f, 1.f), 1.f),
 		0,
+		TextChief::TextAlignment::Center
 	});
+
 	glDepthFunc(GL_LESS);
 }
 
