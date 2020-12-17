@@ -1,6 +1,5 @@
 #include "Scene.h"
 #include "Vendor/stb_image.h"
-#include <glm/gtx/color_space.hpp>
 
 float terrainXScale = 1500.f;
 float terrainYScale = 200.f;
@@ -78,10 +77,11 @@ Scene::Scene():
 	reticleColour(glm::vec4(1.f)),
 	view(glm::mat4(1.f)),
 	projection(glm::mat4(1.f)),
-	isCamDetached(false),
+	isCamDetached(true),
 	elapsedTime(0.f),
 	modelStack(),
 	polyModes(),
+	dLight(nullptr),
 	entityManager(EntityManager::GetObjPtr())
 {
 }
@@ -198,7 +198,7 @@ void Scene::InitEntities(){
 			modelStack.Scale(glm::vec3(scaleFactor))
 		});
 			tree->AddModelMatForAll(modelStack.GetTopModel());
-			tree->AddColorForAll(glm::rgbColor(glm::vec3(PseudorandMinMax(0.0f, 1.0f), 1.0f, PseudorandMinMax(0.0f, 1.0f))));
+			tree->AddColorForAll(glm::vec3(PseudorandMinMax(0.1f, 1.0f), 0.0f, 0.0f));
 			tree->AddDiffuseTexIndexForAll(0);
 		modelStack.PopModel();
 	}
@@ -237,6 +237,8 @@ bool Scene::Init(){
 	static_cast<SpriteAni*>(Meshes::meshes[(int)MeshType::FireSpriteAni])->Play("FireSpriteAni", -1, .5f);
 
 	Meshes::meshes[(int)MeshType::Terrain]->AddTexMap({"Imgs/Floor.jpg", Mesh::TexType::Diffuse, 0});
+
+	dLight = CreateLight(LightType::Directional);
 
 	return true;
 }
@@ -875,6 +877,13 @@ void Scene::ForwardRender(){
 	forwardSP.Set1f("shininess", 32.f); //More light scattering if lower
 	forwardSP.Set3fv("globalAmbient", Light::globalAmbient);
 	forwardSP.Set3fv("camPos", cam.GetPos());
+	forwardSP.Set1i("dAmt", 1);
+
+	DirectionalLight* directionalLight = (DirectionalLight*)dLight;
+	forwardSP.Set3fv("directionalLights[0].ambient", directionalLight->ambient);
+	forwardSP.Set3fv("directionalLights[0].diffuse", directionalLight->diffuse);
+	forwardSP.Set3fv("directionalLights[0].spec", directionalLight->spec);
+	forwardSP.Set3fv("directionalLights[0].dir", directionalLight->dir);
 
 	forwardSP.SetMat4fv("PV", &(projection * view)[0][0]);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

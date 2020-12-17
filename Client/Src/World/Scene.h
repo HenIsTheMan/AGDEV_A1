@@ -93,6 +93,8 @@ private:
 	bool isCamDetached;
 	float elapsedTime;
 
+	Light* dLight;
+
 	ModelStack modelStack;
 };
 
