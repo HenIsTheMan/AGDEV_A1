@@ -10,7 +10,7 @@ enum struct MeshType{
 	Terrain,
 	CoinSpriteAni,
 	FireSpriteAni,
-	QuadLines,
+	QuadLineLoop,
 	Amt
 };
 

@@ -114,8 +114,8 @@ void RegionControl::RenderQSP(ShaderProg& SP, const Cam& cam){
 			modelStack.Rotate(glm::vec4(1.0f, 0.0f, 0.0f, 90.0f)),
 			modelStack.Scale(glm::vec3(leaf->origin[0], leaf->origin[1], 1.0f))
 		});
-			Meshes::meshes[(int)MeshType::Cube]->SetModel(modelStack.GetTopModel());
-			Meshes::meshes[(int)MeshType::Cube]->Render(SP);
+			Meshes::meshes[(int)MeshType::QuadLineLoop]->SetModel(modelStack.GetTopModel());
+			Meshes::meshes[(int)MeshType::QuadLineLoop]->Render(SP);
 		modelStack.PopModel();
 	}
 
