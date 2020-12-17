@@ -113,7 +113,7 @@ void RegionControl::RenderQSP(ShaderProg& SP, const Cam& cam){
 		modelStack.PushModel({
 			modelStack.Translate(glm::vec3(leaf->origin[0], terrainYScale, leaf->origin[1])),
 			modelStack.Rotate(glm::vec4(1.0f, 0.0f, 0.0f, 90.0f)),
-			modelStack.Scale(glm::vec3(leaf->origin[0], leaf->origin[1], 1.0f))
+			modelStack.Scale(glm::vec3(leaf->size[0] * 0.5f, leaf->size[1] * 0.5f, 1.0f))
 		});
 			Meshes::meshes[(int)MeshType::QuadLineLoop]->SetModel(modelStack.GetTopModel());
 			Meshes::meshes[(int)MeshType::QuadLineLoop]->Render(SP);
@@ -152,7 +152,7 @@ void RegionControl::InitRegionPool(const size_t& size){
 }
 
 void RegionControl::SetUpRegionsForStationary(){
-	rootRegion->Partition(false);
+	//rootRegion->Partition(false);
 }
 
 RegionControl::RegionControl():
