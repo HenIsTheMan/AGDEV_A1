@@ -13,8 +13,17 @@ RegionControl::~RegionControl(){
 }
 
 void RegionControl::Update(){
-	//rootRegion->ClearMovableAndDeactivateChildren();
-	//rootRegion->Partition(true);
+	static bool state = false;
+	if(Key(GLFW_KEY_Y)){
+		state = true;
+	}
+	if(!state){
+		return;
+	}
+	std::cout << "Here\n";
+
+	rootRegion->ClearMovableAndDeactivateChildren();
+	rootRegion->Partition(true);
 }
 
 void RegionControl::RenderEntities(ShaderProg& SP, const Cam& cam){
@@ -27,7 +36,7 @@ void RegionControl::RenderEntities(ShaderProg& SP, const Cam& cam){
 	std::map<int, Entity*> entitiesNotOpaque;
 	rootRegion->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
 
-	//std::cout << "entitiesNotOpaque size: " << entitiesNotOpaque.size() << '\n'; //No. varies due to optimisation
+	std::cout << "entitiesNotOpaque size: " << entitiesNotOpaque.size() << '\n'; //No. varies due to optimisation??
 
 	///Render opaque entities 1st
 	for(std::map<int, Entity*>::reverse_iterator iter = entitiesOpaque.rbegin(); iter != entitiesOpaque.rend(); ++iter){
@@ -97,6 +106,9 @@ void RegionControl::RenderQSP(ShaderProg& SP, const Cam& cam){
 	std::vector<Region*> leaves;
 	rootRegion->GetLeaves(SP, leaves);
 	const size_t size = leaves.size();
+
+	std::cout << "leaves size: " << size << '\n';
+
 	if(!size){
 		return;
 	}
