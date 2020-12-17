@@ -18,10 +18,7 @@ App::App():
 	fullscreen(false),
 	elapsedTime(0.f),
 	lastFrameTime(0.f),
-	scene(),
-	FBORefIDs(),
-	texRefIDs(),
-	RBORefIDs()
+	scene()
 {
 	if(!InitAPI(win)){
 		(void)puts("Failed to init API\n");
@@ -31,37 +28,11 @@ App::App():
 }
 
 App::~App(){
-	glDeleteTextures(sizeof(texRefIDs) / sizeof(texRefIDs[0]), texRefIDs);
-	glDeleteRenderbuffers(sizeof(RBORefIDs) / sizeof(RBORefIDs[0]), RBORefIDs);
-	glDeleteFramebuffers(sizeof(FBORefIDs) / sizeof(FBORefIDs[0]), FBORefIDs);
 	glfwTerminate(); //Clean/Del all GLFW's resources that were allocated
 }
 
 bool App::Init(){
 	mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-
-	glGenFramebuffers(sizeof(FBORefIDs) / sizeof(FBORefIDs[0]), FBORefIDs);
-	glGenTextures(sizeof(texRefIDs) / sizeof(texRefIDs[0]), texRefIDs);
-	glGenRenderbuffers(sizeof(RBORefIDs) / sizeof(RBORefIDs[0]), RBORefIDs);
-
-	glBindFramebuffer(GL_FRAMEBUFFER, FBORefIDs[(int)FBO::Minimap]);
-		int currTexRefID;
-		glGetIntegerv(GL_TEXTURE_BINDING_2D, &currTexRefID);
-		glBindTexture(GL_TEXTURE_2D, texRefIDs[(int)Tex::Minimap]);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1024, 1024, 0, GL_RGBA, GL_FLOAT, NULL);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texRefIDs[(int)Tex::Minimap], 0);
-		glBindTexture(GL_TEXTURE_2D, currTexRefID);
-
-		if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE){
-			(void)printf(STR(FBO::Minimap));
-			(void)puts(" is incomplete!\n");
-			return false;
-		}
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	(void)InitOptions();
 	(void)scene.Init();
@@ -120,9 +91,6 @@ void App::Update(){
 }
 
 void App::PreRender() const{
-	//glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE); //Frags update stencil buffer with their ref value when... //++params and options??
-	//glBlendFuncSeparate(GL_ONE, GL_ZERO, GL_DST_ALPHA, GL_DST_ALPHA);
-	//glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_SUBTRACT);
 }
 
 void App::Render(){
@@ -133,17 +101,6 @@ void App::Render(){
 	glClearColor(1.f, 0.82f, 0.86f, 1.f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	scene.ForwardRender();
-
-	glViewport(0, 0, 1024, 1024);
-	glBindFramebuffer(GL_FRAMEBUFFER, FBORefIDs[int(FBO::Minimap)]);
-	glClearColor(.3f, .3f, .3f, 1.f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	scene.MinimapRender();
-
-	glViewport(0, 0, winWidth, winHeight);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glClear(GL_DEPTH_BUFFER_BIT);
-	scene.DefaultRender(texRefIDs[(int)Tex::Minimap], texRefIDs[(int)Tex::Minimap], glm::vec3(.75f), glm::vec3(.25f));
 }
 
 void App::PostRender() const{

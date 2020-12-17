@@ -9,15 +9,6 @@ class App final: public Singleton<App>{
 
 	friend Singleton<App>;
 public:
-	enum struct FBO{
-		Minimap,
-		Amt
-	};
-	enum struct Tex{
-		Minimap,
-		Amt
-	};
-
 	~App();
 	bool Init();
 	void Update();
@@ -33,10 +24,6 @@ private:
 	Scene scene;
 	static const GLFWvidmode* mode;
 	static GLFWwindow* win;
-
-	uint FBORefIDs[(int)FBO::Amt];
-	uint texRefIDs[(int)Tex::Amt];
-	uint RBORefIDs[1];
 };
 
 template <class T>
