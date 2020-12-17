@@ -7,7 +7,6 @@ Left Mouse Button (LMB) - Shoot
 Right Mouse Button (RMB) - Reduce Field Of View (FOV)
 F1 - Toggle fullscreen
 F2 - Change polygon mode
-F3 - Change minimap view
 WASD - Move player
 Space - Prone --> Crouch --> Stand --> Jump
 C - Stand --> Crouch --> Prone
@@ -45,23 +44,10 @@ Collision between player and sphere (player and enemy, player and spherical wall
 Collision between player and cuboid
 Collision between sphere and sphere (bullet and enemy)
 
-Different pre-set camera positions for the minimap:
-		TopFollowingOrtho
-		TopFollowingPerspective
-		TopStaticOrtho
-		TopStaticPerspective
-		IsometricOrtho
-		IsometricPerspective
-		ThirdPersonFollowingOrtho
-		ThirdPersonFollowingPerspective
-		ThirdPersonStaticOrtho
-		ThirdPersonStaticPerspective
-
 Score system (file I/O for saving and loading scores, storing and sorting scores in a container)
 Lives
 Health
 Inventory
-Minimap
 
 Camera collision with terrain
 Night vision (combined with scoped mode for sniper)
