@@ -47,6 +47,9 @@ Scene::Scene():
 		new Model("ObjsAndMtls/Tree.obj", {
 			aiTextureType_DIFFUSE,
 		}),
+		new Model("ObjsAndMtls/Dragon.obj", {
+			aiTextureType_DIFFUSE,
+		}),
 	},
 	forwardSP{"Shaders/Forward.vertexS", "Shaders/Forward.fragS"},
 	textSP{"Shaders/Text.vertexS", "Shaders/Text.fragS"},
@@ -643,9 +646,32 @@ void Scene::GameRender(){
 		Meshes::meshes[(int)MeshType::Terrain]->Render(forwardSP);
 	modelStack.PopModel();
 
+
+
+
+
+	const float scaleFactor = 5.0f;
+	const float xPos = 0.0f;
+	const float zPos = 0.0f;
+	const glm::vec3 pos = glm::vec3(
+		xPos,
+		terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos / terrainXScale, zPos / terrainZScale) + scaleFactor,
+		zPos
+	);
+	modelStack.PushModel({
+		modelStack.Translate(pos),
+		modelStack.Scale(glm::vec3(scaleFactor))
+	});
+	models[(int)ModelType::Dragon]->SetModelForAll(modelStack.GetTopModel());
+	models[(int)ModelType::Dragon]->Render(forwardSP);
+	modelStack.PopModel();
+
 	models[(int)ModelType::Tree]->InstancedRender(forwardSP);
 
 	entityManager->Render(forwardSP, cam);
+
+
+
 
 	const size_t& coinMusicSize = coinMusic.size();
 	for(size_t i = 0; i < coinMusicSize; ++i){

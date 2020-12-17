@@ -41,6 +41,7 @@ private:
 		Grass,
 		Rock,
 		Tree,
+		Dragon,
 		Amt
 	};
 	Model* models[(int)ModelType::Amt];
