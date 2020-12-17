@@ -515,7 +515,7 @@ void Scene::GameRender(){
 		for(short i = 0; i < 5; ++i){
 			forwardSP.Set1i("noNormals", 1);
 			modelStack.PushModel({
-				modelStack.Translate(glm::vec3(float(i) * 100.f - 300.f, -float(winHeight) / 2.3f, -10.f)),
+				modelStack.Translate(glm::vec3(float(i) * 100.f - 200.f, -float(winHeight) / 2.3f, -10.f)),
 			});
 			switch(inv[i]){
 				case ItemType::Shotgun:
@@ -703,7 +703,7 @@ void Scene::GameRender(){
 		///Render inv slots
 		for(short i = 0; i < 5; ++i){
 			modelStack.PushModel({
-				modelStack.Translate(glm::vec3(float(i) * 100.f - 300.f, -float(winHeight) / 2.3f, -10.f)),
+				modelStack.Translate(glm::vec3(float(i) * 100.f - 200.f, -float(winHeight) / 2.3f, -10.f)),
 				modelStack.Scale(glm::vec3(50.f, 50.f, 1.f)),
 			});
 				forwardSP.Set1i("noNormals", 1);
@@ -774,19 +774,20 @@ void Scene::GameRender(){
 	if(currGun){
 		textChief.RenderText(textSP, {
 			std::to_string(currGun->GetLoadedBullets()) + " / " + std::to_string(currGun->GetUnloadedBullets()),
-			float(winWidth) / 2.4f,
-			125.f,
+			float(winWidth) * 0.5f,
+			float(winHeight) * 0.15f,
 			1.f,
 			glm::vec4(1.f, 1.f, 0.f, 1.f),
 			0,
+			TextChief::TextAlignment::Center
 		});
 	}
 
 	const float FPS = 1.0f / dt;
 	textChief.RenderText(textSP, {
 		"FPS: " + std::to_string(FPS).substr(0, std::to_string((int)FPS).length() + 3),
-		25.f,
-		125.f,
+		25.0f,
+		(float)winHeight * 0.05f,
 		1.f,
 		glm::vec4(1.f, 1.f, 0.f, 1.f),
 		0,
@@ -795,7 +796,7 @@ void Scene::GameRender(){
 	textChief.RenderText(textSP, {
 		"Instanced draw calls: " + std::to_string(Mesh::instancedDrawCalls),
 		25.f,
-		250.0f,
+		(float)winHeight * 0.2f,
 		1.f,
 		glm::vec4(1.0f, 0.0f, 1.0f, 1.0f),
 		0,
@@ -804,7 +805,7 @@ void Scene::GameRender(){
 	textChief.RenderText(textSP, {
 		"Normal draw calls: " + std::to_string(Mesh::normalDrawCalls),
 		25.f,
-		300.0f,
+		(float)winHeight * 0.25f,
 		1.f,
 		glm::vec4(1.0f, 0.0f, 1.0f, 1.0f),
 		0,
@@ -813,7 +814,7 @@ void Scene::GameRender(){
 	textChief.RenderText(textSP, {
 		"Polygon count: " + std::to_string(Mesh::polygonCount),
 		25.f,
-		350.0f,
+		(float)winHeight * 0.3f,
 		1.f,
 		glm::vec4(1.0f, 0.0f, 1.0f, 1.0f),
 		0,
@@ -822,7 +823,7 @@ void Scene::GameRender(){
 	textChief.RenderText(textSP, {
 		"Index count: " + std::to_string(Mesh::indexCount),
 		25.f,
-		400.0f,
+		(float)winHeight * 0.35f,
 		1.f,
 		glm::vec4(1.0f, 0.0f, 1.0f, 1.0f),
 		0,
@@ -831,7 +832,7 @@ void Scene::GameRender(){
 	textChief.RenderText(textSP, {
 		"Vertex count: " + std::to_string(Mesh::vertexCount),
 		25.f,
-		450.0f,
+		(float)winHeight * 0.4f,
 		1.f,
 		glm::vec4(1.0f, 0.0f, 1.0f, 1.0f),
 		0,
