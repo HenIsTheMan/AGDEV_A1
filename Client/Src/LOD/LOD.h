@@ -3,9 +3,9 @@
 #include <Engine.h>
 
 enum struct DetailLvl: int{
-	Low,
-	Medium,
 	High,
+	Medium,
+	Low,
 	Amt
 };
 

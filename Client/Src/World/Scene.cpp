@@ -19,7 +19,7 @@ void SetUpCubemap(uint& cubemapRefID, const std::vector<cstr>& faces);
 glm::vec3 Light::globalAmbient = glm::vec3(.2f);
 
 Scene::Scene():
-	cam(glm::vec3(0.0f, 700.f, 0.0f), glm::vec3(0.f), glm::vec3(0.f, 1.f, 0.f), 0.f, 400.f),
+	cam(glm::vec3(0.0f, 700.f, 0.0f), glm::vec3(0.f), glm::vec3(0.f, 1.f, 0.f), 0.0f, 400.0f),
 	soundEngine(nullptr),
 	coinMusic({}),
 	coinSoundFX({}),
@@ -218,9 +218,9 @@ void Scene::InitEntities(){
 	}
 	//*/
 
-	dragonLOD.SetDistAndModel(DetailLvl::Low, 150.0f, models[(int)ModelType::Dragon_Low]);
-	dragonLOD.SetDistAndModel(DetailLvl::Medium, 100.0f,  models[(int)ModelType::Dragon_Medium]);
-	dragonLOD.SetDistAndModel(DetailLvl::High, 50.0f,  models[(int)ModelType::Dragon_High]);
+	dragonLOD.SetDistAndModel(DetailLvl::High, 5000.0f,  models[(int)ModelType::Dragon_High]);
+	dragonLOD.SetDistAndModel(DetailLvl::Medium, 10000.0f,  models[(int)ModelType::Dragon_Medium]);
+	dragonLOD.SetDistAndModel(DetailLvl::Low, 15000.0f, models[(int)ModelType::Dragon_Low]);
 
 	entityManager->SetUpRegionsForStationary();
 }
@@ -378,7 +378,6 @@ void Scene::GameUpdate(GLFWwindow* const& win){
 	}
 
 	if(isCamDetached){
-		cam.SetSpd(150.0f);
 		cam.UpdateDetached(GLFW_KEY_Q, GLFW_KEY_E, GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_W, GLFW_KEY_S);
 	} else{
 		//cam.UpdateJumpFall();
@@ -680,10 +679,10 @@ void Scene::GameRender(){
 	const float zPos = 0.0f;
 	const glm::vec3 pos = glm::vec3(
 		xPos,
-		terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos / terrainXScale, zPos / terrainZScale) + scaleFactor,
+		terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos / terrainXScale, zPos / terrainZScale),
 		zPos
 	);
-	Model* dragon = dragonLOD.GetModel(glm::length(cam.GetPos() - pos)); //playerPos?? //lenSquared
+	Model* dragon = dragonLOD.GetModel(glm::length(cam.GetPos() - pos)); //playerPos?? //lenSquared??
 
 	if(dragon != nullptr){
 		modelStack.PushModel({
