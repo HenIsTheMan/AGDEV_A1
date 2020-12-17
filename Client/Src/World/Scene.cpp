@@ -68,7 +68,6 @@ Scene::Scene():
 	},
 	playerStates((int)PlayerState::NoMovement | (int)PlayerState::Standing),
 	screen(Screen::MainMenu),
-	timeLeft(0.f),
 	score(0),
 	scores({}),
 	textScaleFactors{
@@ -324,9 +323,8 @@ void Scene::Update(GLFWwindow* const& win){
 	static float buttonBT = 0.f;
 
 	switch(screen){
-		case Screen::GameOver:
 		case Screen::MainMenu:
-			MainMenuAndGameOverUpdate(win, mousePos, buttonBT);
+			MainMenuUpdate(win, mousePos, buttonBT);
 			break;
 		case Screen::Game:
 			GameUpdate(win);
@@ -337,7 +335,7 @@ void Scene::Update(GLFWwindow* const& win){
 	}
 }
 
-void Scene::MainMenuAndGameOverUpdate(GLFWwindow* const& win, const POINT& mousePos, float& buttonBT){
+void Scene::MainMenuUpdate(GLFWwindow* const& win, const POINT& mousePos, float& buttonBT){
 	glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
 	cam.SetPos(glm::vec3(0.f, 0.f, 5.f));
@@ -354,7 +352,6 @@ void Scene::MainMenuAndGameOverUpdate(GLFWwindow* const& win, const POINT& mouse
 		}
 		if(leftRightMB > 0.f && buttonBT <= elapsedTime){
 			soundEngine->play2D("Audio/Sounds/Select.wav", false);
-			timeLeft = 60.f;
 			score = 0;
 			if(guns[0]){
 				delete guns[0];
@@ -414,23 +411,6 @@ void Scene::MainMenuAndGameOverUpdate(GLFWwindow* const& win, const POINT& mouse
 }
 
 void Scene::GameUpdate(GLFWwindow* const& win){
-	if(timeLeft <= 0.f){
-		screen = Screen::GameOver;
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-		const size_t& mySize = scores.size();
-		if(mySize == 5){ //Max no. of scores saved
-			std::sort(scores.begin(), scores.end(), std::greater<int>());
-			if(score > scores.back()){
-				scores.pop_back();
-				scores.emplace_back(score);
-			}
-			std::sort(scores.begin(), scores.end(), std::greater<int>());
-		} else{
-			scores.emplace_back(score);
-			std::sort(scores.begin(), scores.end(), std::greater<int>());
-		}
-	}
 	glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	static float camAttachmentBT = 0.0f;
@@ -1086,14 +1066,6 @@ void Scene::GameRender(){
 		});
 	}
 	textChief.RenderText(textSP, {
-		"Time Left: " + std::to_string(timeLeft).substr(0, 5),
-		25.f,
-		25.f,
-		1.f,
-		glm::vec4(1.f, 1.f, 0.f, 1.f),
-		0,
-	});
-	textChief.RenderText(textSP, {
 		"Score: " + std::to_string(score),
 		25.f,
 		75.f,
@@ -1163,74 +1135,6 @@ void Scene::GameRender(){
 	Mesh::vertexCount = 0;
 	Mesh::indexCount = 0;
 	Mesh::polygonCount = 0;
-}
-
-void Scene::GameOverRender(){
-	forwardSP.Set1i("nightVision", 0);
-
-	modelStack.PushModel({
-		modelStack.Scale(glm::vec3(float(winWidth) / 2.f, float(winHeight) / 2.f, 1.f)),
-	});
-		forwardSP.Set1i("noNormals", 1);
-		Meshes::meshes[(int)MeshType::Quad]->SetModel(modelStack.GetTopModel());
-		Meshes::meshes[(int)MeshType::Quad]->Render(forwardSP);
-		forwardSP.Set1i("noNormals", 0);
-		modelStack.PopModel();
-
-	glDepthFunc(GL_GREATER);
-	textChief.RenderText(textSP, {
-		"Play Again",
-		25.f,
-		125.f,
-		textScaleFactors[0],
-		textColours[0],
-		0,
-	});
-	textChief.RenderText(textSP, {
-		"Scores",
-		25.f,
-		75.f,
-		textScaleFactors[1],
-		textColours[1],
-		0,
-	});
-	textChief.RenderText(textSP, {
-		"Quit",
-		25.f,
-		25.f,
-		textScaleFactors[2],
-		textColours[2],
-		0,
-	});
-
-	textChief.RenderText(textSP, {
-		"Game Over",
-		30.f,
-		float(winHeight) / 1.2f,
-		2.f,
-		glm::vec4(1.f, .5f, 0.f, 1.f),
-		0,
-	});
-	textChief.RenderText(textSP, {
-		"Final Score: " + std::to_string(score),
-		30.f,
-		float(winHeight) / 1.2f - 100.f,
-		2.f,
-		glm::vec4(1.f, .5f, 0.f, 1.f),
-		0,
-	});
-
-	if(scores.size() == 1 || (score == scores.front() && score != scores[1])){
-		textChief.RenderText(textSP, {
-			"New High Score!",
-			30.f,
-			float(winHeight) / 1.2f - 200.f,
-			2.f,
-			glm::vec4(1.f, .5f, 0.f, 1.f),
-			0,
-		});
-	}
-	glDepthFunc(GL_LESS);
 }
 
 void Scene::ScoreboardRender(){
@@ -1330,9 +1234,6 @@ void Scene::ForwardRender(){
 			break;
 		case Screen::Game:
 			GameRender();
-			break;
-		case Screen::GameOver:
-			GameOverRender();
 			break;
 		case Screen::Scoreboard: {
 			ScoreboardRender();
