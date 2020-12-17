@@ -1210,6 +1210,27 @@ void Scene::GameRender(){
 		glm::vec4(1.f, 1.f, 0.f, 1.f),
 		0,
 	});
+
+	textChief.RenderText(textSP, {
+		"Instanced draw calls: " + std::to_string(Mesh::instancedDrawCalls),
+		25.f,
+		250.0f,
+		1.f,
+		glm::vec4(1.0f, 0.0f, 1.0f, 1.0f),
+		0,
+	});
+
+	textChief.RenderText(textSP, {
+		"Normal draw calls: " + std::to_string(Mesh::normalDrawCalls),
+		25.f,
+		300.0f,
+		1.f,
+		glm::vec4(1.0f, 0.0f, 1.0f, 1.0f),
+		0,
+	});
+
+	Mesh::instancedDrawCalls = 0;
+	Mesh::normalDrawCalls = 0;
 }
 
 void Scene::GameOverRender(){

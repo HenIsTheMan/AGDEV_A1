@@ -1,6 +1,9 @@
 #include "Mesh.h"
 #include "../Global/GlobalFuncs.h"
 
+int Mesh::normalDrawCalls = 0;
+int Mesh::instancedDrawCalls = 0;
+
 Mesh::Mesh():
 	type(MeshType::Amt),
 	primitive(GL_TRIANGLES),
@@ -464,7 +467,9 @@ void Mesh::InstancedRender(ShaderProg& SP, const bool& autoConfig){
 	}
 
 	indices ? glDrawElementsInstanced(primitive, (int)indices->size(), GL_UNSIGNED_INT, nullptr, (int)modelMats.size()) : glDrawArraysInstanced(primitive, 0, (int)vertices->size(), (int)modelMats.size());
+	++instancedDrawCalls;
 	glBindVertexArray(0);
+
 	if(autoConfig){
 		SP.ResetTexUnits();
 	}
@@ -569,7 +574,9 @@ void Mesh::Render(ShaderProg& SP, const bool& autoConfig){
 	}
 
 	indices ? glDrawElements(primitive, (int)indices->size(), GL_UNSIGNED_INT, nullptr) : glDrawArrays(primitive, 0, (int)vertices->size());
+	++normalDrawCalls;
 	glBindVertexArray(0);
+
 	if(autoConfig){
 		SP.ResetTexUnits();
 	}

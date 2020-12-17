@@ -220,6 +220,7 @@
     <ClInclude Include="Src\Quadtree\Region.h" />
     <ClInclude Include="Src\Quadtree\RegionControl.h" />
     <ClInclude Include="Src\Shared\Meshes.h" />
+    <ClInclude Include="Src\Shared\Stats.hpp" />
     <ClInclude Include="Src\World\Cam.h" />
     <ClInclude Include="Src\World\ModelStack.h" />
     <ClInclude Include="Src\World\Scene.h" />
