@@ -1,9 +1,9 @@
 #include "Scene.h"
 #include "Vendor/stb_image.h"
 
-float terrainXScale = 1500.f;
-float terrainYScale = 200.f;
-float terrainZScale = 1500.f;
+float terrainXScale = 14000.f;
+float terrainYScale = 700.f;
+float terrainZScale = 14000.f;
 
 extern bool LMB;
 extern bool RMB;
@@ -19,7 +19,7 @@ void SetUpCubemap(uint& cubemapRefID, const std::vector<cstr>& faces);
 glm::vec3 Light::globalAmbient = glm::vec3(.2f);
 
 Scene::Scene():
-	cam(glm::vec3(0.f, 0.f, 5.f), glm::vec3(0.f), glm::vec3(0.f, 1.f, 0.f), 0.f, 150.f),
+	cam(glm::vec3(0.0f, 700.f, 0.0f), glm::vec3(0.f), glm::vec3(0.f, 1.f, 0.f), 0.f, 400.f),
 	soundEngine(nullptr),
 	coinMusic({}),
 	coinSoundFX({}),
@@ -183,11 +183,11 @@ void Scene::InitEntities(){
 
 	//* Create trees
 	Model* const tree = models[(int)ModelType::Tree];
-	tree->ReserveModelMatsForAll(400);
-	tree->ReserveColorsForAll(400);
-	tree->ReserveDiffuseTexIndicesForAll(400);
+	tree->ReserveModelMatsForAll(9999);
+	tree->ReserveColorsForAll(9999);
+	tree->ReserveDiffuseTexIndicesForAll(9999);
 
-	for(int i = 0; i < 400; ++i){
+	for(int i = 0; i < 9999; ++i){
 		const float scaleFactor = 50.0f;
 		const float xPos = PseudorandMinMax(-terrainXScale * 0.5f + 2.f, terrainXScale * 0.5f - 2.f);
 		const float zPos = PseudorandMinMax(-terrainZScale * 0.5f + 2.f, terrainZScale * 0.5f - 2.f);
