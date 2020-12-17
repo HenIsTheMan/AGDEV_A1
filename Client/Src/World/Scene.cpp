@@ -218,6 +218,10 @@ void Scene::InitEntities(){
 	}
 	//*/
 
+	dragonLOD.SetDistAndModel(DetailLvl::Low, 150.0f, models[(int)ModelType::Dragon_Low]);
+	dragonLOD.SetDistAndModel(DetailLvl::Medium, 100.0f,  models[(int)ModelType::Dragon_Medium]);
+	dragonLOD.SetDistAndModel(DetailLvl::High, 50.0f,  models[(int)ModelType::Dragon_High]);
+
 	entityManager->SetUpRegionsForStationary();
 }
 
@@ -323,6 +327,21 @@ void Scene::MainMenuUpdate(GLFWwindow* const& win, const POINT& mousePos, float&
 			cam.SetTarget(glm::vec3(0.f, 0.f, -1.f));
 			cam.SetUp(glm::vec3(0.f, 1.f, 0.f));
 			buttonBT = elapsedTime + .3f;
+
+			const size_t& coinMusicSize = coinMusic.size();
+			for(size_t i = 0; i < coinMusicSize; ++i){
+				ISound* music = coinMusic[i];
+				if(music && music->getIsPaused()){
+					music->setIsPaused(false);
+				}
+			}
+			const size_t& fireMusicSize = fireMusic.size();
+			for(size_t i = 0; i < fireMusicSize; ++i){
+				ISound* music = fireMusic[i];
+				if(music && music->getIsPaused()){
+					music->setIsPaused(false);
+				}
+			}
 		}
 	} else{
 		textScaleFactors[0] = 1.f;
@@ -664,13 +683,17 @@ void Scene::GameRender(){
 		terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos / terrainXScale, zPos / terrainZScale) + scaleFactor,
 		zPos
 	);
-	modelStack.PushModel({
-		modelStack.Translate(pos),
-		modelStack.Scale(glm::vec3(scaleFactor))
-	});
-	models[(int)ModelType::Dragon_Low]->SetModelForAll(modelStack.GetTopModel());
-	models[(int)ModelType::Dragon_Low]->Render(forwardSP);
-	modelStack.PopModel();
+	Model* dragon = dragonLOD.GetModel(glm::length(cam.GetPos() - pos)); //playerPos?? //lenSquared
+
+	if(dragon != nullptr){
+		modelStack.PushModel({
+			modelStack.Translate(pos),
+			modelStack.Scale(glm::vec3(scaleFactor))
+		});
+		dragon->SetModelForAll(modelStack.GetTopModel());
+		dragon->Render(forwardSP);
+		modelStack.PopModel();
+	}
 
 	models[(int)ModelType::Tree]->InstancedRender(forwardSP);
 
@@ -678,21 +701,6 @@ void Scene::GameRender(){
 
 
 
-
-	const size_t& coinMusicSize = coinMusic.size();
-	for(size_t i = 0; i < coinMusicSize; ++i){
-		ISound* music = coinMusic[i];
-		if(music && music->getIsPaused()){
-			music->setIsPaused(false);
-		}
-	}
-	const size_t& fireMusicSize = fireMusic.size();
-	for(size_t i = 0; i < fireMusicSize; ++i){
-		ISound* music = fireMusic[i];
-		if(music && music->getIsPaused()){
-			music->setIsPaused(false);
-		}
-	}
 
 	cam.SetPos(glm::vec3(0.f, 0.f, 5.f));
 	cam.SetTarget(glm::vec3(0.f));

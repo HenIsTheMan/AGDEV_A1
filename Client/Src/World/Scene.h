@@ -13,6 +13,8 @@
 
 #include "ModelStack.h"
 
+#include "../LOD/LOD.h"
+
 #define BIT(x) 1 << x
 
 class Scene final{
@@ -32,6 +34,8 @@ private:
 	TextChief textChief;
 
 	int polyModes[2];
+
+	LOD dragonLOD;
 
 	enum struct ModelType{
 		Shotgun = 0,

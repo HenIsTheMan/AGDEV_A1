@@ -13,12 +13,13 @@ class LOD final{
 public:
 	LOD();
 
-	const Model* GetModel(const float dist) const;
+	Model* GetModel(const float dist) const;
 
 	///Setters
 	void SetDist(const DetailLvl lvl, const float dist);
-	void SetModel(const DetailLvl lvl, const Model* const model);
+	void SetModel(const DetailLvl lvl, Model* const model);
+	void SetDistAndModel(const DetailLvl lvl, const float dist, Model* const model);
 private:
 	float dists[(int)DetailLvl::Amt];
-	const Model* models[(int)DetailLvl::Amt];
+	Model* models[(int)DetailLvl::Amt];
 };
