@@ -7,6 +7,7 @@ Region::Region():
 	parent(nullptr),
 	origin(glm::vec2()),
 	size(glm::vec2()),
+	color(glm::vec4(PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), 1.0f)),
 	topLeft(nullptr),
 	topRight(nullptr),
 	bottomLeft(nullptr),

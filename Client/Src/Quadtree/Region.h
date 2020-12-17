@@ -34,6 +34,7 @@ private:
 	Region* parent;
 	glm::vec2 origin;
 	glm::vec2 size;
+	glm::vec4 color;
 
 	Region* topLeft;
 	Region* topRight;

@@ -104,10 +104,11 @@ void RegionControl::RenderQSP(ShaderProg& SP, const Cam& cam){
 
 	SP.Set1i("noNormals", 1);
 	SP.Set1i("useCustomDiffuseTexIndex", 0);
-	SP.Set1i("useCustomColour", 0);
+	SP.Set1i("useCustomColour", 1);
 
 	for(size_t i = 0; i < size; ++i){
 		const Region* const leaf = leaves[i];
+		SP.Set4fv("customColour", leaf->color);
 
 		modelStack.PushModel({
 			modelStack.Translate(glm::vec3(leaf->origin[0], terrainYScale, leaf->origin[1])),
