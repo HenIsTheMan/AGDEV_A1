@@ -22,8 +22,6 @@ public:
 	bool Init();
 	void Update(GLFWwindow* const& win);
 	void ForwardRender();
-	void BlurRender(const uint& brightTexRefID, const bool& horizontal);
-	void DefaultRender(const uint& screenTexRefID, const uint& blurTexRefID, const glm::vec3& translate, const glm::vec3& scale);
 private:
 	Cam cam;
 	ISoundEngine* soundEngine;
@@ -47,10 +45,7 @@ private:
 	};
 	Model* models[(int)ModelType::Amt];
 
-	ShaderProg blurSP;
 	ShaderProg forwardSP;
-	ShaderProg normalsSP;
-	ShaderProg screenSP;
 	ShaderProg textSP;
 
 	std::vector<Light*> ptLights;

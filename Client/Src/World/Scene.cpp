@@ -49,10 +49,7 @@ Scene::Scene():
 			aiTextureType_DIFFUSE,
 		}),
 	},
-	blurSP{"Shaders/Quad.vertexS", "Shaders/Blur.fragS"},
 	forwardSP{"Shaders/Forward.vertexS", "Shaders/Forward.fragS"},
-	normalsSP{"Shaders/Normals.vertexS", "Shaders/Normals.fragS", "Shaders/Normals.gs"},
-	screenSP{"Shaders/Quad.vertexS", "Shaders/Screen.fragS"},
 	textSP{"Shaders/Text.vertexS", "Shaders/Text.fragS"},
 	ptLights({}),
 	directionalLights({}),
@@ -1069,37 +1066,6 @@ void Scene::ForwardRender(){
 	}
 
 	glBlendFunc(GL_ONE, GL_ZERO);
-}
-
-void Scene::BlurRender(const uint& brightTexRefID, const bool& horizontal){
-	blurSP.Use();
-	blurSP.Set1i("horizontal", horizontal);
-	blurSP.UseTex(brightTexRefID, "texSampler");
-	Meshes::meshes[(int)MeshType::Quad]->SetModel(modelStack.GetTopModel());
-	Meshes::meshes[(int)MeshType::Quad]->Render(blurSP, false);
-	blurSP.ResetTexUnits();
-}
-
-void Scene::DefaultRender(const uint& screenTexRefID, const uint& blurTexRefID, const glm::vec3& translate, const glm::vec3& scale){
-	if(!glm::length(translate) || screen == Screen::Game){
-		screenSP.Use();
-		screenSP.Set1f("exposure", .5f);
-		screenSP.UseTex(screenTexRefID, "screenTexSampler");
-		screenSP.UseTex(blurTexRefID, "blurTexSampler");
-		if(screen == Screen::Game){
-			screenSP.Set1i("nightVision", int(RMB && inv[currSlot] == ItemType::Sniper));
-		} else{
-			screenSP.Set1i("nightVision", 0);
-		}
-		modelStack.PushModel({
-			modelStack.Translate(translate),
-			modelStack.Scale(scale),
-		});
-			Meshes::meshes[(int)MeshType::Quad]->SetModel(modelStack.GetTopModel());
-			Meshes::meshes[(int)MeshType::Quad]->Render(screenSP, false);
-		modelStack.PopModel();
-		screenSP.ResetTexUnits();
-	}
 }
 
 void Scene::RenderEntities(){
