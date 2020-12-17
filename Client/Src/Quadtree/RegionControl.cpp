@@ -27,6 +27,8 @@ void RegionControl::RenderEntities(ShaderProg& SP, const Cam& cam){
 	std::map<int, Entity*> entitiesNotOpaque;
 	rootRegion->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
 
+	std::cout << "entitiesNotOpaque size: " << entitiesNotOpaque.size() << '\n';
+
 	///Render opaque entities 1st
 	for(std::map<int, Entity*>::reverse_iterator iter = entitiesOpaque.rbegin(); iter != entitiesOpaque.rend(); ++iter){
 		Entity* const& entity = iter->second;
@@ -96,7 +98,7 @@ void RegionControl::RenderQSP(ShaderProg& SP, const Cam& cam){
 	rootRegion->GetLeaves(SP, leaves);
 	const size_t size = leaves.size();
 
-	std::cout << size << '\n';
+	std::cout << "leaves size: " << size << '\n';
 
 	if(!size){
 		return;
@@ -152,7 +154,7 @@ void RegionControl::InitRegionPool(const size_t& size){
 }
 
 void RegionControl::SetUpRegionsForStationary(){
-	//rootRegion->Partition(false);
+	rootRegion->Partition(false);
 }
 
 RegionControl::RegionControl():
