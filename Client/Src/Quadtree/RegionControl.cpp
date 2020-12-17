@@ -13,17 +13,8 @@ RegionControl::~RegionControl(){
 }
 
 void RegionControl::Update(){
-	static bool state = false;
-	if(Key(GLFW_KEY_Y)){
-		state = true;
-	}
-	if(!state){
-		return;
-	}
-	std::cout << "Here\n";
-
-	//rootRegion->ClearMovableAndDeactivateChildren();
-	//rootRegion->Partition(true);
+	rootRegion->ClearMovableAndDeactivateChildren();
+	rootRegion->Partition(true);
 }
 
 void RegionControl::RenderEntities(ShaderProg& SP, const Cam& cam){
@@ -37,8 +28,8 @@ void RegionControl::RenderEntities(ShaderProg& SP, const Cam& cam){
 	rootRegion->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
 
 	//std::cout << "entitiesNotOpaque size: " << entitiesNotOpaque.size() << '\n'; //No. varies due to optimisation??
-	std::cout << rootRegion->movableNodes.size() << '\n';
-	std::cout << "entitiesOpaque size: " << entitiesOpaque.size() << '\n';
+	//std::cout << rootRegion->movableNodes.size() << '\n';
+	//std::cout << "entitiesOpaque size: " << entitiesOpaque.size() << '\n';
 
 	///Render opaque entities 1st
 	for(std::map<int, Entity*>::reverse_iterator iter = entitiesOpaque.rbegin(); iter != entitiesOpaque.rend(); ++iter){

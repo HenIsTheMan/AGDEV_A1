@@ -34,58 +34,62 @@ Region::~Region(){
 void Region::GetEntitiesToRender(std::map<int, Entity*>& entitiesOpaque, std::map<int, Entity*>& entitiesNotOpaque, const Cam& cam){
 	//Check if visible??
 
-	if((topLeft && topLeft->active) || (topRight && topRight->active) || (bottomLeft && bottomLeft->active) || (bottomRight && bottomRight->active)){
+	const bool result = (topLeft && topLeft->active) || (topRight && topRight->active) || (bottomLeft && bottomLeft->active) || (bottomRight && bottomRight->active);
+	if(result){
 		topLeft->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
 		topRight->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
 		bottomLeft->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
 		bottomRight->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
-		return;
 	}
 
 	const glm::vec3& camPos = cam.GetPos();
 	const glm::vec3& camFront = cam.CalcFront();
 
-	for(int i = 0; i < stationaryNodes.size(); ++i){
-		//Check if visible??
+	if(!result || (result && topLeft->stationaryNodes.empty() && topRight->stationaryNodes.empty() && bottomLeft->stationaryNodes.empty() && bottomRight->stationaryNodes.empty())){
+		for(int i = 0; i < stationaryNodes.size(); ++i){
+			//Check if visible??
 
-		Entity* const entity = stationaryNodes[i]->RetrieveEntity();
+			Entity* const entity = stationaryNodes[i]->RetrieveEntity();
 
-		if(entity && entity->active){
-			glm::vec3 displacementVec = entity->pos - camPos;
-			if(glm::dot(displacementVec, camFront) > 0.f){
+			if(entity && entity->active){
+				glm::vec3 displacementVec = entity->pos - camPos;
+				if(glm::dot(displacementVec, camFront) > 0.f){
 
-				switch(entity->type){
-					case Entity::EntityType::ShotgunAmmo:
-					case Entity::EntityType::ScarAmmo:
-					case Entity::EntityType::SniperAmmo:
-						entitiesOpaque.insert(std::make_pair((int)glm::dot(displacementVec, displacementVec), entity));
-						break;
-					case Entity::EntityType::Coin:
-					case Entity::EntityType::Fire:
-						entitiesNotOpaque.insert(std::make_pair((int)glm::dot(displacementVec, displacementVec), entity));
-						break;
+					switch(entity->type){
+						case Entity::EntityType::ShotgunAmmo:
+						case Entity::EntityType::ScarAmmo:
+						case Entity::EntityType::SniperAmmo:
+							entitiesOpaque.insert(std::make_pair((int)glm::dot(displacementVec, displacementVec), entity));
+							break;
+						case Entity::EntityType::Coin:
+						case Entity::EntityType::Fire:
+							entitiesNotOpaque.insert(std::make_pair((int)glm::dot(displacementVec, displacementVec), entity));
+							break;
+					}
 				}
 			}
 		}
 	}
 
-	for(int i = 0; i < movableNodes.size(); ++i){
-		//Check if visible??
+	if(!result || (result && topLeft->movableNodes.empty() && topRight->movableNodes.empty() && bottomLeft->movableNodes.empty() && bottomRight->movableNodes.empty())){
+		for(int i = 0; i < movableNodes.size(); ++i){
+			//Check if visible??
 
-		Entity* const entity = movableNodes[i]->RetrieveEntity();
+			Entity* const entity = movableNodes[i]->RetrieveEntity();
 
-		if(entity && entity->active){
-			glm::vec3 displacementVec = entity->pos - camPos;
-			//if(glm::dot(displacementVec, camFront) > 0.f){
+			if(entity && entity->active){
+				glm::vec3 displacementVec = entity->pos - camPos;
+				if(glm::dot(displacementVec, camFront) > 0.f){
 
-				switch(entity->type){
-					case Entity::EntityType::Bullet:
-					case Entity::EntityType::Enemy:
-					case Entity::EntityType::Player:
-						entitiesOpaque.insert(std::make_pair((int)glm::dot(displacementVec, displacementVec), entity));
-						break;
+					switch(entity->type){
+						case Entity::EntityType::Bullet:
+						case Entity::EntityType::Enemy:
+						case Entity::EntityType::Player:
+							entitiesOpaque.insert(std::make_pair((int)glm::dot(displacementVec, displacementVec), entity));
+							break;
+					}
 				}
-			//}
+			}
 		}
 	}
 }
@@ -204,7 +208,12 @@ void Region::ClearMovableAndDeactivateChildren(){
 
 void Region::Partition(const bool movable){
 	const std::vector<Node*>& nodes = movable ? movableNodes : stationaryNodes;
-	if(nodes.size() <= (size_t)1){ //Limit amt of partitions here based on size??
+	if(nodes.size() <= (size_t)1
+		&& (topLeft == nullptr || !topLeft->active) //For movable entities to be propagated down the quadtree
+		&& (topRight == nullptr || !topRight->active) //...
+		&& (bottomLeft == nullptr || !bottomLeft->active) //...
+		&& (bottomRight == nullptr || !bottomRight->active) //...
+	){
 		return;
 	}
 
