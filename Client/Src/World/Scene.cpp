@@ -51,9 +51,6 @@ Scene::Scene():
 	},
 	forwardSP{"Shaders/Forward.vertexS", "Shaders/Forward.fragS"},
 	textSP{"Shaders/Text.vertexS", "Shaders/Text.fragS"},
-	ptLights({}),
-	directionalLights({}),
-	spotlights({}),
 	cubemapRefID(0),
 	currSlot(0),
 	inv{
@@ -63,7 +60,6 @@ Scene::Scene():
 		ItemType::None,
 		ItemType::None,
 	},
-	playerStates((int)PlayerState::NoMovement | (int)PlayerState::Standing),
 	screen(Screen::MainMenu),
 	textScaleFactors{
 		1.f,
@@ -73,7 +69,6 @@ Scene::Scene():
 		glm::vec4(1.f),
 		glm::vec4(1.f),
 	},
-	sprintOn(false),
 	currGun(nullptr),
 	guns{
 		nullptr,
@@ -97,22 +92,6 @@ Scene::~Scene(){
 			delete guns[i];
 			guns[i] = nullptr;
 		}
-	}
-
-	const size_t& pSize = ptLights.size();
-	const size_t& dSize = directionalLights.size();
-	const size_t& sSize = spotlights.size();
-	for(size_t i = 0; i < pSize; ++i){
-		delete ptLights[i];
-		ptLights[i] = nullptr;
-	}
-	for(size_t i = 0; i < dSize; ++i){
-		delete directionalLights[i];
-		directionalLights[i] = nullptr;
-	}
-	for(size_t i = 0; i < sSize; ++i){
-		delete spotlights[i];
-		spotlights[i] = nullptr;
 	}
 	
 	for(int i = 0; i < (int)MeshType::Amt; ++i){
@@ -259,8 +238,6 @@ bool Scene::Init(){
 
 	Meshes::meshes[(int)MeshType::Terrain]->AddTexMap({"Imgs/Floor.jpg", Mesh::TexType::Diffuse, 0});
 
-	directionalLights.emplace_back(CreateLight(LightType::Directional)); //Simulate sunlight
-
 	return true;
 }
 
@@ -362,134 +339,15 @@ void Scene::GameUpdate(GLFWwindow* const& win){
 		cam.SetSpd(150.0f);
 		cam.UpdateDetached(GLFW_KEY_Q, GLFW_KEY_E, GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_W, GLFW_KEY_S);
 	} else{
-		////Control player states
-		static float sprintBT = 0.f;
-		static float heightBT = 0.f;
-
-		///Toggle sprint
-		if(Key(VK_SHIFT) && sprintBT <= elapsedTime){
-			sprintOn = !sprintOn;
-			sprintBT = elapsedTime + .5f;
-		}
-
-		///Set movement state
-		if(Key(GLFW_KEY_A) || Key(GLFW_KEY_D) || Key(GLFW_KEY_W) || Key(GLFW_KEY_S)){
-			if(sprintOn){
-				playerStates &= ~(int)PlayerState::NoMovement;
-				playerStates &= ~(int)PlayerState::Walking;
-				playerStates |= (int)PlayerState::Sprinting;
-			} else{
-				playerStates &= ~(int)PlayerState::NoMovement;
-				playerStates |= (int)PlayerState::Walking;
-				playerStates &= ~(int)PlayerState::Sprinting;
-			}
-		} else{
-			playerStates |= (int)PlayerState::NoMovement;
-			playerStates &= ~(int)PlayerState::Walking;
-			playerStates &= ~(int)PlayerState::Sprinting;
-		}
-
-		///Set height state
-		if(heightBT <= elapsedTime){
-			if(Key(GLFW_KEY_C)){
-				if(playerStates & (int)PlayerState::Standing){
-					playerStates |= (int)PlayerState::Crouching;
-					playerStates &= ~(int)PlayerState::Standing;
-				} else if(playerStates & (int)PlayerState::Crouching){
-					playerStates |= (int)PlayerState::Proning;
-					playerStates &= ~(int)PlayerState::Crouching;
-				}
-				heightBT = elapsedTime + .5f;
-			}
-			if(Key(VK_SPACE)){
-				if(playerStates & (int)PlayerState::Proning){
-					playerStates |= (int)PlayerState::Crouching;
-					playerStates &= ~(int)PlayerState::Proning;
-				} else if(playerStates & (int)PlayerState::Crouching){
-					playerStates |= (int)PlayerState::Standing;
-					playerStates &= ~(int)PlayerState::Crouching;
-				} else if(playerStates & (int)PlayerState::Standing){
-					soundEngine->play2D("Audio/Sounds/Jump.wav", false);
-					playerStates |= (int)PlayerState::Jumping;
-					playerStates &= ~(int)PlayerState::Standing;
-				}
-				heightBT = elapsedTime + .5f;
-			} else{
-				if((playerStates & (int)PlayerState::Jumping)){
-					playerStates |= (int)PlayerState::Falling;
-					playerStates &= ~(int)PlayerState::Jumping;
-					cam.SetVel(0.f);
-				}
-			}
-		}
-
-		float yMin = terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(cam.GetPos().x / terrainXScale, cam.GetPos().z / terrainZScale);
-		float yMax = yMin;
-
-		///Update player according to its states
-		int playerStatesTemp = playerStates;
-		int bitMask = 1;
-		while(playerStatesTemp){
-			switch(PlayerState(playerStatesTemp & bitMask)){
-				case PlayerState::NoMovement:
-					cam.SetSpd(0.f);
-					break;
-				case PlayerState::Walking:
-					cam.SetSpd(100.f);
-					break;
-				case PlayerState::Sprinting:
-					cam.SetSpd(250.f);
-					break;
-				case PlayerState::Standing:
-					yMin += 30.f;
-					yMax += 30.f;
-					break;
-				case PlayerState::Jumping:
-					cam.SetVel(300.f);
-				case PlayerState::Falling:
-					cam.SetAccel(-1500.f);
-					yMin += 30.f;
-					yMax += 250.f;
-					break;
-				case PlayerState::Crouching:
-					cam.SetSpd(cam.GetSpd() / 5.f);
-					yMin += 5.f;
-					yMax += 5.f;
-					break;
-				case PlayerState::Proning:
-					cam.SetSpd(5.f);
-					yMin += 1.f;
-					yMax += 1.f;
-					break;
-			}
-			playerStatesTemp &= ~bitMask;
-			bitMask <<= 1;
-		}
-
-		if(playerStates & (int)PlayerState::Jumping){
-			if(cam.GetPos().y >= yMax){
-				playerStates |= (int)PlayerState::Falling;
-				playerStates &= ~(int)PlayerState::Jumping;
-				cam.SetVel(0.f);
-			}
-		}
-		if(playerStates & (int)PlayerState::Falling){
-			if(cam.GetPos().y <= yMin){
-				playerStates |= (int)PlayerState::Standing;
-				playerStates &= ~(int)PlayerState::Falling;
-				cam.SetAccel(0.f);
-				cam.SetVel(0.f);
-			}
-		}
-
-		cam.UpdateJumpFall();
-		cam.UpdateAttached(
-			GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_W, GLFW_KEY_S,
-			-terrainXScale / 2.f + 5.f, terrainXScale / 2.f - 5.f,
-			yMin, yMax,
-			-terrainZScale / 2.f + 5.f, terrainZScale / 2.f - 5.f
-		);
+		//cam.UpdateJumpFall();
+		//cam.UpdateAttached(
+		//	GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_W, GLFW_KEY_S,
+		//	-terrainXScale / 2.f + 5.f, terrainXScale / 2.f - 5.f,
+		//	yMin, yMax,
+		//	-terrainZScale / 2.f + 5.f, terrainZScale / 2.f - 5.f
+		//);
 	}
+
 	view = cam.LookAt();
 
 	///Control FOV of perspective projection based on item selected in inv
@@ -1013,45 +871,10 @@ void Scene::GameRender(){
 
 void Scene::ForwardRender(){
 	forwardSP.Use();
-	const int& pAmt = (int)ptLights.size();
-	const int& dAmt = (int)directionalLights.size();
-	const int& sAmt = (int)spotlights.size();
 
 	forwardSP.Set1f("shininess", 32.f); //More light scattering if lower
 	forwardSP.Set3fv("globalAmbient", Light::globalAmbient);
 	forwardSP.Set3fv("camPos", cam.GetPos());
-	forwardSP.Set1i("pAmt", pAmt);
-	forwardSP.Set1i("dAmt", dAmt);
-	forwardSP.Set1i("sAmt", sAmt);
-
-	int i;
-	for(i = 0; i < pAmt; ++i){
-		const PtLight* const& ptLight = static_cast<PtLight*>(ptLights[i]);
-		forwardSP.Set3fv(("ptLights[" + std::to_string(i) + "].ambient").c_str(), ptLight->ambient);
-		forwardSP.Set3fv(("ptLights[" + std::to_string(i) + "].diffuse").c_str(), ptLight->diffuse);
-		forwardSP.Set3fv(("ptLights[" + std::to_string(i) + "].spec").c_str(), ptLight->spec);
-		forwardSP.Set3fv(("ptLights[" + std::to_string(i) + "].pos").c_str(), ptLight->pos);
-		forwardSP.Set1f(("ptLights[" + std::to_string(i) + "].constant").c_str(), ptLight->constant);
-		forwardSP.Set1f(("ptLights[" + std::to_string(i) + "].linear").c_str(), ptLight->linear);
-		forwardSP.Set1f(("ptLights[" + std::to_string(i) + "].quadratic").c_str(), ptLight->quadratic);
-	}
-	for(i = 0; i < dAmt; ++i){
-		const DirectionalLight* const& directionalLight = static_cast<DirectionalLight*>(directionalLights[i]);
-		forwardSP.Set3fv(("directionalLights[" + std::to_string(i) + "].ambient").c_str(), directionalLight->ambient);
-		forwardSP.Set3fv(("directionalLights[" + std::to_string(i) + "].diffuse").c_str(), directionalLight->diffuse);
-		forwardSP.Set3fv(("directionalLights[" + std::to_string(i) + "].spec").c_str(), directionalLight->spec);
-		forwardSP.Set3fv(("directionalLights[" + std::to_string(i) + "].dir").c_str(), directionalLight->dir);
-	}
-	for(i = 0; i < sAmt; ++i){
-		const Spotlight* const& spotlight = static_cast<Spotlight*>(spotlights[i]);
-		forwardSP.Set3fv(("spotlights[" + std::to_string(i) + "].ambient").c_str(), spotlight->ambient);
-		forwardSP.Set3fv(("spotlights[" + std::to_string(i) + "].diffuse").c_str(), spotlight->diffuse);
-		forwardSP.Set3fv(("spotlights[" + std::to_string(i) + "].spec").c_str(), spotlight->spec);
-		forwardSP.Set3fv(("spotlights[" + std::to_string(i) + "].pos").c_str(), spotlight->pos);
-		forwardSP.Set3fv(("spotlights[" + std::to_string(i) + "].dir").c_str(), spotlight->dir);
-		forwardSP.Set1f(("spotlights[" + std::to_string(i) + "].cosInnerCutoff").c_str(), spotlight->cosInnerCutoff);
-		forwardSP.Set1f(("spotlights[" + std::to_string(i) + "].cosOuterCutoff").c_str(), spotlight->cosOuterCutoff);
-	}
 
 	forwardSP.SetMat4fv("PV", &(projection * view)[0][0]);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

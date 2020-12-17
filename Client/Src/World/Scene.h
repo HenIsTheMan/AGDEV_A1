@@ -48,12 +48,9 @@ private:
 	ShaderProg forwardSP;
 	ShaderProg textSP;
 
-	std::vector<Light*> ptLights;
-	std::vector<Light*> directionalLights;
-	std::vector<Light*> spotlights;
 	uint cubemapRefID;
 
-	enum struct ItemType{
+	enum struct ItemType: int{
 		None = -1,
 		Shotgun,
 		Scar,
@@ -65,20 +62,9 @@ private:
 	};
 	int currSlot;
 	ItemType inv[5];
-	enum struct PlayerState{
-		NoMovement = BIT(1),
-		Walking = BIT(2),
-		Sprinting = BIT(3),
 
-		Standing = BIT(4),
-		Jumping = BIT(5),
-		Falling = BIT(6),
-		Crouching = BIT(7),
-		Proning = BIT(8),
-	};
-	int playerStates;
-	enum struct Screen{
-		MainMenu = 0,
+	enum struct Screen: int{
+		MainMenu,
 		Game,
 		Amt
 	};
@@ -86,7 +72,6 @@ private:
 	Screen screen;
 	float textScaleFactors[2];
 	glm::vec4 textColours[2];
-	bool sprintOn;
 	Gun* currGun;
 	Gun* guns[3];
 	glm::vec4 reticleColour;
