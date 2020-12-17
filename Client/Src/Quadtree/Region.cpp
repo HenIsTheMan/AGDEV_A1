@@ -227,18 +227,18 @@ void Region::Partition(const bool movable){
 		){
 			if(entity->pos[1] - entity->scale[1] * 0.5f <= origin[1]){
 				if(entity->pos[0] - entity->scale[0] * 0.5f <= origin[0]){
-					topRight->AddNode(node, entity->movable);
+					topLeft->AddNode(node, entity->movable);
 				}
 				if(entity->pos[0] + entity->scale[0] * 0.5f >= origin[0]){
-					topLeft->AddNode(node, entity->movable);
+					topRight->AddNode(node, entity->movable);
 				}
 			}
 			if(entity->pos[1] + entity->scale[1] * 0.5f >= origin[1]){
 				if(entity->pos[0] - entity->scale[0] * 0.5f <= origin[0]){
-					bottomRight->AddNode(node, entity->movable);
+					bottomLeft->AddNode(node, entity->movable);
 				}
 				if(entity->pos[0] + entity->scale[0] * 0.5f >= origin[0]){
-					bottomLeft->AddNode(node, entity->movable);
+					bottomRight->AddNode(node, entity->movable);
 				}
 			}
 		}
