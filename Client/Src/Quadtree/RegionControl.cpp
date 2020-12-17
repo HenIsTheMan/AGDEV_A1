@@ -22,8 +22,8 @@ void RegionControl::Update(){
 	}
 	std::cout << "Here\n";
 
-	rootRegion->ClearMovableAndDeactivateChildren();
-	rootRegion->Partition(true);
+	//rootRegion->ClearMovableAndDeactivateChildren();
+	//rootRegion->Partition(true);
 }
 
 void RegionControl::RenderEntities(ShaderProg& SP, const Cam& cam){
@@ -36,7 +36,9 @@ void RegionControl::RenderEntities(ShaderProg& SP, const Cam& cam){
 	std::map<int, Entity*> entitiesNotOpaque;
 	rootRegion->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
 
-	std::cout << "entitiesNotOpaque size: " << entitiesNotOpaque.size() << '\n'; //No. varies due to optimisation??
+	//std::cout << "entitiesNotOpaque size: " << entitiesNotOpaque.size() << '\n'; //No. varies due to optimisation??
+	std::cout << rootRegion->movableNodes.size() << '\n';
+	std::cout << "entitiesOpaque size: " << entitiesOpaque.size() << '\n';
 
 	///Render opaque entities 1st
 	for(std::map<int, Entity*>::reverse_iterator iter = entitiesOpaque.rbegin(); iter != entitiesOpaque.rend(); ++iter){
@@ -58,6 +60,7 @@ void RegionControl::RenderEntities(ShaderProg& SP, const Cam& cam){
 			case Entity::EntityType::ShotgunAmmo:
 			case Entity::EntityType::ScarAmmo:
 			case Entity::EntityType::SniperAmmo:
+			case Entity::EntityType::Player:
 				modelStack.PushModel({
 					modelStack.Translate(entity->pos),
 					modelStack.Scale(entity->scale),
@@ -107,7 +110,7 @@ void RegionControl::RenderQSP(ShaderProg& SP, const Cam& cam){
 	rootRegion->GetLeaves(SP, leaves);
 	const size_t size = leaves.size();
 
-	std::cout << "leaves size: " << size << '\n';
+	//std::cout << "leaves size: " << size << '\n';
 
 	if(!size){
 		return;

@@ -66,6 +66,23 @@ void EntityManager::DeactivateEntityProcedure(Entity* const entity){
 	//regionControl->RemoveNode(rootNode->DetachChild(entity), entity->movable);
 }
 
+void EntityManager::CreatePlayer(const EntityCreationAttribs& attribs){
+	Entity* const& entity = ActivateEntity(true);
+
+	entity->type = Entity::EntityType::Player;
+	entity->life = 0.f;
+	entity->maxLife = 0.f;
+	entity->colour = attribs.colour;
+	entity->diffuseTexIndex = attribs.diffuseTexIndex;
+	entity->collisionNormal = attribs.collisionNormal;
+	entity->scale = attribs.scale;
+
+	entity->pos = attribs.pos;
+	entity->vel = glm::vec3(0.f);
+	entity->mass = 5.f;
+	entity->force = glm::vec3(0.f);
+}
+
 void EntityManager::CreateShotgunBullet(const glm::vec3& camPos, const glm::vec3& camFront){
 	Entity* const entity = ActivateEntity(true);
 

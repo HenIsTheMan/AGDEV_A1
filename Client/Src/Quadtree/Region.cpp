@@ -55,8 +55,6 @@ void Region::GetEntitiesToRender(std::map<int, Entity*>& entitiesOpaque, std::ma
 			if(glm::dot(displacementVec, camFront) > 0.f){
 
 				switch(entity->type){
-					case Entity::EntityType::Bullet:
-					case Entity::EntityType::Enemy:
 					case Entity::EntityType::ShotgunAmmo:
 					case Entity::EntityType::ScarAmmo:
 					case Entity::EntityType::SniperAmmo:
@@ -68,6 +66,26 @@ void Region::GetEntitiesToRender(std::map<int, Entity*>& entitiesOpaque, std::ma
 						break;
 				}
 			}
+		}
+	}
+
+	for(int i = 0; i < movableNodes.size(); ++i){
+		//Check if visible??
+
+		Entity* const entity = movableNodes[i]->RetrieveEntity();
+
+		if(entity && entity->active){
+			glm::vec3 displacementVec = entity->pos - camPos;
+			//if(glm::dot(displacementVec, camFront) > 0.f){
+
+				switch(entity->type){
+					case Entity::EntityType::Bullet:
+					case Entity::EntityType::Enemy:
+					case Entity::EntityType::Player:
+						entitiesOpaque.insert(std::make_pair((int)glm::dot(displacementVec, displacementVec), entity));
+						break;
+				}
+			//}
 		}
 	}
 }
