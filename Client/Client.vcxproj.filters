@@ -16,6 +16,7 @@
     <ClCompile Include="Src\Entity\EntityManager.cpp" />
     <ClCompile Include="Src\Shared\Meshes.cpp" />
     <ClCompile Include="Src\World\ModelStack.cpp" />
+    <ClCompile Include="Src\LOD\LOD.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Admin\App.h" />
@@ -32,6 +33,7 @@
     <ClInclude Include="Src\Entity\EntityManager.h" />
     <ClInclude Include="Src\Shared\Meshes.h" />
     <ClInclude Include="Src\World\ModelStack.h" />
+    <ClInclude Include="Src\LOD\LOD.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Blur.fragS" />
