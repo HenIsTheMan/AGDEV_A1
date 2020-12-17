@@ -436,7 +436,7 @@ void Scene::GameUpdate(GLFWwindow* const& win){
 	}
 
 	if(isCamDetached){
-		cam.SetVel(150.0f);
+		cam.SetSpd(150.0f);
 		cam.UpdateDetached(GLFW_KEY_Q, GLFW_KEY_E, GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_W, GLFW_KEY_S);
 	} else{
 		////Control player states
