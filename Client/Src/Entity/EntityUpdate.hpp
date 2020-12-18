@@ -24,7 +24,7 @@ inline static void UpdatePlayerHoriz(Entity* const player){
 		return;
 	}
 
-	player->moveSpd = 400.0f;
+	player->moveSpd = 1400.0f;
 	const glm::vec3 xzFacingDir = glm::vec3(player->facingDir.x, 0.f, player->facingDir.z);
 
 	glm::vec3&& change = glm::vec3((float)frontBack, 0.f, (float)frontBack) * xzFacingDir + (float)leftRight * RotateVecIn2D(xzFacingDir, glm::radians(90.0f), Axis::y);

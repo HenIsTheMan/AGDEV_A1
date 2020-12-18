@@ -154,21 +154,9 @@ void Scene::InitEntities(){
 	entityManager->Init();
 
 	//* Create Player
-	const float playerScaleFactor = 50.0f;
-	const float playerPosX = 0.0f;
-	const float playerPosZ = 0.0f;
-
 	myPlayer = entityManager->CreatePlayer({
-		glm::vec3(
-			playerPosX,
-			terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(
-				playerPosX / terrainXScale,
-				playerPosZ / terrainZScale,
-				false
-			) + playerScaleFactor * 0.5f,
-			playerPosZ
-		),
-		glm::vec3(playerScaleFactor),
+		glm::vec3(),
+		glm::vec3(50.0f, 200.0f, 50.0f),
 		glm::vec4(1.0f),
 		-1,
 	});
@@ -552,7 +540,7 @@ void Scene::GameUpdate(GLFWwindow* const& win){
 	if(isCamDetached){
 		cam.UpdateDetached(GLFW_KEY_E, GLFW_KEY_Q, GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_W, GLFW_KEY_S);
 	} else{
-		cam.UpdateAttached(myPlayer->GetPos() + glm::vec3(0.0f, myPlayer->GetScale().y * 0.45f, 0.0f));
+		cam.UpdateAttached(myPlayer->GetPos() + glm::vec3(0.0f, myPlayer->GetScale().y * 0.5f, 0.0f));
 		const_cast<Entity*>(myPlayer)->SetFacingDir(cam.CalcFront());
 
 		if(RMB){ //Control angularFOV of perspective projection based on item selected in inv
@@ -955,7 +943,7 @@ void Scene::GameRender(){
 	textChief.RenderText(textSP, {
 		"Instanced draw calls: " + std::to_string(Mesh::instancedDrawCalls),
 		25.f,
-		(float)winHeight * 0.2f,
+		(float)winHeight * 0.55f,
 		1.f,
 		glm::vec4(0.0f, 1.0f, 0.0f, 1.0f),
 		0,
@@ -964,7 +952,7 @@ void Scene::GameRender(){
 	textChief.RenderText(textSP, {
 		"Normal draw calls: " + std::to_string(Mesh::normalDrawCalls),
 		25.f,
-		(float)winHeight * 0.25f,
+		(float)winHeight * 0.65f,
 		1.f,
 		glm::vec4(0.0f, 1.0f, 0.0f, 1.0f),
 		0,
@@ -973,7 +961,7 @@ void Scene::GameRender(){
 	textChief.RenderText(textSP, {
 		"Polygon count: " + std::to_string(Mesh::polygonCount),
 		25.f,
-		(float)winHeight * 0.3f,
+		(float)winHeight * 0.75f,
 		1.f,
 		glm::vec4(0.0f, 1.0f, 0.0f, 1.0f),
 		0,
@@ -982,7 +970,7 @@ void Scene::GameRender(){
 	textChief.RenderText(textSP, {
 		"Index count: " + std::to_string(Mesh::indexCount),
 		25.f,
-		(float)winHeight * 0.35f,
+		(float)winHeight * 0.85f,
 		1.f,
 		glm::vec4(0.0f, 1.0f, 0.0f, 1.0f),
 		0,
@@ -991,7 +979,7 @@ void Scene::GameRender(){
 	textChief.RenderText(textSP, {
 		"Vertex count: " + std::to_string(Mesh::vertexCount),
 		25.f,
-		(float)winHeight * 0.4f,
+		(float)winHeight * 0.95f,
 		1.f,
 		glm::vec4(0.0f, 1.0f, 0.0f, 1.0f),
 		0,
