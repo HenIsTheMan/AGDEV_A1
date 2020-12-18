@@ -57,7 +57,4 @@ inline static void UpdatePlayerVert(Entity* const player){
 		}
 		isSpacePressed = false;
 	}
-
-	player->yMin = terrainYScale *
-		static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(player->pos.x / terrainXScale, player->pos.y / terrainZScale, false) + player->scale.y * 0.5f;
 }

@@ -57,6 +57,11 @@ void EntityManager::Update(){
 					IsAirborneWrapper::isAirborne = false;
 				}
 
+				movableEntity->yMin = terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(
+					movableEntity->pos.x / terrainXScale,
+					movableEntity->pos.z / terrainZScale, false
+				) + movableEntity->scale.y * 0.5f;
+
 				movableEntity->pos.x = std::min(movableEntity->xMax, std::max(movableEntity->xMin, movableEntity->pos.x));
 				movableEntity->pos.y = std::min(movableEntity->yMax, std::max(movableEntity->yMin, movableEntity->pos.y));
 				movableEntity->pos.z = std::min(movableEntity->zMax, std::max(movableEntity->zMin, movableEntity->pos.z));

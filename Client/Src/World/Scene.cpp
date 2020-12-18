@@ -20,7 +20,7 @@ void SetUpCubemap(uint& cubemapRefID, const std::vector<cstr>& faces);
 glm::vec3 Light::globalAmbient = glm::vec3(.2f);
 
 Scene::Scene():
-	cam(glm::vec3(0.0f, 700.f, 0.0f), glm::vec3(0.0f, 700.0f, -5.f), glm::vec3(0.f, 1.f, 0.f), 0.0f, 1400.0f),
+	cam(glm::vec3(0.0f, 0.f, 0.0f), glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.f, 1.f, 0.0f), 0.0f, 1400.0f),
 	soundEngine(nullptr),
 	coinMusic({}),
 	coinSoundFX({}),
@@ -171,7 +171,7 @@ void Scene::InitEntities(){
 
 	//* Create coins
 	for(short i = 0; i < 20; ++i){
-		const float scaleFactor = 15.f;
+		const float scaleFactor = 70.f;
 		const float xPos = PseudorandMinMax(-terrainXScale * 0.5f + 2.0f, terrainXScale * 0.5f - 2.0f);
 		const float zPos = PseudorandMinMax(-terrainZScale * 0.5f + 2.0f, terrainZScale * 0.5f - 2.0f);
 		const glm::vec3 pos = glm::vec3(
@@ -442,6 +442,7 @@ void Scene::MainMenuUpdate(GLFWwindow* const& win, const POINT& mousePos, float&
 		}
 		if(leftRightMB > 0.f && buttonBT <= elapsedTime){
 			soundEngine->play2D("Audio/Sounds/Select.wav", false);
+
 			if(guns[0]){
 				delete guns[0];
 				guns[0] = nullptr;
@@ -457,10 +458,13 @@ void Scene::MainMenuUpdate(GLFWwindow* const& win, const POINT& mousePos, float&
 				guns[2] = nullptr;
 			}
 			guns[2] = new Sniper();
+
 			screen = Screen::Game;
-			cam.SetPos(glm::vec3(0.f));
-			cam.SetTarget(glm::vec3(0.f, 0.f, -1.f));
+
+			cam.SetPos(glm::vec3(0.0f, 1500.0f, 2400.0f));
+			cam.SetTarget(glm::vec3(0.0f, 1500.0f, 0.0f));
 			cam.SetUp(glm::vec3(0.f, 1.f, 0.f));
+
 			buttonBT = elapsedTime + .3f;
 
 			const size_t& coinMusicSize = coinMusic.size();
