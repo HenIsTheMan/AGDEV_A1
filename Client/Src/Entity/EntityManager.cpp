@@ -162,7 +162,7 @@ void EntityManager::CreatePlayer(const EntityCreationAttribs& attribs){
 	entity->scale = attribs.scale;
 
 	entity->pos = attribs.pos;
-	entity->spd = 400.0f;
+	entity->spd = 0.0f;
 	entity->dir = glm::vec3(0.0f, 0.0f, -1.0f);
 	entity->mass = 5.f;
 	entity->force = glm::vec3(0.f);

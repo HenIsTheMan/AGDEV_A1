@@ -216,27 +216,26 @@ void Scene::InitEntities(){
 
 void Scene::CreateTreesAndCubes(){
 	Model* const treeHigh = models[(int)ModelType::Tree_High];
-	treeHigh->ReserveModelMatsForAll(5000);
-	treeHigh->ReserveColorsForAll(5000);
-	treeHigh->ReserveDiffuseTexIndicesForAll(5000);
+	treeHigh->ReserveModelMatsForAll(2000);
+	treeHigh->ReserveColorsForAll(2000);
+	treeHigh->ReserveDiffuseTexIndicesForAll(2000);
 
 	Model* const treeMedium = models[(int)ModelType::Tree_Medium];
-	treeMedium->ReserveModelMatsForAll(5000);
-	treeMedium->ReserveColorsForAll(5000);
-	treeMedium->ReserveDiffuseTexIndicesForAll(5000);
+	treeMedium->ReserveModelMatsForAll(2000);
+	treeMedium->ReserveColorsForAll(2000);
+	treeMedium->ReserveDiffuseTexIndicesForAll(2000);
 
 	Model* const treeLow = models[(int)ModelType::Tree_Low];
-	treeLow->ReserveModelMatsForAll(5000);
-	treeLow->ReserveColorsForAll(5000);
-	treeLow->ReserveDiffuseTexIndicesForAll(5000);
+	treeLow->ReserveModelMatsForAll(2000);
+	treeLow->ReserveColorsForAll(2000);
+	treeLow->ReserveDiffuseTexIndicesForAll(2000);
 
 	Mesh* const cubeMesh = Meshes::meshes[(int)MeshType::Cube];
-	cubeMesh->ReserveModelMats(5000);
-	cubeMesh->ReserveColors(5000);
-	cubeMesh->ReserveDiffuseTexIndices(5000);
+	cubeMesh->ReserveModelMats(2000);
+	cubeMesh->ReserveColors(2000);
+	cubeMesh->ReserveDiffuseTexIndices(2000);
 
-	for(int i = 0; i < 5000; ++i){
-		const float scaleFactor = 50.0f;
+	for(int i = 0; i < 2000; ++i){
 		const float xPos = PseudorandMinMax(-terrainXScale * 0.5f + 2.f, terrainXScale * 0.5f - 2.f);
 		const float zPos = PseudorandMinMax(-terrainZScale * 0.5f + 2.f, 2.f);
 		const glm::vec3 pos = glm::vec3(
@@ -248,7 +247,7 @@ void Scene::CreateTreesAndCubes(){
 		modelStack.PushModel({
 			modelStack.Translate(pos),
 			modelStack.Rotate(glm::vec4(0.f, 1.f, 0.f, PseudorandMinMax(0.0f, 360.0f))),
-			modelStack.Scale(glm::vec3(scaleFactor))
+			modelStack.Scale(glm::vec3(200.0f))
 		});
 			const glm::mat4& modelMat = modelStack.GetTopModel();
 			const glm::vec3& color = glm::vec3(PseudorandMinMax(0.1f, 1.0f), 0.0f, 0.0f);
@@ -268,9 +267,9 @@ void Scene::CreateTreesAndCubes(){
 		modelStack.PopModel();
 
 		modelStack.PushModel({
-			modelStack.Translate(pos + glm::vec3(0.0f, (float)PseudorandMinMax(600, 800), terrainZScale * 0.5f - 2.f)),
+			modelStack.Translate(pos + glm::vec3(0.0f, (float)PseudorandMinMax(1200, 1600), terrainZScale * 0.5f - 2.f)),
 			modelStack.Rotate(glm::vec4(0.f, 1.f, 0.f, PseudorandMinMax(0.0f, 360.0f))),
-			modelStack.Scale(glm::vec3(20.0f)),
+			modelStack.Scale(glm::vec3(40.0f)),
 		});
 			cubeMesh->AddModelMat(modelStack.GetTopModel());
 			cubeMesh->AddColor(glm::vec4(1.0f));
