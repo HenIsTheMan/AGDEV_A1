@@ -97,15 +97,20 @@ Scene::Scene():
 	elapsedTime(0.f),
 	modelStack(),
 	polyModes(),
-	dLight(nullptr),
+	dLightFromTop(nullptr),
+	dLightFromBottom(nullptr),
 	entityManager(EntityManager::GetObjPtr())
 {
 }
 
 Scene::~Scene(){
-	if(dLight){
-		delete dLight;
-		dLight = nullptr;
+	if(dLightFromTop){
+		delete dLightFromTop;
+		dLightFromTop = nullptr;
+	}
+	if(dLightFromBottom){
+		delete dLightFromBottom;
+		dLightFromBottom = nullptr;
 	}
 
 	for(short i = 0; i < 3; ++i){
@@ -375,7 +380,8 @@ bool Scene::Init(){
 
 	Meshes::meshes[(int)MeshType::Terrain]->AddTexMap({"Imgs/Floor.jpg", Mesh::TexType::Diffuse, 0});
 
-	dLight = CreateLight(LightType::Directional);
+	dLightFromTop = CreateLight(LightType::Directional);
+	dLightFromBottom = CreateLight(LightType::Directional);
 
 	return true;
 }
@@ -995,13 +1001,19 @@ void Scene::ForwardRender(){
 	forwardSP.Set1f("shininess", 32.f); //More light scattering if lower
 	forwardSP.Set3fv("globalAmbient", Light::globalAmbient);
 	forwardSP.Set3fv("camPos", cam.GetPos());
-	forwardSP.Set1i("dAmt", 1);
+	forwardSP.Set1i("dAmt", 2);
 
-	DirectionalLight* directionalLight = (DirectionalLight*)dLight;
-	forwardSP.Set3fv("directionalLights[0].ambient", directionalLight->ambient);
-	forwardSP.Set3fv("directionalLights[0].diffuse", directionalLight->diffuse);
-	forwardSP.Set3fv("directionalLights[0].spec", directionalLight->spec);
-	forwardSP.Set3fv("directionalLights[0].dir", directionalLight->dir);
+	DirectionalLight* directionalLightFromTop = (DirectionalLight*)dLightFromTop;
+	forwardSP.Set3fv("directionalLights[0].ambient", directionalLightFromTop->ambient);
+	forwardSP.Set3fv("directionalLights[0].diffuse", directionalLightFromTop->diffuse);
+	forwardSP.Set3fv("directionalLights[0].spec", directionalLightFromTop->spec);
+	forwardSP.Set3fv("directionalLights[0].dir", directionalLightFromTop->dir);
+
+	DirectionalLight* directionalLightFromBottom = (DirectionalLight*)dLightFromBottom;
+	forwardSP.Set3fv("directionalLights[1].ambient", directionalLightFromBottom->ambient);
+	forwardSP.Set3fv("directionalLights[1].diffuse", directionalLightFromBottom->diffuse);
+	forwardSP.Set3fv("directionalLights[1].spec", directionalLightFromBottom->spec);
+	forwardSP.Set3fv("directionalLights[1].dir", directionalLightFromBottom->dir);
 
 	forwardSP.SetMat4fv("PV", &(projection * view)[0][0]);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
