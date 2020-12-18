@@ -41,9 +41,6 @@ private:
 	void ActivateEntityProcedure(Entity* const entity);
 	void DeactivateEntityProcedure(Entity* const entity);
 
-	bool shldRenderQSP;
-	float elapsedTime;
-
 	std::vector<Entity*> entityPool;
 	Node* rootNode;
 	RegionControl* regionControl;

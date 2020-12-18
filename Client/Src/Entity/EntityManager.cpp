@@ -1,7 +1,5 @@
 #include "EntityManager.h"
 
-extern float dt;
-
 EntityManager::~EntityManager(){
 	for(Entity*& entity: entityPool){
 		if(entity){
@@ -36,23 +34,11 @@ void EntityManager::Init(){
 }
 
 void EntityManager::Update(){
-	elapsedTime += dt;
-
-	static float BT = 0.0f;
-	if(Key(GLFW_KEY_L) && BT <= elapsedTime){
-		shldRenderQSP = !shldRenderQSP;
-		BT = elapsedTime + .5f;
-	}
-
 	regionControl->Update();
 }
 
 void EntityManager::Render(ShaderProg& SP, const Cam& cam) const{
-	regionControl->RenderEntities(SP, cam);
-
-	if(shldRenderQSP){
-		regionControl->RenderQSP(SP, cam);
-	}
+	regionControl->Render(SP, cam);
 }
 
 void EntityManager::SetUpRegionsForStationary(){
@@ -266,8 +252,6 @@ void EntityManager::DeactivateEntity(Entity* const& entity, const bool movable){
 }
 
 EntityManager::EntityManager():
-	shldRenderQSP(false),
-	elapsedTime(0.0f),
 	entityPool(),
 	rootNode(new Node()),
 	regionControl(RegionControl::GetObjPtr()),

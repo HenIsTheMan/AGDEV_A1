@@ -1,5 +1,7 @@
 #include "RegionControl.h"
 
+extern float dt;
+
 extern float terrainXScale;
 extern float terrainYScale;
 extern float terrainZScale;
@@ -13,8 +15,27 @@ RegionControl::~RegionControl(){
 }
 
 void RegionControl::Update(){
+	elapsedTime += dt;
+
+	static float BT = 0.0f;
+	if(Key(GLFW_KEY_L) && BT <= elapsedTime){
+		shldRenderQSP = !shldRenderQSP;
+		BT = elapsedTime + .5f;
+	}
+
 	rootRegion->ClearMovableAndDeactivateChildren();
 	rootRegion->Partition(true);
+}
+
+void RegionControl::Render(ShaderProg& SP, const Cam& cam){
+	RenderEntities(SP, cam);
+
+	if(shldRenderQSP){
+		RenderQSP(SP, cam);
+	}
+}
+
+void RegionControl::UpdateEntities(){
 }
 
 void RegionControl::RenderEntities(ShaderProg& SP, const Cam& cam){
@@ -161,6 +182,8 @@ void RegionControl::SetUpRegionsForStationary(){
 }
 
 RegionControl::RegionControl():
+	shldRenderQSP(false),
+	elapsedTime(0.0f),
 	modelStack(),
 	rootRegion(new Region())
 {

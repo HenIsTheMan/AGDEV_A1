@@ -10,6 +10,9 @@ public:
 	~RegionControl();
 
 	void Update();
+	void Render(ShaderProg& SP, const Cam& cam);
+
+	void UpdateEntities();
 	void RenderEntities(ShaderProg& SP, const Cam& cam);
 	void RenderQSP(ShaderProg& SP, const Cam& cam);
 
@@ -26,6 +29,9 @@ public:
 	void SetUpRegionsForStationary();
 private:
 	RegionControl();
+
+	bool shldRenderQSP;
+	float elapsedTime;
 
 	ModelStack modelStack;
 	Region* rootRegion;
