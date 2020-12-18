@@ -383,6 +383,10 @@ bool Scene::Init(){
 	dLightFromTop = CreateLight(LightType::Directional);
 	dLightFromBottom = CreateLight(LightType::Directional);
 
+	dLightFromTop->ambient = glm::vec3(0.3f);
+	static_cast<DirectionalLight*>(dLightFromBottom)->dir = glm::vec3(0.0f, 1.0f, 0.0f);
+	dLightFromBottom->diffuse = glm::vec3(0.5f, 0.0f, 0.0f);
+
 	return true;
 }
 
@@ -939,7 +943,7 @@ void Scene::GameRender(){
 		25.0f,
 		(float)winHeight * 0.05f,
 		1.f,
-		glm::vec4(1.f, 1.f, 0.f, 1.f),
+		glm::vec4(0.0f, 1.0f, 0.0f, 1.0f),
 		0,
 	});
 
@@ -948,7 +952,7 @@ void Scene::GameRender(){
 		25.f,
 		(float)winHeight * 0.2f,
 		1.f,
-		glm::vec4(1.0f, 0.0f, 1.0f, 1.0f),
+		glm::vec4(0.0f, 1.0f, 0.0f, 1.0f),
 		0,
 	});
 
@@ -957,7 +961,7 @@ void Scene::GameRender(){
 		25.f,
 		(float)winHeight * 0.25f,
 		1.f,
-		glm::vec4(1.0f, 0.0f, 1.0f, 1.0f),
+		glm::vec4(0.0f, 1.0f, 0.0f, 1.0f),
 		0,
 	});
 
@@ -966,7 +970,7 @@ void Scene::GameRender(){
 		25.f,
 		(float)winHeight * 0.3f,
 		1.f,
-		glm::vec4(1.0f, 0.0f, 1.0f, 1.0f),
+		glm::vec4(0.0f, 1.0f, 0.0f, 1.0f),
 		0,
 	});
 
@@ -975,7 +979,7 @@ void Scene::GameRender(){
 		25.f,
 		(float)winHeight * 0.35f,
 		1.f,
-		glm::vec4(1.0f, 0.0f, 1.0f, 1.0f),
+		glm::vec4(0.0f, 1.0f, 0.0f, 1.0f),
 		0,
 	});
 
@@ -984,7 +988,7 @@ void Scene::GameRender(){
 		25.f,
 		(float)winHeight * 0.4f,
 		1.f,
-		glm::vec4(1.0f, 0.0f, 1.0f, 1.0f),
+		glm::vec4(0.0f, 1.0f, 0.0f, 1.0f),
 		0,
 	});
 
