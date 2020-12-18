@@ -478,7 +478,7 @@ void Scene::MainMenuUpdate(GLFWwindow* const& win, const POINT& mousePos, float&
 			cam.SetTarget(glm::vec3(0.0f, 1500.0f, 0.0f));
 			cam.SetUp(glm::vec3(0.f, 1.f, 0.f));
 
-			buttonBT = elapsedTime + .3f;
+			glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 			const size_t& coinMusicSize = coinMusic.size();
 			for(size_t i = 0; i < coinMusicSize; ++i){
@@ -494,6 +494,8 @@ void Scene::MainMenuUpdate(GLFWwindow* const& win, const POINT& mousePos, float&
 					music->setIsPaused(false);
 				}
 			}
+
+			buttonBT = elapsedTime + .3f;
 		}
 	} else{
 		textScaleFactors[0] = 1.f;
@@ -521,82 +523,12 @@ void Scene::MainMenuUpdate(GLFWwindow* const& win, const POINT& mousePos, float&
 }
 
 void Scene::GameUpdate(GLFWwindow* const& win){
-	glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
-	///Control FOV of perspective projection based on item selected in inv
-	if(RMB){
-		switch(inv[currSlot]){
-			case ItemType::Shotgun:
-				angularFOV = 40.f;
-				break;
-			case ItemType::Scar:
-				angularFOV = 30.f;
-				break;
-			case ItemType::Sniper:
-				if(angularFOV != 15.f){
-					soundEngine->play2D("Audio/Sounds/Scope.wav", false);
-				}
-				angularFOV = 15.f;
-				break;
-		}
-	} else{
-		angularFOV = 45.f;
-	}
-
 	const glm::vec3& camPos = cam.GetPos();
 	const glm::vec3& camFront = cam.CalcFront();
 	soundEngine->setListenerPosition(vec3df(camPos.x, camPos.y, camPos.z), vec3df(camFront.x, camFront.y, camFront.z));
 
 	static_cast<SpriteAni*>(Meshes::meshes[(int)MeshType::CoinSpriteAni])->Update();
 	static_cast<SpriteAni*>(Meshes::meshes[(int)MeshType::FireSpriteAni])->Update();
-
-	static float polyModeBT = 0.f;
-	static float minimapViewBT = 0.f;
-	static float distortionBT = 0.f;
-	static float echoBT = 0.f;
-	static float wavesReverbBT = 0.f;
-	static float resetSoundFXBT = 0.f;
-
-	///Track changing of inv slots
-	int keys[]{
-		GLFW_KEY_1,
-		GLFW_KEY_2,
-		GLFW_KEY_3,
-		GLFW_KEY_4,
-		GLFW_KEY_5,
-	};
-	for(int i = 0; i < sizeof(keys) / sizeof(keys[0]); ++i){
-		if(Key(keys[i])){
-			currSlot = keys[i] - 49;
-			break;
-		}
-	}
-	switch(inv[currSlot]){
-		case ItemType::Shotgun:
-		case ItemType::Scar:
-		case ItemType::Sniper:
-			currGun = guns[int(inv[currSlot])];
-			break;
-		default:
-			currGun = nullptr;
-	}
-
-	if(Key(VK_F2) && polyModeBT <= elapsedTime){
-		polyModes[0] += polyModes[0] == GL_FILL ? -2 : 1;
-		glPolygonMode(GL_FRONT_AND_BACK, polyModes[0]);
-		polyModeBT = elapsedTime + .5f;
-	}
-
-	///Control shooting and reloading of currGun
-	if(currGun){
-		if(LMB){
-			currGun->Shoot(elapsedTime, cam.GetPos(), cam.CalcFront(), soundEngine);
-		}
-		if(Key(GLFW_KEY_R)){
-			currGun->Reload(soundEngine);
-		}
-		currGun->Update();
-	}
 
 	entityManager->Update();
 
@@ -608,11 +540,71 @@ void Scene::GameUpdate(GLFWwindow* const& win){
 		isPressedB = false;
 	}
 
+	static float polyModeBT = 0.f;
+	if(Key(VK_F2) && polyModeBT <= elapsedTime){
+		polyModes[0] += polyModes[0] == GL_FILL ? -2 : 1;
+		glPolygonMode(GL_FRONT_AND_BACK, polyModes[0]);
+		polyModeBT = elapsedTime + .5f;
+	}
+
 	if(isCamDetached){
 		cam.UpdateDetached(GLFW_KEY_E, GLFW_KEY_Q, GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_W, GLFW_KEY_S);
+		angularFOV = 45.f;
 	} else{
 		cam.UpdateAttached(myPlayer->GetPos() + glm::vec3(0.0f, myPlayer->GetScale().y * 0.45f, 0.0f));
 		const_cast<Entity*>(myPlayer)->SetFacingDir(cam.CalcFront());
+
+		if(RMB){ //Control angularFOV of perspective projection based on item selected in inv
+			switch(inv[currSlot]){
+				case ItemType::Shotgun:
+					angularFOV = 40.f;
+					break;
+				case ItemType::Scar:
+					angularFOV = 30.f;
+					break;
+				case ItemType::Sniper:
+					if(angularFOV != 15.f){
+						soundEngine->play2D("Audio/Sounds/Scope.wav", false);
+					}
+					angularFOV = 15.f;
+					break;
+			}
+		}
+
+		if(currGun){ //Control shooting and reloading of currGun
+			if(LMB){
+				currGun->Shoot(elapsedTime, cam.GetPos(), cam.CalcFront(), soundEngine);
+			}
+			if(Key(GLFW_KEY_R)){
+				currGun->Reload(soundEngine);
+			}
+			currGun->Update();
+		}
+
+		//* Track changing of inv slots
+		int keys[]{
+			GLFW_KEY_1,
+			GLFW_KEY_2,
+			GLFW_KEY_3,
+			GLFW_KEY_4,
+			GLFW_KEY_5,
+		};
+		for(int i = 0; i < sizeof(keys) / sizeof(keys[0]); ++i){
+			if(Key(keys[i])){
+				currSlot = keys[i] - 49;
+				break;
+			}
+		}
+		switch(inv[currSlot]){
+			case ItemType::Shotgun:
+			case ItemType::Scar:
+			case ItemType::Sniper:
+				currGun = guns[int(inv[currSlot])];
+				break;
+			default:
+				currGun = nullptr;
+		}
+		//*/
 	}
 }
 
