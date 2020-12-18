@@ -19,7 +19,7 @@ void RegionControl::Update(){
 
 	static float BT = 0.0f;
 	if(Key(GLFW_KEY_L) && BT <= elapsedTime){
-		shldRenderQSP = !shldRenderQSP;
+		shldRenderQuadtree = !shldRenderQuadtree;
 		BT = elapsedTime + .5f;
 	}
 
@@ -28,12 +28,12 @@ void RegionControl::Update(){
 }
 
 void RegionControl::Render(ShaderProg& SP, const Cam& cam){
-	if(shldRenderQSP){
-		RenderQSP(SP, cam);
+	if(shldRenderQuadtree){
+		RenderQuadtree(SP, cam);
 	}
 }
 
-void RegionControl::RenderQSP(ShaderProg& SP, const Cam& cam){
+void RegionControl::RenderQuadtree(ShaderProg& SP, const Cam& cam){
 	std::vector<Region*> leaves;
 	rootRegion->GetLeaves(SP, leaves);
 	const size_t size = leaves.size();
@@ -104,7 +104,7 @@ void RegionControl::SetUpRegionsForStationary(){
 }
 
 RegionControl::RegionControl():
-	shldRenderQSP(false),
+	shldRenderQuadtree(false),
 	elapsedTime(0.0f),
 	modelStack(),
 	rootRegion(new Region())

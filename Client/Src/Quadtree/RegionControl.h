@@ -12,7 +12,7 @@ public:
 	void Update();
 	void Render(ShaderProg& SP, const Cam& cam);
 
-	void RenderQSP(ShaderProg& SP, const Cam& cam);
+	void RenderQuadtree(ShaderProg& SP, const Cam& cam);
 
 	void GetEntitiesToUpdate(std::vector<Entity*>& movableEntities, std::vector<Entity*>& stationaryEntities);
 	void GetEntitiesToRender(std::map<int, Entity*>& entitiesOpaque, std::map<int, Entity*>& entitiesNotOpaque, const Cam& cam);
@@ -31,7 +31,7 @@ public:
 private:
 	RegionControl();
 
-	bool shldRenderQSP;
+	bool shldRenderQuadtree;
 	float elapsedTime;
 
 	ModelStack modelStack;
