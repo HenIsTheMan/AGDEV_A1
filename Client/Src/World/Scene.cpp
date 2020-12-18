@@ -159,7 +159,7 @@ void Scene::InitEntities(){
 		entityManager->CreatePlayer({
 			glm::vec3(
 				xPos,
-				terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos / terrainXScale, zPos / terrainZScale),
+				terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos / terrainXScale, zPos / terrainZScale, false) + scaleFactor,
 				zPos
 			),
 			glm::vec3(scaleFactor),
@@ -176,7 +176,7 @@ void Scene::InitEntities(){
 		const float zPos = PseudorandMinMax(-terrainZScale * 0.5f + 5.f, terrainZScale * 0.5f - 5.f);
 		const glm::vec3 pos = glm::vec3(
 			xPos,
-			terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos / terrainXScale, zPos / terrainZScale),
+			terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos / terrainXScale, zPos / terrainZScale, false) + scaleFactor,
 			zPos
 		);
 		entityManager->CreateCoin({
@@ -513,7 +513,7 @@ void Scene::GameUpdate(GLFWwindow* const& win){
 	}
 
 	if(isCamDetached){
-		cam.UpdateDetached(GLFW_KEY_Q, GLFW_KEY_E, GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_W, GLFW_KEY_S);
+		cam.UpdateDetached(GLFW_KEY_Y, GLFW_KEY_I, GLFW_KEY_H, GLFW_KEY_K, GLFW_KEY_U, GLFW_KEY_J);
 	} else{
 		//cam.UpdateJumpFall();
 		//cam.UpdateAttached(
