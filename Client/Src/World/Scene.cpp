@@ -1,9 +1,10 @@
 #include "Scene.h"
 #include "Vendor/stb_image.h"
+#include <glm/gtx/color_space.hpp>
 
-float terrainXScale = 14000.f;
+float terrainXScale = 12000.f;
 float terrainYScale = 700.f;
-float terrainZScale = 14000.f;
+float terrainZScale = 12000.f;
 
 extern bool LMB;
 extern bool RMB;
@@ -196,31 +197,41 @@ void Scene::InitEntities(){
 	}
 	//*/
 
-	//* Create trees and cubes
+	CreateTreesAndCubes();
+	CreateDecorations();
+
+	treeLOD.SetDistAndModel(DetailLvl::High, 5000.0f,  models[(int)ModelType::Tree_High]);
+	treeLOD.SetDistAndModel(DetailLvl::Medium, 10000.0f,  models[(int)ModelType::Tree_Medium]);
+	treeLOD.SetDistAndModel(DetailLvl::Low, 15000.0f, models[(int)ModelType::Tree_Low]);
+
+	entityManager->SetUpRegionsForStationary();
+}
+
+void Scene::CreateTreesAndCubes(){
 	Model* const treeHigh = models[(int)ModelType::Tree_High];
-	treeHigh->ReserveModelMatsForAll(9999);
-	treeHigh->ReserveColorsForAll(9999);
-	treeHigh->ReserveDiffuseTexIndicesForAll(9999);
+	treeHigh->ReserveModelMatsForAll(2000);
+	treeHigh->ReserveColorsForAll(2000);
+	treeHigh->ReserveDiffuseTexIndicesForAll(2000);
 
 	Model* const treeMedium = models[(int)ModelType::Tree_Medium];
-	treeMedium->ReserveModelMatsForAll(9999);
-	treeMedium->ReserveColorsForAll(9999);
-	treeMedium->ReserveDiffuseTexIndicesForAll(9999);
+	treeMedium->ReserveModelMatsForAll(2000);
+	treeMedium->ReserveColorsForAll(2000);
+	treeMedium->ReserveDiffuseTexIndicesForAll(2000);
 
 	Model* const treeLow = models[(int)ModelType::Tree_Low];
-	treeLow->ReserveModelMatsForAll(9999);
-	treeLow->ReserveColorsForAll(9999);
-	treeLow->ReserveDiffuseTexIndicesForAll(9999);
+	treeLow->ReserveModelMatsForAll(2000);
+	treeLow->ReserveColorsForAll(2000);
+	treeLow->ReserveDiffuseTexIndicesForAll(2000);
 
 	Mesh* const cubeMesh = Meshes::meshes[(int)MeshType::Cube];
-	cubeMesh->ReserveModelMats(9999);
-	cubeMesh->ReserveColors(9999);
-	cubeMesh->ReserveDiffuseTexIndices(9999);
+	cubeMesh->ReserveModelMats(2000);
+	cubeMesh->ReserveColors(2000);
+	cubeMesh->ReserveDiffuseTexIndices(2000);
 
-	for(int i = 0; i < 9999; ++i){
+	for(int i = 0; i < 5000; ++i){
 		const float scaleFactor = 50.0f;
 		const float xPos = PseudorandMinMax(-terrainXScale * 0.5f + 2.f, terrainXScale * 0.5f - 2.f);
-		const float zPos = PseudorandMinMax(-terrainZScale * 0.5f + 2.f, terrainZScale * 0.5f - 2.f);
+		const float zPos = PseudorandMinMax(-terrainZScale * 0.5f + 2.f, 0.f);
 		const glm::vec3 pos = glm::vec3(
 			xPos,
 			terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos / terrainXScale, zPos / terrainZScale, false),
@@ -258,13 +269,80 @@ void Scene::InitEntities(){
 			cubeMesh->AddDiffuseTexIndex(PseudorandMinMax(0, 11));
 		modelStack.PopModel();
 	}
-	//*/
+}
 
-	treeLOD.SetDistAndModel(DetailLvl::High, 5000.0f,  models[(int)ModelType::Tree_High]);
-	treeLOD.SetDistAndModel(DetailLvl::Medium, 10000.0f,  models[(int)ModelType::Tree_Medium]);
-	treeLOD.SetDistAndModel(DetailLvl::Low, 15000.0f, models[(int)ModelType::Tree_Low]);
+void Scene::CreateDecorations(){
+	Model* const flower = models[(int)ModelType::Flower];
+	flower->ReserveModelMatsForAll(3000);
+	flower->ReserveColorsForAll(3000);
+	flower->ReserveDiffuseTexIndicesForAll(3000);
 
-	entityManager->SetUpRegionsForStationary();
+	Model* const grass = models[(int)ModelType::Grass];
+	grass->ReserveModelMatsForAll(3000);
+	grass->ReserveColorsForAll(3000);
+	grass->ReserveDiffuseTexIndicesForAll(3000);
+
+	Model* const rock = models[(int)ModelType::Rock];
+	rock->ReserveModelMatsForAll(3000);
+	rock->ReserveColorsForAll(3000);
+	rock->ReserveDiffuseTexIndicesForAll(3000);
+
+	for(int i = 0; i < 3000; ++i){
+		const float xPos0 = PseudorandMinMax(-terrainXScale * 0.5f + 2.f, terrainXScale * 0.5f - 2.f);
+		const float zPos0 = PseudorandMinMax(-terrainZScale * 0.5f + 2.f, terrainZScale * 0.5f - 2.f);
+		const glm::vec3 pos0 = glm::vec3(
+			xPos0,
+			terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos0 / terrainXScale, zPos0 / terrainZScale, false),
+			zPos0
+		);
+
+		const float xPos1 = PseudorandMinMax(-terrainXScale * 0.5f + 2.f, terrainXScale * 0.5f - 2.f);
+		const float zPos1 = PseudorandMinMax(-terrainZScale * 0.5f + 2.f, terrainZScale * 0.5f - 2.f);
+		const glm::vec3 pos1 = glm::vec3(
+			xPos1,
+			terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos1 / terrainXScale, zPos1 / terrainZScale, false),
+			zPos1
+		);
+
+		const float xPos2 = PseudorandMinMax(-terrainXScale * 0.5f + 2.f, terrainXScale * 0.5f - 2.f);
+		const float zPos2 = PseudorandMinMax(-terrainZScale * 0.5f + 2.f, terrainZScale * 0.5f - 2.f);
+		const glm::vec3 pos2 = glm::vec3(
+			xPos2,
+			terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos2 / terrainXScale, zPos2 / terrainZScale, false),
+			zPos2
+		);
+
+		const glm::vec3 brightColor = glm::rgbColor(glm::vec3(PseudorandMinMax(0.1f, 1.0f), PseudorandMinMax(0.1f, 1.0f), 1.0f));
+
+		modelStack.PushModel({
+			modelStack.Translate(pos0),
+			modelStack.Scale(glm::vec3(30.0f))
+		});
+			flower->AddModelMatForAll(modelStack.GetTopModel());
+			flower->AddColorForAll(brightColor);
+			flower->AddDiffuseTexIndexForAll(-1);
+		modelStack.PopModel();
+
+		const glm::vec3 normalColor = glm::vec3(PseudorandMinMax(0.1f, 1.0f), PseudorandMinMax(0.1f, 1.0f), PseudorandMinMax(0.1f, 1.0f));
+
+		modelStack.PushModel({
+			modelStack.Translate(pos1),
+			modelStack.Scale(glm::vec3(70.0f))
+		});
+			grass->AddModelMatForAll(modelStack.GetTopModel());
+			grass->AddColorForAll(normalColor);
+			grass->AddDiffuseTexIndexForAll(-1);
+		modelStack.PopModel();
+
+		modelStack.PushModel({
+			modelStack.Translate(pos2),
+			modelStack.Scale(glm::vec3(70.0f))
+		});
+			rock->AddModelMatForAll(modelStack.GetTopModel());
+			rock->AddColorForAll(normalColor);
+			rock->AddDiffuseTexIndexForAll(-1);
+		modelStack.PopModel();
+	}
 }
 
 bool Scene::Init(){
@@ -720,6 +798,9 @@ void Scene::GameRender(){
 
 	cubeMesh->InstancedRender(forwardSP);
 	treeLOD.GetModel(glm::length(cam.GetPos() - glm::vec3()))->InstancedRender(forwardSP); //playerPos?? //lenSquared??
+	models[(int)ModelType::Flower]->InstancedRender(forwardSP);
+	models[(int)ModelType::Grass]->InstancedRender(forwardSP);
+	models[(int)ModelType::Rock]->InstancedRender(forwardSP);
 
 	entityManager->Render(forwardSP, cam);
 

@@ -93,6 +93,9 @@ private:
 
 	void InitEntities();
 
+	void CreateTreesAndCubes();
+	void CreateDecorations();
+
 	glm::mat4 view;
 	glm::mat4 projection;
 
