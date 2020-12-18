@@ -44,13 +44,13 @@ void Region::GetEntitiesToUpdate(std::vector<Entity*>& movableEntities, std::vec
 
 	if(!result || (result && topLeft->stationaryNodes.empty() && topRight->stationaryNodes.empty() && bottomLeft->stationaryNodes.empty() && bottomRight->stationaryNodes.empty())){ //??
 		for(int i = 0; i < stationaryNodes.size(); ++i){
-			stationaryEntities.emplace_back(stationaryNodes[i]->GetEntity());
+			stationaryEntities.emplace_back(stationaryNodes[i]->RetrieveEntity());
 		}
 	}
 
 	if(!result || (result && topLeft->movableNodes.empty() && topRight->movableNodes.empty() && bottomLeft->movableNodes.empty() && bottomRight->movableNodes.empty())){ //??
 		for(int i = 0; i < movableNodes.size(); ++i){
-			movableEntities.emplace_back(movableNodes[i]->GetEntity());
+			movableEntities.emplace_back(movableNodes[i]->RetrieveEntity());
 		}
 	}
 }

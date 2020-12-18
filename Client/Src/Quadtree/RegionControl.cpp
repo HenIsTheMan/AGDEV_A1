@@ -28,107 +28,9 @@ void RegionControl::Update(){
 }
 
 void RegionControl::Render(ShaderProg& SP, const Cam& cam){
-	RenderEntities(SP, cam);
-
 	if(shldRenderQSP){
 		RenderQSP(SP, cam);
 	}
-}
-
-void RegionControl::UpdateEntities(){
-	std::vector<Entity*> movableEntities;
-	std::vector<Entity*> stationaryEntities;
-	rootRegion->GetEntitiesToUpdate(movableEntities, stationaryEntities);
-
-	for(Entity* const movableEntity: movableEntities){
-		switch(movableEntity->type){
-			case Entity::EntityType::Player:
-
-		}
-	}
-
-	//Update dragon??
-	//for(Entity* const stationaryEntity: stationaryEntities){
-	//}
-}
-
-void RegionControl::RenderEntities(ShaderProg& SP, const Cam& cam){
-	SP.Set1i("noNormals", 1);
-	SP.Set1i("useCustomColour", 1);
-	SP.Set1i("useCustomDiffuseTexIndex", 1);
-
-	///Use std::map so render order is correct
-	std::map<int, Entity*> entitiesOpaque;
-	std::map<int, Entity*> entitiesNotOpaque;
-	rootRegion->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
-
-	//std::cout << "entitiesNotOpaque size: " << entitiesNotOpaque.size() << '\n'; //No. varies due to optimisation??
-	//std::cout << rootRegion->movableNodes.size() << '\n';
-	//std::cout << "entitiesOpaque size: " << entitiesOpaque.size() << '\n';
-
-	///Render opaque entities 1st
-	for(std::map<int, Entity*>::reverse_iterator iter = entitiesOpaque.rbegin(); iter != entitiesOpaque.rend(); ++iter){
-		Entity* const& entity = iter->second;
-
-		SP.Set4fv("customColour", entity->colour);
-		SP.Set1i("customDiffuseTexIndex", entity->diffuseTexIndex);
-
-		switch(entity->type){
-			case Entity::EntityType::Bullet:
-			case Entity::EntityType::Enemy:
-				modelStack.PushModel({
-					modelStack.Translate(entity->pos),
-					modelStack.Scale(entity->scale),
-				});
-					Meshes::meshes[(int)MeshType::Sphere]->SetModel(modelStack.GetTopModel());
-					Meshes::meshes[(int)MeshType::Sphere]->Render(SP);
-				break;
-			case Entity::EntityType::ShotgunAmmo:
-			case Entity::EntityType::ScarAmmo:
-			case Entity::EntityType::SniperAmmo:
-			case Entity::EntityType::Player:
-				modelStack.PushModel({
-					modelStack.Translate(entity->pos),
-					modelStack.Scale(entity->scale),
-				});
-					Meshes::meshes[(int)MeshType::Cube]->SetModel(modelStack.GetTopModel());
-					Meshes::meshes[(int)MeshType::Cube]->Render(SP);
-				break;
-		}
-		modelStack.PopModel();
-	}
-
-	SP.Set1i("useCustomColour", 0);
-	SP.Set1i("useCustomDiffuseTexIndex", 0);
-
-	///Then render non-opaque entities
-	for(std::map<int, Entity*>::reverse_iterator iter = entitiesNotOpaque.rbegin(); iter != entitiesNotOpaque.rend(); ++iter){
-		Entity* const& entity = iter->second;
-
-		switch(entity->type){
-			case Entity::EntityType::Coin:
-				modelStack.PushModel({
-					modelStack.Translate(entity->pos),
-					modelStack.Rotate(glm::vec4(0.f, 1.f, 0.f, glm::degrees(atan2(cam.GetPos().x - entity->pos.x, cam.GetPos().z - entity->pos.z)))),
-					modelStack.Scale(entity->scale),
-				});
-					Meshes::meshes[(int)MeshType::CoinSpriteAni]->SetModel(modelStack.GetTopModel());
-					Meshes::meshes[(int)MeshType::CoinSpriteAni]->Render(SP);
-				break;
-			case Entity::EntityType::Fire:
-				modelStack.PushModel({
-					modelStack.Translate(entity->pos + glm::vec3(0.f, entity->scale.y / 2.f, 0.f)),
-					modelStack.Rotate(glm::vec4(0.f, 1.f, 0.f, glm::degrees(atan2(cam.GetPos().x - entity->pos.x, cam.GetPos().z - entity->pos.z)))),
-					modelStack.Scale(glm::vec3(entity->scale.x, entity->scale.y * 2.f, entity->scale.z)),
-				});
-					Meshes::meshes[(int)MeshType::FireSpriteAni]->SetModel(modelStack.GetTopModel());
-					Meshes::meshes[(int)MeshType::FireSpriteAni]->Render(SP);
-				break;
-		}
-		modelStack.PopModel();
-	}
-
-	SP.Set1i("noNormals", 0);
 }
 
 void RegionControl::RenderQSP(ShaderProg& SP, const Cam& cam){
@@ -159,6 +61,14 @@ void RegionControl::RenderQSP(ShaderProg& SP, const Cam& cam){
 	}
 
 	SP.Set1i("noNormals", 0);
+}
+
+void RegionControl::GetEntitiesToUpdate(std::vector<Entity*>& movableEntities, std::vector<Entity*>& stationaryEntities){
+	rootRegion->GetEntitiesToUpdate(movableEntities, stationaryEntities);
+}
+
+void RegionControl::GetEntitiesToRender(std::map<int, Entity*>& entitiesOpaque, std::map<int, Entity*>& entitiesNotOpaque, const Cam& cam){
+	rootRegion->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
 }
 
 const Region* RegionControl::FindRegion(Node* const& node, const bool movable){

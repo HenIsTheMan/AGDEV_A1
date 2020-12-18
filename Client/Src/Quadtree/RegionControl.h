@@ -12,9 +12,10 @@ public:
 	void Update();
 	void Render(ShaderProg& SP, const Cam& cam);
 
-	void UpdateEntities();
-	void RenderEntities(ShaderProg& SP, const Cam& cam);
 	void RenderQSP(ShaderProg& SP, const Cam& cam);
+
+	void GetEntitiesToUpdate(std::vector<Entity*>& movableEntities, std::vector<Entity*>& stationaryEntities);
+	void GetEntitiesToRender(std::map<int, Entity*>& entitiesOpaque, std::map<int, Entity*>& entitiesNotOpaque, const Cam& cam);
 
 	const Region* FindRegion(Node* const& node, const bool movable);
 

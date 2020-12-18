@@ -18,7 +18,7 @@ public:
 
 	void Init();
 	void Update();
-	void Render(ShaderProg& SP, const Cam& cam) const;
+	void Render(ShaderProg& SP, const Cam& cam);
 
 	void CreatePlayer(const EntityCreationAttribs& attribs);
 	void CreateShotgunBullet(const glm::vec3& camPos, const glm::vec3& camFront);
@@ -46,4 +46,5 @@ private:
 	RegionControl* regionControl;
 
 	ColliderManager* colliderManager;
+	ModelStack modelStack;
 };
