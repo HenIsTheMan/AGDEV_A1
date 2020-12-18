@@ -216,24 +216,24 @@ void Scene::InitEntities(){
 
 void Scene::CreateTreesAndCubes(){
 	Model* const treeHigh = models[(int)ModelType::Tree_High];
-	treeHigh->ReserveModelMatsForAll(2000);
-	treeHigh->ReserveColorsForAll(2000);
-	treeHigh->ReserveDiffuseTexIndicesForAll(2000);
+	treeHigh->ReserveModelMatsForAll(5000);
+	treeHigh->ReserveColorsForAll(5000);
+	treeHigh->ReserveDiffuseTexIndicesForAll(5000);
 
 	Model* const treeMedium = models[(int)ModelType::Tree_Medium];
-	treeMedium->ReserveModelMatsForAll(2000);
-	treeMedium->ReserveColorsForAll(2000);
-	treeMedium->ReserveDiffuseTexIndicesForAll(2000);
+	treeMedium->ReserveModelMatsForAll(5000);
+	treeMedium->ReserveColorsForAll(5000);
+	treeMedium->ReserveDiffuseTexIndicesForAll(5000);
 
 	Model* const treeLow = models[(int)ModelType::Tree_Low];
-	treeLow->ReserveModelMatsForAll(2000);
-	treeLow->ReserveColorsForAll(2000);
-	treeLow->ReserveDiffuseTexIndicesForAll(2000);
+	treeLow->ReserveModelMatsForAll(5000);
+	treeLow->ReserveColorsForAll(5000);
+	treeLow->ReserveDiffuseTexIndicesForAll(5000);
 
 	Mesh* const cubeMesh = Meshes::meshes[(int)MeshType::Cube];
-	cubeMesh->ReserveModelMats(2000);
-	cubeMesh->ReserveColors(2000);
-	cubeMesh->ReserveDiffuseTexIndices(2000);
+	cubeMesh->ReserveModelMats(5000);
+	cubeMesh->ReserveColors(5000);
+	cubeMesh->ReserveDiffuseTexIndices(5000);
 
 	for(int i = 0; i < 5000; ++i){
 		const float scaleFactor = 50.0f;
@@ -269,6 +269,7 @@ void Scene::CreateTreesAndCubes(){
 
 		modelStack.PushModel({
 			modelStack.Translate(pos + glm::vec3(0.0f, (float)PseudorandMinMax(600, 800), terrainZScale * 0.5f - 2.f)),
+			modelStack.Rotate(glm::vec4(0.f, 1.f, 0.f, PseudorandMinMax(0.0f, 360.0f))),
 			modelStack.Scale(glm::vec3(20.0f)),
 		});
 			cubeMesh->AddModelMat(modelStack.GetTopModel());
@@ -323,7 +324,8 @@ void Scene::CreateDecorations(){
 
 		modelStack.PushModel({
 			modelStack.Translate(pos0),
-			modelStack.Scale(glm::vec3(70.0f))
+			modelStack.Rotate(glm::vec4(0.f, 1.f, 0.f, PseudorandMinMax(0.0f, 360.0f))),
+			modelStack.Scale(glm::vec3(140.0f))
 		});
 			flower->AddModelMatForAll(modelStack.GetTopModel());
 			flower->AddColorForAll(brightColor);
@@ -334,7 +336,8 @@ void Scene::CreateDecorations(){
 
 		modelStack.PushModel({
 			modelStack.Translate(pos1),
-			modelStack.Scale(glm::vec3(70.0f))
+			modelStack.Rotate(glm::vec4(0.f, 1.f, 0.f, PseudorandMinMax(0.0f, 360.0f))),
+			modelStack.Scale(glm::vec3(140.0f))
 		});
 			grass->AddModelMatForAll(modelStack.GetTopModel());
 			grass->AddColorForAll(normalColor);
@@ -344,7 +347,7 @@ void Scene::CreateDecorations(){
 		modelStack.PushModel({
 			modelStack.Translate(pos2),
 			modelStack.Rotate(glm::vec4(0.f, 1.f, 0.f, PseudorandMinMax(0.0f, 360.0f))),
-			modelStack.Scale(glm::vec3((float)PseudorandMinMax(60.0f, 90.0f)))
+			modelStack.Scale(glm::vec3((float)PseudorandMinMax(60, 90)))
 		});
 			rock->AddModelMatForAll(modelStack.GetTopModel());
 			rock->AddColorForAll(normalColor);
