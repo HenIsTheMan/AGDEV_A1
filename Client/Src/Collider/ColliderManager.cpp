@@ -1,5 +1,21 @@
 #include "ColliderManager.h"
 
+ColliderManager::~ColliderManager(){
+	for(Collider* boxCollider: boxColliders){
+		if(boxCollider){
+			delete boxCollider;
+			boxCollider = nullptr;
+		}
+	}
+
+	for(Collider* sphereCollider: sphereColliders){
+		if(sphereCollider){
+			delete sphereCollider;
+			sphereCollider = nullptr;
+		}
+	}
+}
+
 void ColliderManager::Init(const size_t boxCollidersSize, const size_t sphereCollidersSize){
 	boxColliders.reserve(boxCollidersSize);
 	for(size_t i = 0; i < boxCollidersSize; ++i){

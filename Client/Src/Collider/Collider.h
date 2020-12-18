@@ -8,6 +8,8 @@ enum struct ColliderType: int{
 
 class Collider{ //Abstract class
 public:
+	virtual ~Collider() = default;
+
 	///Getters
 	bool GetActive() const;
 	ColliderType GetType() const;

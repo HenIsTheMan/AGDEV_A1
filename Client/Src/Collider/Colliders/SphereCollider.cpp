@@ -21,3 +21,19 @@ SphereCollider::SphereCollider(const float radius, const glm::vec3& pos):
 	pos(pos)
 {
 }
+
+float SphereCollider::GetRadius() const{
+	return radius;
+}
+
+const glm::vec3& SphereCollider::GetPos() const{
+	return pos;
+}
+
+void SphereCollider::SetRadius(const float radius){
+	this->radius = radius;
+}
+
+void SphereCollider::SetPos(const glm::vec3& pos){
+	this->pos = pos;
+}

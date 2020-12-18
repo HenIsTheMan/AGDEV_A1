@@ -10,6 +10,14 @@ public:
 	SphereCollider(const float radius);
 	SphereCollider(const glm::vec3& pos);
 	SphereCollider(const float radius, const glm::vec3& pos);
+
+	///Getters
+	float GetRadius() const;
+	const glm::vec3& GetPos() const;
+
+	///Setters
+	void SetRadius(const float radius);
+	void SetPos(const glm::vec3& pos);
 private:
 	float radius;
 	glm::vec3 pos;

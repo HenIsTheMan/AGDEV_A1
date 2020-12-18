@@ -8,7 +8,7 @@
 class ColliderManager final: public Singleton<ColliderManager>{
 	friend Singleton<ColliderManager>;
 public:
-	~ColliderManager() = default;
+	~ColliderManager();
 
 	void Init(const size_t boxCollidersSize, const size_t sphereCollidersSize);
 

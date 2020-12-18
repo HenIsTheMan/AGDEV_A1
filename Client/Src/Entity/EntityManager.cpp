@@ -15,7 +15,9 @@ EntityManager::~EntityManager(){
 		delete rootNode;
 		rootNode = nullptr;
 	}
+
 	regionControl->Destroy();
+	colliderManager->Destroy();
 }
 
 void EntityManager::Init(){
@@ -82,6 +84,8 @@ void EntityManager::CreatePlayer(const EntityCreationAttribs& attribs){
 	entity->vel = glm::vec3(0.f);
 	entity->mass = 5.f;
 	entity->force = glm::vec3(0.f);
+
+	entity->collider = colliderManager->ActivateCollider(ColliderType::Box);
 }
 
 void EntityManager::CreateShotgunBullet(const glm::vec3& camPos, const glm::vec3& camFront){
@@ -98,6 +102,8 @@ void EntityManager::CreateShotgunBullet(const glm::vec3& camPos, const glm::vec3
 	entity->vel = 200.f * glm::vec3(glm::rotate(glm::mat4(1.f), glm::radians(PseudorandMinMax(-1.f, 1.f)), {0.f, 1.f, 0.f}) * glm::vec4(camFront, 0.f)); //With bullet bloom
 	entity->mass = 5.f;
 	entity->force = glm::vec3(0.f);
+
+	entity->collider = colliderManager->ActivateCollider(ColliderType::Sphere);
 }
 
 void EntityManager::CreateScarBullet(const glm::vec3& camPos, const glm::vec3& camFront){
@@ -114,6 +120,8 @@ void EntityManager::CreateScarBullet(const glm::vec3& camPos, const glm::vec3& c
 	entity->vel = 180.f * glm::vec3(glm::rotate(glm::mat4(1.f), glm::radians(PseudorandMinMax(-2.f, 2.f)), {0.f, 1.f, 0.f}) * glm::vec4(camFront, 0.f)); //With bullet bloom
 	entity->mass = 5.f;
 	entity->force = glm::vec3(0.f);
+
+	entity->collider = colliderManager->ActivateCollider(ColliderType::Sphere);
 }
 
 void EntityManager::CreateSniperBullet(const glm::vec3& camPos, const glm::vec3& camFront){
@@ -130,6 +138,8 @@ void EntityManager::CreateSniperBullet(const glm::vec3& camPos, const glm::vec3&
 	entity->vel = 500.f * camFront;
 	entity->mass = 5.f;
 	entity->force = glm::vec3(0.f);
+
+	entity->collider = colliderManager->ActivateCollider(ColliderType::Sphere);
 }
 
 void EntityManager::CreateAmmo(const Entity::EntityType type, const EntityCreationAttribs& attribs){
@@ -146,6 +156,8 @@ void EntityManager::CreateAmmo(const Entity::EntityType type, const EntityCreati
 	entity->vel = glm::vec3(0.f);
 	entity->mass = 5.f;
 	entity->force = glm::vec3(0.f);
+
+	entity->collider = colliderManager->ActivateCollider(ColliderType::Box);
 }
 
 void EntityManager::CreateCoin(const EntityCreationAttribs& attribs){
@@ -162,6 +174,8 @@ void EntityManager::CreateCoin(const EntityCreationAttribs& attribs){
 	entity->vel = glm::vec3(0.f);
 	entity->mass = 5.f;
 	entity->force = glm::vec3(0.f);
+
+	entity->collider = colliderManager->ActivateCollider(ColliderType::Box);
 }
 
 void EntityManager::CreateFire(const EntityCreationAttribs& attribs){
@@ -178,6 +192,8 @@ void EntityManager::CreateFire(const EntityCreationAttribs& attribs){
 	entity->vel = glm::vec3(0.f);
 	entity->mass = 5.f;
 	entity->force = glm::vec3(0.f);
+
+	entity->collider = colliderManager->ActivateCollider(ColliderType::Box);
 }
 
 void EntityManager::CreateEnemy(const EntityCreationAttribs& attribs){
@@ -195,7 +211,7 @@ void EntityManager::CreateEnemy(const EntityCreationAttribs& attribs){
 	entity->mass = 5.f;
 	entity->force = glm::vec3(0.f);
 
-	entity->collider = colliderManager->ActivateCollider(ColliderType::Box);
+	entity->collider = colliderManager->ActivateCollider(ColliderType::Box); //??
 }
 
 void EntityManager::CreateTree(const EntityCreationAttribs& attribs){
