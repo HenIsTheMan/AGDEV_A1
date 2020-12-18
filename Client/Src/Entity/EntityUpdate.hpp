@@ -8,6 +8,12 @@ extern float terrainXScale;
 extern float terrainYScale;
 extern float terrainZScale;
 
+struct IsAirborneWrapper final{
+	static bool isAirborne;
+};
+
+bool IsAirborneWrapper::isAirborne = false;
+
 inline static void UpdatePlayerHoriz(Entity* const player){
 	int leftRight = (int)Key(VK_LEFT) - (int)Key(VK_RIGHT);
 	int frontBack = (int)Key(VK_UP) - (int)Key(VK_DOWN);
@@ -36,13 +42,20 @@ inline static void UpdatePlayerHoriz(Entity* const player){
 }
 
 inline static void UpdatePlayerVert(Entity* const player){
-	static bool isJumping = false;
+	static bool isSpacePressed = false;
 
-	//update isJumping??
+	if(!isSpacePressed && Key(VK_SPACE)){
+		if(!IsAirborneWrapper::isAirborne){
+			player->vel.y = 500.0f;
+			IsAirborneWrapper::isAirborne = true;
+		}
 
-	if(!isJumping && Key(VK_SPACE)){
-		player->vel.y = 300.0f;
-		isJumping = true;
+		isSpacePressed = true;
+	} else if(isSpacePressed  && !Key(VK_SPACE)){
+		if(player->vel.y > 0.0f){
+			player->vel.y = 0.0f;
+		}
+		isSpacePressed = false;
 	}
 
 	player->yMin = terrainYScale *

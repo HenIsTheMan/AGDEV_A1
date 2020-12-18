@@ -49,15 +49,20 @@ void EntityManager::Update(){
 			case Entity::EntityType::Player:
 				UpdatePlayerHoriz(movableEntity);
 				UpdatePlayerVert(movableEntity);
+
+				movableEntity->vel += movableEntity->force / movableEntity->mass * dt;
+				movableEntity->pos += movableEntity->vel * dt;
+
+				if(movableEntity->pos.y < movableEntity->yMin){
+					IsAirborneWrapper::isAirborne = false;
+				}
+
+				movableEntity->pos.x = std::min(movableEntity->xMax, std::max(movableEntity->xMin, movableEntity->pos.x));
+				movableEntity->pos.y = std::min(movableEntity->yMax, std::max(movableEntity->yMin, movableEntity->pos.y));
+				movableEntity->pos.z = std::min(movableEntity->zMax, std::max(movableEntity->zMin, movableEntity->pos.z));
+
 				break;
 		}
-
-		movableEntity->vel += movableEntity->force / movableEntity->mass * dt;
-		movableEntity->pos += movableEntity->vel * dt;
-
-		movableEntity->pos.x = std::min(movableEntity->xMax, std::max(movableEntity->xMin, movableEntity->pos.x));
-		movableEntity->pos.y = std::min(movableEntity->yMax, std::max(movableEntity->yMin, movableEntity->pos.y));
-		movableEntity->pos.z = std::min(movableEntity->zMax, std::max(movableEntity->zMin, movableEntity->pos.z));
 	}
 
 	//Update dragon??
@@ -170,7 +175,7 @@ void EntityManager::CreatePlayer(const EntityCreationAttribs& attribs){
 	entity->pos = attribs.pos;
 	entity->vel = entity->moveSpd * entity->facingDir;
 	entity->mass = 1.0f;
-	entity->force = glm::vec3(0.0f, -1500.f, 0.0f);
+	entity->force = glm::vec3(0.0f, -400.f, 0.0f);
 
 	entity->collider = colliderManager->ActivateCollider(ColliderType::Box);
 	entity->moveSpd = 0.0f;

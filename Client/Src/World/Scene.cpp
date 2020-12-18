@@ -20,7 +20,7 @@ void SetUpCubemap(uint& cubemapRefID, const std::vector<cstr>& faces);
 glm::vec3 Light::globalAmbient = glm::vec3(.2f);
 
 Scene::Scene():
-	cam(glm::vec3(0.0f, 700.f, 0.0f), glm::vec3(0.0f, 700.0f, -5.f), glm::vec3(0.f, 1.f, 0.f), 0.0f, 400.0f),
+	cam(glm::vec3(0.0f, 700.f, 0.0f), glm::vec3(0.0f, 700.0f, -5.f), glm::vec3(0.f, 1.f, 0.f), 0.0f, 1400.0f),
 	soundEngine(nullptr),
 	coinMusic({}),
 	coinSoundFX({}),
