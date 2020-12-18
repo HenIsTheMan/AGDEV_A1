@@ -209,7 +209,7 @@ void EntityManager::CreateTree(const EntityCreationAttribs& attribs){
 	entity->mass = 5.f;
 	entity->force = glm::vec3(0.f);
 
-	entity->collider = ;
+	entity->collider = colliderManager->ActivateCollider(ColliderType::Box);
 }
 
 Entity* const EntityManager::ActivateEntity(const bool movable){
@@ -236,6 +236,12 @@ Entity* const EntityManager::ActivateEntity(const bool movable){
 
 void EntityManager::DeactivateEntity(Entity* const& entity, const bool movable){
 	entity->active = false;
+
+	Collider* const collider = entity->collider;
+	if(collider != nullptr){
+		colliderManager->DeactivateCollider(collider);
+	}
+
 	DeactivateEntityProcedure(entity);
 }
 
@@ -244,6 +250,7 @@ EntityManager::EntityManager():
 	elapsedTime(0.0f),
 	entityPool(),
 	rootNode(new Node()),
-	regionControl(RegionControl::GetObjPtr())
+	regionControl(RegionControl::GetObjPtr()),
+	colliderManager(ColliderManager::GetObjPtr())
 {
 }

@@ -2,6 +2,7 @@
 
 #include "../Entity/Entity.h"
 #include "../Quadtree/RegionControl.h"
+#include "../Collider/ColliderManager.h"
 
 class EntityManager final: public Singleton<EntityManager>{
 	friend Singleton<EntityManager>;
@@ -46,4 +47,6 @@ private:
 	std::vector<Entity*> entityPool;
 	Node* rootNode;
 	RegionControl* regionControl;
+
+	ColliderManager* colliderManager;
 };
