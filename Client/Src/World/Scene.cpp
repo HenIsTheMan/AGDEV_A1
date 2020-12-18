@@ -261,7 +261,7 @@ void Scene::CreateTreesAndCubes(){
 		modelStack.PopModel();
 
 		modelStack.PushModel({
-			modelStack.Translate(pos + glm::vec3(0.0f, (float)PseudorandMinMax(600, 800), 0.0f)),
+			modelStack.Translate(pos + glm::vec3(0.0f, (float)PseudorandMinMax(600, 800), terrainZScale * 0.5f - 2.f)),
 			modelStack.Scale(glm::vec3(20.0f)),
 		});
 			cubeMesh->AddModelMat(modelStack.GetTopModel());
@@ -289,7 +289,7 @@ void Scene::CreateDecorations(){
 
 	for(int i = 0; i < 3000; ++i){
 		const float xPos0 = PseudorandMinMax(-terrainXScale * 0.5f + 2.f, terrainXScale * 0.5f - 2.f);
-		const float zPos0 = PseudorandMinMax(-terrainZScale * 0.5f + 2.f, terrainZScale * 0.5f - 2.f);
+		const float zPos0 = PseudorandMinMax(-terrainZScale * 0.1f + 2.f, terrainZScale * 0.5f - 2.f);
 		const glm::vec3 pos0 = glm::vec3(
 			xPos0,
 			terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos0 / terrainXScale, zPos0 / terrainZScale, false),
@@ -297,7 +297,7 @@ void Scene::CreateDecorations(){
 		);
 
 		const float xPos1 = PseudorandMinMax(-terrainXScale * 0.5f + 2.f, terrainXScale * 0.5f - 2.f);
-		const float zPos1 = PseudorandMinMax(-terrainZScale * 0.5f + 2.f, terrainZScale * 0.5f - 2.f);
+		const float zPos1 = PseudorandMinMax(-terrainZScale * 0.1f + 2.f, terrainZScale * 0.5f - 2.f);
 		const glm::vec3 pos1 = glm::vec3(
 			xPos1,
 			terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos1 / terrainXScale, zPos1 / terrainZScale, false),
@@ -305,7 +305,7 @@ void Scene::CreateDecorations(){
 		);
 
 		const float xPos2 = PseudorandMinMax(-terrainXScale * 0.5f + 2.f, terrainXScale * 0.5f - 2.f);
-		const float zPos2 = PseudorandMinMax(-terrainZScale * 0.5f + 2.f, terrainZScale * 0.5f - 2.f);
+		const float zPos2 = PseudorandMinMax(-terrainZScale * 0.1f + 2.f, terrainZScale * 0.5f - 2.f);
 		const glm::vec3 pos2 = glm::vec3(
 			xPos2,
 			terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos2 / terrainXScale, zPos2 / terrainZScale, false),
@@ -316,7 +316,7 @@ void Scene::CreateDecorations(){
 
 		modelStack.PushModel({
 			modelStack.Translate(pos0),
-			modelStack.Scale(glm::vec3(30.0f))
+			modelStack.Scale(glm::vec3(70.0f))
 		});
 			flower->AddModelMatForAll(modelStack.GetTopModel());
 			flower->AddColorForAll(brightColor);
