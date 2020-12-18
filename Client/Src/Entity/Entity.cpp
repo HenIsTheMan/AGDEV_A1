@@ -11,11 +11,12 @@ Entity::Entity():
 	scale(glm::vec3(1.f)),
 
 	pos(glm::vec3(0.f)),
-	dir(glm::vec3(0.0f)),
-	spd(0.0f),
+	vel(glm::vec3(0.0f)),
 	mass(0.f),
 	force(glm::vec3(0.f)),
 
-	collider(nullptr)
+	collider(nullptr),
+	facingDir(glm::vec3(0.0f)),
+	moveSpd(0.0f)
 {
 }

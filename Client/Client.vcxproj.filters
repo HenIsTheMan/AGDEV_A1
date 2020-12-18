@@ -43,6 +43,7 @@
     <ClInclude Include="Src\Collider\Colliders\BoxCollider.h" />
     <ClInclude Include="Src\Collider\Colliders\SphereCollider.h" />
     <ClInclude Include="Src\Entity\EntityUpdate.hpp" />
+    <ClInclude Include="Src\Shared\RotateVecIn2D.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Blur.fragS" />

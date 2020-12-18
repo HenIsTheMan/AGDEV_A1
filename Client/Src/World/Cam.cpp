@@ -71,11 +71,9 @@ void Cam::UpdateAttached(
 	float frontBack = float(Key(front) - Key(back));
 
 	const glm::vec3&& camFront = CalcFront();
-	const glm::vec3&& xzCamFront = glm::vec3(camFront.x, 0.f, camFront.z);
-	glm::vec3&& frontBackDir = glm::normalize(glm::dot(camFront, glm::normalize(xzCamFront)) * glm::normalize(xzCamFront));
-	frontBackDir.y = 1.f;
+	const glm::vec3&& xzCamFront = glm::vec3(camFront.x, 1.0f, camFront.z);
 
-	glm::vec3&& change = glm::vec3(frontBack, 0.f, frontBack) * frontBackDir + leftRight * -CalcRight();
+	glm::vec3&& change = glm::vec3(frontBack, 0.f, frontBack) * xzCamFront + leftRight * -CalcRight();
 	if(change != glm::vec3(0.f)){
 		change = normalize(change);
 	}
@@ -111,16 +109,13 @@ void Cam::UpdateDetached(const int& up, const int& down, const int& left, const 
 	float frontBack = float(Key(front) - Key(back));
 
 	const glm::vec3&& camFront = CalcFront();
-	const glm::vec3&& xzCamFront = glm::vec3(camFront.x, 0.f, camFront.z);
-	glm::vec3&& frontBackDir = glm::normalize(glm::dot(camFront, glm::normalize(xzCamFront)) * glm::normalize(xzCamFront));
-	frontBackDir.y = 1.f;
+	const glm::vec3&& xzCamFront = glm::vec3(camFront.x, 1.0f, camFront.z);
 
-	glm::vec3&& change = glm::vec3(frontBack, upDown, frontBack) * frontBackDir + leftRight * -CalcRight() + leftRightMB * camFront;
+	glm::vec3&& change = glm::vec3(frontBack, upDown, frontBack) * xzCamFront + leftRight * -CalcRight() + leftRightMB * camFront;
 	if(change != glm::vec3(0.f)){
 		change = normalize(change);
 	}
 	pos += camSpd * change;
-	//pos.y = std::max(-100.f + 100.f * Mesh::ReadHeightMap(Mesh::heightMap, pos.x / 500.f, pos.z / 500.f) + 1.f, pos.y);
 	target += camSpd * change;
 
 	glm::mat4 yawPitch = glm::rotate(glm::rotate(glm::mat4(1.f), glm::radians(yaw), {0.f, 1.f, 0.f}), glm::radians(pitch), CalcRight());

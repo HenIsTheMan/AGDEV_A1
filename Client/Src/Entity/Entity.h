@@ -39,10 +39,11 @@ private:
 	glm::vec3 scale;
 
 	glm::vec3 pos;
-	glm::vec3 dir;
-	float spd;
+	glm::vec3 vel;
 	float mass;
 	glm::vec3 force;
 
 	Collider* collider;
+	glm::vec3 facingDir;
+	float moveSpd;
 };

@@ -51,7 +51,7 @@ void EntityManager::Update(){
 				UpdatePlayerVertVel(movableEntity);
 				break;
 		}
-		movableEntity->pos += movableEntity->dir * movableEntity->spd * dt;
+		movableEntity->pos += movableEntity->vel * dt;
 	}
 
 	//Update dragon??
@@ -162,8 +162,9 @@ void EntityManager::CreatePlayer(const EntityCreationAttribs& attribs){
 	entity->scale = attribs.scale;
 
 	entity->pos = attribs.pos;
-	entity->spd = 0.0f;
-	entity->dir = glm::vec3(0.0f, 0.0f, -1.0f);
+	entity->moveSpd = 0.0f;
+	entity->facingDir = glm::vec3(0.0f, 0.0f, -1.0f);
+	entity->vel = entity->moveSpd * entity->facingDir;
 	entity->mass = 5.f;
 	entity->force = glm::vec3(0.f);
 
@@ -181,8 +182,9 @@ void EntityManager::CreateShotgunBullet(const glm::vec3& camPos, const glm::vec3
 	entity->scale = glm::vec3(.2f);
 
 	entity->pos = camPos;
-	entity->spd = 200.f;
-	entity->dir = glm::vec3(glm::rotate(glm::mat4(1.f), glm::radians(PseudorandMinMax(-1.f, 1.f)), {0.f, 1.f, 0.f}) * glm::vec4(camFront, 0.f)); //Bullet bloom
+	entity->moveSpd = 200.f;
+	entity->facingDir = glm::vec3(glm::rotate(glm::mat4(1.f), glm::radians(PseudorandMinMax(-1.f, 1.f)), {0.f, 1.f, 0.f}) * glm::vec4(camFront, 0.f)); //Bullet bloom
+	entity->vel = entity->moveSpd * entity->facingDir;
 	entity->mass = 5.f;
 	entity->force = glm::vec3(0.f);
 
@@ -200,8 +202,9 @@ void EntityManager::CreateScarBullet(const glm::vec3& camPos, const glm::vec3& c
 	entity->scale = glm::vec3(.2f);
 
 	entity->pos = camPos + 10.f * camFront;
-	entity->spd = 180.f;
-	entity->dir = glm::vec3(glm::rotate(glm::mat4(1.f), glm::radians(PseudorandMinMax(-2.f, 2.f)), {0.f, 1.f, 0.f}) * glm::vec4(camFront, 0.f)); //Bullet bloom
+	entity->moveSpd = 180.f;
+	entity->facingDir = glm::vec3(glm::rotate(glm::mat4(1.f), glm::radians(PseudorandMinMax(-2.f, 2.f)), {0.f, 1.f, 0.f}) * glm::vec4(camFront, 0.f)); //Bullet bloom
+	entity->vel = entity->moveSpd * entity->facingDir;
 	entity->mass = 5.f;
 	entity->force = glm::vec3(0.f);
 
@@ -219,8 +222,9 @@ void EntityManager::CreateSniperBullet(const glm::vec3& camPos, const glm::vec3&
 	entity->scale = glm::vec3(.2f);
 
 	entity->pos = camPos + 10.f * camFront;
-	entity->spd = 500.f;
-	entity->dir = camFront;
+	entity->moveSpd = 500.0f;
+	entity->facingDir = camFront;
+	entity->vel = entity->moveSpd * entity->facingDir;
 	entity->mass = 5.f;
 	entity->force = glm::vec3(0.f);
 
