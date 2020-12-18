@@ -110,4 +110,6 @@ private:
 	Light* dLightFromBottom;
 
 	ModelStack modelStack;
+
+	const Entity* myPlayer;
 };

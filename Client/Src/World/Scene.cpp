@@ -99,7 +99,8 @@ Scene::Scene():
 	polyModes(),
 	dLightFromTop(nullptr),
 	dLightFromBottom(nullptr),
-	entityManager(EntityManager::GetObjPtr())
+	entityManager(EntityManager::GetObjPtr()),
+	myPlayer(nullptr)
 {
 }
 
@@ -155,7 +156,8 @@ void Scene::InitEntities(){
 	const float playerScaleFactor = 50.0f;
 	const float playerPosX = 0.0f;
 	const float playerPosZ = 0.0f;
-	entityManager->CreatePlayer({
+
+	myPlayer = entityManager->CreatePlayer({
 		glm::vec3(
 			playerPosX,
 			terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(
@@ -169,6 +171,8 @@ void Scene::InitEntities(){
 		glm::vec4(1.0f),
 		-1,
 	});
+
+	assert(myPlayer != nullptr && "Var 'myPlayer' is nullptr");
 	//*/
 
 	//* Create coins
@@ -512,29 +516,6 @@ void Scene::MainMenuUpdate(GLFWwindow* const& win, const POINT& mousePos, float&
 void Scene::GameUpdate(GLFWwindow* const& win){
 	glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-	static bool isPressedB = false;
-
-	if(!isPressedB && Key(GLFW_KEY_B)){
-		isCamDetached = !isCamDetached;
-		isPressedB = true;
-	} else if(isPressedB && !Key(GLFW_KEY_B)){
-		isPressedB = false;
-	}
-
-	if(isCamDetached){
-		cam.UpdateDetached(GLFW_KEY_E, GLFW_KEY_Q, GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_W, GLFW_KEY_S);
-	} else{
-		//cam.UpdateJumpFall();
-		//cam.UpdateAttached(
-		//	GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_W, GLFW_KEY_S,
-		//	-terrainXScale / 2.f + 5.f, terrainXScale / 2.f - 5.f,
-		//	yMin, yMax,
-		//	-terrainZScale / 2.f + 5.f, terrainZScale / 2.f - 5.f
-		//);
-	}
-
-	view = cam.LookAt();
-
 	///Control FOV of perspective projection based on item selected in inv
 	if(RMB){
 		switch(inv[currSlot]){
@@ -554,7 +535,6 @@ void Scene::GameUpdate(GLFWwindow* const& win){
 	} else{
 		angularFOV = 45.f;
 	}
-	projection = glm::perspective(glm::radians(angularFOV), cam.GetAspectRatio(), .1f, 9999.f);
 
 	const glm::vec3& camPos = cam.GetPos();
 	const glm::vec3& camFront = cam.CalcFront();
@@ -612,6 +592,20 @@ void Scene::GameUpdate(GLFWwindow* const& win){
 	}
 
 	entityManager->Update();
+
+	static bool isPressedB = false;
+	if(!isPressedB && Key(GLFW_KEY_B)){
+		isCamDetached = !isCamDetached;
+		isPressedB = true;
+	} else if(isPressedB && !Key(GLFW_KEY_B)){
+		isPressedB = false;
+	}
+
+	if(isCamDetached){
+		cam.UpdateDetached(GLFW_KEY_E, GLFW_KEY_Q, GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_W, GLFW_KEY_S);
+	} else{
+		cam.UpdateAttached(myPlayer->GetPos() + glm::vec3(0.0f, myPlayer->GetScale().y * 0.45f, 0.0f));
+	}
 }
 
 void Scene::MainMenuRender(){

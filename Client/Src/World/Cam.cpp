@@ -60,44 +60,25 @@ glm::mat4 Cam::LookAt() const{
 	return rotation * translation;
 }
 
-void Cam::UpdateAttached(
-	const int& left, const int& right, const int& front, const int& back,
-	const float& xMin, const float& xMax,
-	const float& yMin, const float& yMax,
-	const float& zMin, const float& zMax
-){
-	const float camSpd = canMove ? spd * dt : 0.f;
-	float leftRight = float(Key(left) - Key(right));
-	float frontBack = float(Key(front) - Key(back));
-
-	const glm::vec3&& camFront = CalcFront();
-	const glm::vec3&& xzCamFront = glm::vec3(camFront.x, 1.0f, camFront.z);
-
-	glm::vec3&& change = glm::vec3(frontBack, 0.f, frontBack) * xzCamFront + leftRight * -CalcRight();
-	if(change != glm::vec3(0.f)){
-		change = normalize(change);
-	}
-	trueVel = change;
-	pos += camSpd * change;
-	pos.x = std::max(xMin, std::min(xMax, pos.x));
-	pos.y = std::max(yMin, std::min(yMax, pos.y));
-	pos.z = std::max(zMin, std::min(zMax, pos.z));
-	target = pos + camFront;
+void Cam::UpdateAttached(const glm::vec3& pos){
+	const glm::vec3 offset = pos - this->pos;
+	this->pos = pos;
+	target += offset;
 
 	pitchCheck += pitch;
-	if(pitchCheck > 80.f || pitchCheck < -80.f){
-		pitch = 80.f - (pitchCheck - pitch);
+	if(pitchCheck > 75.0f || pitchCheck < -75.0f){
+		pitch = 75.0f - (pitchCheck - pitch);
 	}
-	if(pitchCheck < 80.f && pitchCheck > -80.f){
+	if(pitchCheck < 75.0f && pitchCheck > -75.0f){
 		glm::mat4 yawPitch = glm::rotate(glm::rotate(glm::mat4(1.f), glm::radians(yaw), {0.f, 1.f, 0.f}), glm::radians(pitch), CalcRight());
-		target = pos + glm::vec3(yawPitch * glm::vec4(camFront, 0.f));
+		target = this->pos + glm::vec3(yawPitch * glm::vec4(CalcFront(), 0.f));
 		up = glm::vec3(yawPitch * glm::vec4(up, 0.f));
 	}
-	if(pitchCheck > 80.f){
-		pitchCheck = 80.f;
+	if(pitchCheck > 75.0f){
+		pitchCheck = 75.0f;
 	}
-	if(pitchCheck < -80.f){
-		pitchCheck = -80.f;
+	if(pitchCheck < -75.0f){
+		pitchCheck = -75.0f;
 	}
 	yaw = pitch = 0.f;
 }

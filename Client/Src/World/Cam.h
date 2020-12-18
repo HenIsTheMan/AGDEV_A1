@@ -10,7 +10,7 @@ public:
 	glm::vec3 CalcRight() const;
 	glm::vec3 CalcUp() const;
 	glm::mat4 LookAt() const;
-	void UpdateAttached(const int& left, const int& right, const int& front, const int& back, const float& xMin, const float& xMax, const float& yMin, const float& yMax, const float& zMin, const float& zMax);
+	void UpdateAttached(const glm::vec3& pos);
 	void UpdateDetached(const int& up, const int& down, const int& left, const int& right, const int& front, const int& back);
 	void UpdateJumpFall();
 

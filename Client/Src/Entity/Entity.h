@@ -14,6 +14,9 @@ class Entity final{
 	friend class Gun;
 	friend void UpdatePlayerHoriz(Entity* const player);
 	friend void UpdatePlayerVert(Entity* const player);
+public:
+	const glm::vec3& GetPos() const;
+	const glm::vec3& GetScale() const;
 private:
 	enum class EntityType{
 		Bullet = 0,

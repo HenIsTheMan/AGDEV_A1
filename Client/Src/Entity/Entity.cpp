@@ -1,5 +1,13 @@
 #include "Entity.h"
 
+const glm::vec3& Entity::GetPos() const{
+	return pos;
+}
+
+const glm::vec3& Entity::GetScale() const{
+	return scale;
+}
+
 Entity::Entity():
 	type(EntityType::Amt),
 	active(false),

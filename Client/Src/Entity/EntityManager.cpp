@@ -212,7 +212,7 @@ void EntityManager::DeactivateEntityProcedure(Entity* const entity){
 	//regionControl->RemoveNode(rootNode->DetachChild(entity), entity->movable);
 }
 
-void EntityManager::CreatePlayer(const EntityCreationAttribs& attribs){
+const Entity* EntityManager::CreatePlayer(const EntityCreationAttribs& attribs){
 	Entity* const& entity = ActivateEntity(true);
 
 	entity->type = Entity::EntityType::Player;
@@ -235,6 +235,8 @@ void EntityManager::CreatePlayer(const EntityCreationAttribs& attribs){
 	entity->moveSpd = 0.0f;
 	entity->facingDir = glm::vec3(0.0f, 0.0f, -1.0f);
 	entity->yMax = FLT_MAX;
+
+	return entity;
 }
 
 void EntityManager::CreateShotgunBullet(const glm::vec3& camPos, const glm::vec3& camFront){
