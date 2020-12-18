@@ -148,7 +148,7 @@ public:
                     currRight = currRight->left;
                 }
                 BinTreeNode<T>* nodeFound = !currLeft->right ? currLeft : currRight;
-                if(nodeToDel->data == nodeFound->data){ //Prevents endless/infinite recursion //Not working??
+                if(nodeToDel->data == nodeFound->data){ //Prevents endless/infinite recursion
                     if(!currLeft->right){
                         BinTreeNode<T>* parentNode = nodeToDel->left;
                         while(parentNode->right && parentNode->right != nodeFound){

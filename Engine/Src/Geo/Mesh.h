@@ -63,7 +63,6 @@ public:
 	void SetModel(const glm::mat4& model);
 	void SetModelMat(const glm::mat4& modelMat, const ptrdiff_t& index);
 
-	//void BatchRender(const std::vector<BatchRenderParams>& params); //Old and not working??
 	void InstancedRender(ShaderProg& SP, const bool& autoConfig = true);
 	virtual void Render(ShaderProg& SP, const bool& autoConfig = true);
 protected:

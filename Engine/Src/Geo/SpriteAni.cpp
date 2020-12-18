@@ -223,7 +223,7 @@ void SpriteAni::Render(ShaderProg& SP, const bool& autoConfig){
 		glBindVertexArray(VAO);
 	}
 	
-	glDrawElements(primitive, 6, GL_UNSIGNED_INT, (const void*)(long long(this->currFrame) * 6 * sizeof(GLuint))); //more??
+	glDrawElements(primitive, 6, GL_UNSIGNED_INT, (const void*)(long long(this->currFrame) * 6 * sizeof(GLuint)));
 	++Mesh::normalDrawCalls;
 	const int amtOfVertices = (int)vertices->size();
 	Mesh::vertexCount += amtOfVertices;

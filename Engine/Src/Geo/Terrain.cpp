@@ -145,7 +145,7 @@ void Terrain::Create(){
 				glm::vec4(.7f, .4f, .1f, 1.f),
 				glm::vec2(float(x) / float(terrainSize) * tileH, 1.f - float(z) / float(terrainSize) * tileV),
 				normals[z][x],
-				glm::vec3(0.f), //??
+				glm::vec3(0.f),
 				0,
 			});
 		}

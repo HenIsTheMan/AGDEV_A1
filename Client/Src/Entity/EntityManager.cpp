@@ -19,12 +19,14 @@ EntityManager::~EntityManager(){
 }
 
 void EntityManager::Init(){
-	entityPool.resize(99999);
+	entityPool.resize(9999);
 
 	const size_t& mySize = entityPool.size();
 	for(size_t i = 0; i < mySize; ++i){
 		entityPool[i] = new Entity();
 	}
+
+	colliderManager->Init(9999, 9999);
 
 	regionControl->InitRegionPool(500);
 	regionControl->ReserveStationaryNodes(999);
@@ -192,6 +194,8 @@ void EntityManager::CreateEnemy(const EntityCreationAttribs& attribs){
 	entity->vel = glm::vec3(0.f);
 	entity->mass = 5.f;
 	entity->force = glm::vec3(0.f);
+
+	entity->collider = colliderManager->ActivateCollider(ColliderType::Box);
 }
 
 void EntityManager::CreateTree(const EntityCreationAttribs& attribs){
