@@ -830,6 +830,8 @@ void Scene::GameRender(){
 	projection = glm::ortho(-float(winWidth) / 2.f, float(winWidth) / 2.f, -float(winHeight) / 2.f, float(winHeight) / 2.f, .1f, 9999.f);
 	forwardSP.SetMat4fv("PV", &(projection * view)[0][0]);
 
+	Mesh* const quadMesh = Meshes::meshes[(int)MeshType::Quad];
+
 	if(RMB && inv[currSlot] == ItemType::Sniper){
 		forwardSP.Set1i("nightVision", 1);
 
@@ -841,8 +843,8 @@ void Scene::GameRender(){
 			modelStack.Scale(glm::vec3(float(winHeight) * 0.7f, float(winHeight) * 0.7f, 1.f)),
 		});
 			forwardSP.Set1i("customDiffuseTexIndex", 1);
-			Meshes::meshes[(int)MeshType::Quad]->SetModel(modelStack.GetTopModel());
-			Meshes::meshes[(int)MeshType::Quad]->Render(forwardSP);
+			quadMesh->SetModel(modelStack.GetTopModel());
+			quadMesh->Render(forwardSP);
 		modelStack.PopModel();
 		modelStack.PushModel({
 			modelStack.Translate(glm::vec3(0.f, 0.f, -9.1f)),
@@ -851,8 +853,8 @@ void Scene::GameRender(){
 			forwardSP.Set1i("customDiffuseTexIndex", -1);
 			forwardSP.Set1i("useCustomColour", 1);
 			forwardSP.Set4fv("customColour", glm::vec4(glm::vec3(0.f), 1.f));
-			Meshes::meshes[(int)MeshType::Quad]->SetModel(modelStack.GetTopModel());
-			Meshes::meshes[(int)MeshType::Quad]->Render(forwardSP);
+			quadMesh->SetModel(modelStack.GetTopModel());
+			quadMesh->Render(forwardSP);
 			forwardSP.Set1i("useCustomColour", 0);
 		modelStack.PopModel();
 
@@ -874,8 +876,8 @@ void Scene::GameRender(){
 				}
 				forwardSP.Set1i("useCustomDiffuseTexIndex", 1);
 				forwardSP.Set1i("customDiffuseTexIndex", 3);
-					Meshes::meshes[(int)MeshType::Quad]->SetModel(modelStack.GetTopModel());
-					Meshes::meshes[(int)MeshType::Quad]->Render(forwardSP);
+				quadMesh->SetModel(modelStack.GetTopModel());
+				quadMesh->Render(forwardSP);
 				forwardSP.Set1i("useCustomDiffuseTexIndex", 0);
 				if(i == currSlot){
 					forwardSP.Set1i("useCustomColour", 0);
@@ -894,8 +896,8 @@ void Scene::GameRender(){
 				forwardSP.Set4fv("customColour", reticleColour);
 				forwardSP.Set1i("useCustomDiffuseTexIndex", 1);
 				forwardSP.Set1i("customDiffuseTexIndex", 4);
-					Meshes::meshes[(int)MeshType::Quad]->SetModel(modelStack.GetTopModel());
-					Meshes::meshes[(int)MeshType::Quad]->Render(forwardSP);
+				quadMesh->SetModel(modelStack.GetTopModel());
+				quadMesh->Render(forwardSP);
 				forwardSP.Set1i("useCustomDiffuseTexIndex", 0);
 				forwardSP.Set1i("useCustomColour", 0);
 				forwardSP.Set1i("noNormals", 0);
@@ -913,8 +915,8 @@ void Scene::GameRender(){
 					forwardSP.Set4fv("customColour", reticleColour);
 					forwardSP.Set1i("useCustomDiffuseTexIndex", 1);
 					forwardSP.Set1i("customDiffuseTexIndex", inv[currSlot] == ItemType::Shotgun ? 5 : 6);
-						Meshes::meshes[(int)MeshType::Quad]->SetModel(modelStack.GetTopModel());
-						Meshes::meshes[(int)MeshType::Quad]->Render(forwardSP);
+					quadMesh->SetModel(modelStack.GetTopModel());
+					quadMesh->Render(forwardSP);
 					forwardSP.Set1i("useCustomDiffuseTexIndex", 0);
 					forwardSP.Set1i("useCustomColour", 0);
 					forwardSP.Set1i("noNormals", 0);
