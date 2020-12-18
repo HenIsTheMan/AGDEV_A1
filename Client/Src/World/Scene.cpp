@@ -196,7 +196,7 @@ void Scene::InitEntities(){
 	}
 	//*/
 
-	//* Create trees
+	//* Create trees and cubes
 	Model* const treeHigh = models[(int)ModelType::Tree_High];
 	treeHigh->ReserveModelMatsForAll(9999);
 	treeHigh->ReserveColorsForAll(9999);
@@ -211,6 +211,11 @@ void Scene::InitEntities(){
 	treeLow->ReserveModelMatsForAll(9999);
 	treeLow->ReserveColorsForAll(9999);
 	treeLow->ReserveDiffuseTexIndicesForAll(9999);
+
+	Mesh* const cubeMesh = Meshes::meshes[(int)MeshType::Cube];
+	cubeMesh->ReserveModelMats(9999);
+	cubeMesh->ReserveColors(9999);
+	cubeMesh->ReserveDiffuseTexIndices(9999);
 
 	for(int i = 0; i < 9999; ++i){
 		const float scaleFactor = 50.0f;
@@ -242,6 +247,15 @@ void Scene::InitEntities(){
 			treeLow->AddModelMatForAll(modelMat);
 			treeLow->AddColorForAll(color);
 			treeLow->AddDiffuseTexIndexForAll(diffuseTexIndex);
+		modelStack.PopModel();
+
+		modelStack.PushModel({
+			modelStack.Translate(pos + glm::vec3(0.0f, (float)PseudorandMinMax(600, 800), 0.0f)),
+			modelStack.Scale(glm::vec3(20.0f)),
+		});
+			cubeMesh->AddModelMat(modelStack.GetTopModel());
+			cubeMesh->AddColor(glm::vec4(1.0f));
+			cubeMesh->AddDiffuseTexIndex(PseudorandMinMax(0, 11));
 		modelStack.PopModel();
 	}
 	//*/
@@ -624,13 +638,16 @@ void Scene::GameRender(){
 
 	forwardSP.SetMat4fv("PV", &(projection * glm::mat4(glm::mat3(view)))[0][0]);
 
+
+	Mesh* const cubeMesh = Meshes::meshes[(int)MeshType::Cube];
+
 	glDepthFunc(GL_LEQUAL); //Modify comparison operators used for depth test such that frags with depth <= 1.f are shown
 	glCullFace(GL_FRONT);
 		forwardSP.Set1i("sky", 1);
 		forwardSP.Set1i("skybox", 1);
 		forwardSP.UseTex(cubemapRefID, "cubemapSampler", GL_TEXTURE_CUBE_MAP);
-		Meshes::meshes[(int)MeshType::Cube]->SetModel(modelStack.GetTopModel());
-		Meshes::meshes[(int)MeshType::Cube]->Render(forwardSP);
+		cubeMesh->SetModel(modelStack.GetTopModel());
+		cubeMesh->Render(forwardSP);
 		forwardSP.Set1i("skybox", 0);
 		forwardSP.Set1i("sky", 0);
 	glCullFace(GL_BACK);
@@ -701,7 +718,7 @@ void Scene::GameRender(){
 
 
 
-
+	cubeMesh->InstancedRender(forwardSP);
 	treeLOD.GetModel(glm::length(cam.GetPos() - glm::vec3()))->InstancedRender(forwardSP); //playerPos?? //lenSquared??
 
 	entityManager->Render(forwardSP, cam);

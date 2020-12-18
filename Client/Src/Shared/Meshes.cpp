@@ -11,6 +11,18 @@ Mesh* Meshes::meshes[(int)MeshType::Amt] = {
 		{"Imgs/ReticleScar.png", Mesh::TexType::Diffuse, 0},
 	}),
 	new Mesh(Mesh::MeshType::Cube, GL_TRIANGLES, {
+		{"Imgs/Cubes/Box.png", Mesh::TexType::Diffuse, 0},
+		{"Imgs/Cubes/CrackedStone.jpg", Mesh::TexType::Diffuse, 0},
+		{"Imgs/Cubes/DarkStone.jpg", Mesh::TexType::Diffuse, 0},
+		{"Imgs/Cubes/Gold.jpg", Mesh::TexType::Diffuse, 0},
+		{"Imgs/Cubes/GrayBricks.jpg", Mesh::TexType::Diffuse, 0},
+		{"Imgs/Cubes/LightStone.jpg", Mesh::TexType::Diffuse, 0},
+		{"Imgs/Cubes/RedBricks.jpg", Mesh::TexType::Diffuse, 0},
+		{"Imgs/Cubes/Sand.jpg", Mesh::TexType::Diffuse, 0},
+		{"Imgs/Cubes/SomeBlue.jpg", Mesh::TexType::Diffuse, 0},
+		{"Imgs/Cubes/SomeGray.png", Mesh::TexType::Diffuse, 0},
+		{"Imgs/Cubes/SomeGreen.jpg", Mesh::TexType::Diffuse, 0},
+		{"Imgs/Cubes/Water.jpg", Mesh::TexType::Diffuse, 0},
 	}),
 	new Mesh(Mesh::MeshType::Sphere, GL_TRIANGLE_STRIP, {
 		{"Imgs/Enemy.jpg", Mesh::TexType::Diffuse, 0},
