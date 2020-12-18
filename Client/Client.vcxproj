@@ -225,6 +225,7 @@
     <ClInclude Include="Src\Entity\Entity.h" />
     <ClInclude Include="Src\Entity\Entities\Gun.h" />
     <ClInclude Include="Src\Entity\EntityManager.h" />
+    <ClInclude Include="Src\Entity\EntityUpdate.hpp" />
     <ClInclude Include="Src\LOD\LOD.h" />
     <ClInclude Include="Src\Quadtree\Node.h" />
     <ClInclude Include="Src\Quadtree\Region.h" />

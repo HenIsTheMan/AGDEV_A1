@@ -1,5 +1,7 @@
 #include "EntityManager.h"
 
+#include "EntityUpdate.hpp"
+
 extern float dt;
 
 EntityManager::~EntityManager(){
@@ -45,10 +47,11 @@ void EntityManager::Update(){
 	for(Entity* const movableEntity: movableEntities){
 		switch(movableEntity->type){
 			case Entity::EntityType::Player:
-
+				UpdatePlayerHorizVel(movableEntity);
+				UpdatePlayerVertVel(movableEntity);
 				break;
 		}
-		movableEntity->pos += movableEntity->vel * dt;
+		movableEntity->pos += movableEntity->dir * movableEntity->spd * dt;
 	}
 
 	//Update dragon??
@@ -159,7 +162,8 @@ void EntityManager::CreatePlayer(const EntityCreationAttribs& attribs){
 	entity->scale = attribs.scale;
 
 	entity->pos = attribs.pos;
-	entity->vel = glm::vec3(0.f);
+	entity->spd = 400.0f;
+	entity->dir = glm::vec3(0.0f, 0.0f, -1.0f);
 	entity->mass = 5.f;
 	entity->force = glm::vec3(0.f);
 
@@ -177,7 +181,8 @@ void EntityManager::CreateShotgunBullet(const glm::vec3& camPos, const glm::vec3
 	entity->scale = glm::vec3(.2f);
 
 	entity->pos = camPos;
-	entity->vel = 200.f * glm::vec3(glm::rotate(glm::mat4(1.f), glm::radians(PseudorandMinMax(-1.f, 1.f)), {0.f, 1.f, 0.f}) * glm::vec4(camFront, 0.f)); //With bullet bloom
+	entity->spd = 200.f;
+	entity->dir = glm::vec3(glm::rotate(glm::mat4(1.f), glm::radians(PseudorandMinMax(-1.f, 1.f)), {0.f, 1.f, 0.f}) * glm::vec4(camFront, 0.f)); //Bullet bloom
 	entity->mass = 5.f;
 	entity->force = glm::vec3(0.f);
 
@@ -195,7 +200,8 @@ void EntityManager::CreateScarBullet(const glm::vec3& camPos, const glm::vec3& c
 	entity->scale = glm::vec3(.2f);
 
 	entity->pos = camPos + 10.f * camFront;
-	entity->vel = 180.f * glm::vec3(glm::rotate(glm::mat4(1.f), glm::radians(PseudorandMinMax(-2.f, 2.f)), {0.f, 1.f, 0.f}) * glm::vec4(camFront, 0.f)); //With bullet bloom
+	entity->spd = 180.f;
+	entity->dir = glm::vec3(glm::rotate(glm::mat4(1.f), glm::radians(PseudorandMinMax(-2.f, 2.f)), {0.f, 1.f, 0.f}) * glm::vec4(camFront, 0.f)); //Bullet bloom
 	entity->mass = 5.f;
 	entity->force = glm::vec3(0.f);
 
@@ -213,7 +219,8 @@ void EntityManager::CreateSniperBullet(const glm::vec3& camPos, const glm::vec3&
 	entity->scale = glm::vec3(.2f);
 
 	entity->pos = camPos + 10.f * camFront;
-	entity->vel = 500.f * camFront;
+	entity->spd = 500.f;
+	entity->dir = camFront;
 	entity->mass = 5.f;
 	entity->force = glm::vec3(0.f);
 
@@ -231,7 +238,6 @@ void EntityManager::CreateAmmo(const Entity::EntityType type, const EntityCreati
 	entity->scale = attribs.scale;
 
 	entity->pos = attribs.pos;
-	entity->vel = glm::vec3(0.f);
 	entity->mass = 5.f;
 	entity->force = glm::vec3(0.f);
 
@@ -249,7 +255,6 @@ void EntityManager::CreateCoin(const EntityCreationAttribs& attribs){
 	entity->scale = attribs.scale;
 
 	entity->pos = attribs.pos;
-	entity->vel = glm::vec3(0.f);
 	entity->mass = 5.f;
 	entity->force = glm::vec3(0.f);
 
@@ -267,7 +272,6 @@ void EntityManager::CreateFire(const EntityCreationAttribs& attribs){
 	entity->scale = attribs.scale;
 
 	entity->pos = attribs.pos;
-	entity->vel = glm::vec3(0.f);
 	entity->mass = 5.f;
 	entity->force = glm::vec3(0.f);
 
@@ -285,7 +289,6 @@ void EntityManager::CreateEnemy(const EntityCreationAttribs& attribs){
 	entity->scale = attribs.scale;
 
 	entity->pos = attribs.pos;
-	entity->vel = glm::vec3(0.f);
 	entity->mass = 5.f;
 	entity->force = glm::vec3(0.f);
 
@@ -303,7 +306,6 @@ void EntityManager::CreateTree(const EntityCreationAttribs& attribs){
 	entity->scale = attribs.scale;
 
 	entity->pos = attribs.pos;
-	entity->vel = glm::vec3(0.f);
 	entity->mass = 5.f;
 	entity->force = glm::vec3(0.f);
 

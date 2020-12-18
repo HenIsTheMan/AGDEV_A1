@@ -38,7 +38,8 @@ private:
 	glm::vec3 scale;
 
 	glm::vec3 pos;
-	glm::vec3 vel;
+	glm::vec3 dir;
+	float spd;
 	float mass;
 	glm::vec3 force;
 
