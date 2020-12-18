@@ -54,6 +54,10 @@ void EntityManager::Update(){
 
 		movableEntity->vel += movableEntity->force / movableEntity->mass * dt;
 		movableEntity->pos += movableEntity->vel * dt;
+
+		movableEntity->pos.x = std::min(movableEntity->xMax, std::max(movableEntity->xMin, movableEntity->pos.x));
+		movableEntity->pos.y = std::min(movableEntity->yMax, std::max(movableEntity->yMin, movableEntity->pos.y));
+		movableEntity->pos.z = std::min(movableEntity->zMax, std::max(movableEntity->zMin, movableEntity->pos.z));
 	}
 
 	//Update dragon??
@@ -164,13 +168,14 @@ void EntityManager::CreatePlayer(const EntityCreationAttribs& attribs){
 	entity->scale = attribs.scale;
 
 	entity->pos = attribs.pos;
-	entity->moveSpd = 0.0f;
-	entity->facingDir = glm::vec3(0.0f, 0.0f, -1.0f);
 	entity->vel = entity->moveSpd * entity->facingDir;
 	entity->mass = 1.0f;
-	entity->force = glm::vec3(0.f);
+	entity->force = glm::vec3(0.0f, -1500.f, 0.0f);
 
 	entity->collider = colliderManager->ActivateCollider(ColliderType::Box);
+	entity->moveSpd = 0.0f;
+	entity->facingDir = glm::vec3(0.0f, 0.0f, -1.0f);
+	entity->yMax = FLT_MAX;
 }
 
 void EntityManager::CreateShotgunBullet(const glm::vec3& camPos, const glm::vec3& camFront){

@@ -47,4 +47,11 @@ private:
 	Collider* collider;
 	glm::vec3 facingDir;
 	float moveSpd;
+
+	float xMin;
+	float xMax;
+	float yMin;
+	float yMax;
+	float zMin;
+	float zMax;
 };

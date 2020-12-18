@@ -4,9 +4,13 @@
 
 #include "../Shared/RotateVecIn2D.hpp"
 
+extern float terrainXScale;
+extern float terrainYScale;
+extern float terrainZScale;
+
 inline static void UpdatePlayerHoriz(Entity* const player){
-	int leftRight = (int)Key(GLFW_KEY_A) - (int)Key(GLFW_KEY_D);
-	int frontBack = (int)Key(GLFW_KEY_W) - (int)Key(GLFW_KEY_S);
+	int leftRight = (int)Key(VK_LEFT) - (int)Key(VK_RIGHT);
+	int frontBack = (int)Key(VK_UP) - (int)Key(VK_DOWN);
 
 	if(leftRight == 0 && frontBack == 0){
 		player->vel.x = 0.0f;
@@ -24,15 +28,23 @@ inline static void UpdatePlayerHoriz(Entity* const player){
 
 	player->vel.x = change.x * player->moveSpd;
 	player->vel.z = change.z * player->moveSpd;
+
+	player->xMin = -terrainXScale * 0.5f + 2.f;
+	player->xMax = terrainXScale * 0.5f - 2.f;
+	player->zMin = -terrainZScale * 0.5f + 2.f;
+	player->zMax = terrainZScale * 0.5f - 2.f;
 }
 
 inline static void UpdatePlayerVert(Entity* const player){
 	static bool isJumping = false;
+
+	//update isJumping??
 
 	if(!isJumping && Key(VK_SPACE)){
 		player->vel.y = 300.0f;
 		isJumping = true;
 	}
 
-	player->force.y = -1500.f;
+	player->yMin = terrainYScale *
+		static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(player->pos.x / terrainXScale, player->pos.y / terrainZScale, false) + player->scale.y * 0.5f;
 }

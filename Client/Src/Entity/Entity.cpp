@@ -17,6 +17,13 @@ Entity::Entity():
 
 	collider(nullptr),
 	facingDir(glm::vec3(0.0f)),
-	moveSpd(0.0f)
+	moveSpd(0.0f),
+
+	xMin(0.0f),
+	xMax(0.0f),
+	yMin(0.0f),
+	yMax(0.0f),
+	zMin(0.0f),
+	zMax(0.0f)
 {
 }

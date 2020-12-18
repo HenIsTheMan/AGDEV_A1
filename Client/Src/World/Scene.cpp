@@ -159,7 +159,7 @@ void Scene::InitEntities(){
 		entityManager->CreatePlayer({
 			glm::vec3(
 				xPos,
-				terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos / terrainXScale, zPos / terrainZScale, false) + scaleFactor,
+				terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos / terrainXScale, zPos / terrainZScale, false) + scaleFactor * 0.5f,
 				zPos
 			),
 			glm::vec3(scaleFactor),
@@ -172,8 +172,8 @@ void Scene::InitEntities(){
 	//* Create coins
 	for(short i = 0; i < 20; ++i){
 		const float scaleFactor = 15.f;
-		const float xPos = PseudorandMinMax(-terrainXScale * 0.5f + 5.f, terrainXScale * 0.5f - 5.f);
-		const float zPos = PseudorandMinMax(-terrainZScale * 0.5f + 5.f, terrainZScale * 0.5f - 5.f);
+		const float xPos = PseudorandMinMax(-terrainXScale * 0.5f + 2.0f, terrainXScale * 0.5f - 2.0f);
+		const float zPos = PseudorandMinMax(-terrainZScale * 0.5f + 2.0f, terrainZScale * 0.5f - 2.0f);
 		const glm::vec3 pos = glm::vec3(
 			xPos,
 			terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos / terrainXScale, zPos / terrainZScale, false) + scaleFactor,
@@ -513,7 +513,7 @@ void Scene::GameUpdate(GLFWwindow* const& win){
 	}
 
 	if(isCamDetached){
-		cam.UpdateDetached(GLFW_KEY_Y, GLFW_KEY_I, GLFW_KEY_H, GLFW_KEY_K, GLFW_KEY_U, GLFW_KEY_J);
+		cam.UpdateDetached(GLFW_KEY_E, GLFW_KEY_Q, GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_W, GLFW_KEY_S);
 	} else{
 		//cam.UpdateJumpFall();
 		//cam.UpdateAttached(
