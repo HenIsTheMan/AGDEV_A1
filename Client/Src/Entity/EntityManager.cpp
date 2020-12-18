@@ -74,7 +74,6 @@ void EntityManager::CreatePlayer(const EntityCreationAttribs& attribs){
 	entity->maxLife = 0.f;
 	entity->colour = attribs.colour;
 	entity->diffuseTexIndex = attribs.diffuseTexIndex;
-	entity->collisionNormal = attribs.collisionNormal;
 	entity->scale = attribs.scale;
 
 	entity->pos = attribs.pos;
@@ -91,9 +90,7 @@ void EntityManager::CreateShotgunBullet(const glm::vec3& camPos, const glm::vec3
 	entity->maxLife = 5.f;
 	entity->colour = glm::vec4(glm::vec3(.4f), .3f);
 	entity->diffuseTexIndex = -1;
-	entity->collisionNormal = glm::vec3(1.f, 0.f, 0.f);
 	entity->scale = glm::vec3(.2f);
-	entity->light = nullptr;
 
 	entity->pos = camPos;
 	entity->vel = 200.f * glm::vec3(glm::rotate(glm::mat4(1.f), glm::radians(PseudorandMinMax(-1.f, 1.f)), {0.f, 1.f, 0.f}) * glm::vec4(camFront, 0.f)); //With bullet bloom
@@ -109,9 +106,7 @@ void EntityManager::CreateScarBullet(const glm::vec3& camPos, const glm::vec3& c
 	entity->maxLife = 5.f;
 	entity->colour = glm::vec4(glm::vec3(1.f), .3f);
 	entity->diffuseTexIndex = -1;
-	entity->collisionNormal = glm::vec3(1.f, 0.f, 0.f);
 	entity->scale = glm::vec3(.2f);
-	entity->light = nullptr;
 
 	entity->pos = camPos + 10.f * camFront;
 	entity->vel = 180.f * glm::vec3(glm::rotate(glm::mat4(1.f), glm::radians(PseudorandMinMax(-2.f, 2.f)), {0.f, 1.f, 0.f}) * glm::vec4(camFront, 0.f)); //With bullet bloom
@@ -127,9 +122,7 @@ void EntityManager::CreateSniperBullet(const glm::vec3& camPos, const glm::vec3&
 	entity->maxLife = 5.f;
 	entity->colour = glm::vec4(0.f, 0.f, 1.f, .3f);
 	entity->diffuseTexIndex = -1;
-	entity->collisionNormal = glm::vec3(1.f, 0.f, 0.f);
 	entity->scale = glm::vec3(.2f);
-	entity->light = nullptr;
 
 	entity->pos = camPos + 10.f * camFront;
 	entity->vel = 500.f * camFront;
@@ -145,7 +138,6 @@ void EntityManager::CreateAmmo(const Entity::EntityType type, const EntityCreati
 	entity->maxLife = 0.f;
 	entity->colour = attribs.colour;
 	entity->diffuseTexIndex = attribs.diffuseTexIndex;
-	entity->collisionNormal = attribs.collisionNormal;
 	entity->scale = attribs.scale;
 
 	entity->pos = attribs.pos;
@@ -162,7 +154,6 @@ void EntityManager::CreateCoin(const EntityCreationAttribs& attribs){
 	entity->maxLife = 0.f;
 	entity->colour = attribs.colour;
 	entity->diffuseTexIndex = attribs.diffuseTexIndex;
-	entity->collisionNormal = attribs.collisionNormal;
 	entity->scale = attribs.scale;
 
 	entity->pos = attribs.pos;
@@ -179,7 +170,6 @@ void EntityManager::CreateFire(const EntityCreationAttribs& attribs){
 	entity->maxLife = 0.f;
 	entity->colour = attribs.colour;
 	entity->diffuseTexIndex = attribs.diffuseTexIndex;
-	entity->collisionNormal = attribs.collisionNormal;
 	entity->scale = attribs.scale;
 
 	entity->pos = attribs.pos;
@@ -196,7 +186,6 @@ void EntityManager::CreateEnemy(const EntityCreationAttribs& attribs){
 	entity->maxLife = 100.f;
 	entity->colour = attribs.colour;
 	entity->diffuseTexIndex = attribs.diffuseTexIndex;
-	entity->collisionNormal = attribs.collisionNormal;
 	entity->scale = attribs.scale;
 
 	entity->pos = attribs.pos;
@@ -213,7 +202,6 @@ void EntityManager::CreateTree(const EntityCreationAttribs& attribs){
 	entity->maxLife = 0.f;
 	entity->colour = attribs.colour;
 	entity->diffuseTexIndex = attribs.diffuseTexIndex;
-	entity->collisionNormal = attribs.collisionNormal;
 	entity->scale = attribs.scale;
 
 	entity->pos = attribs.pos;

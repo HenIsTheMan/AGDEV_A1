@@ -10,7 +10,6 @@ public:
 
 	struct EntityCreationAttribs final{
 		glm::vec3 pos;
-		glm::vec3 collisionNormal;
 		glm::vec3 scale;
 		glm::vec4 colour;
 		int diffuseTexIndex;

@@ -33,9 +33,7 @@ private:
 	float maxLife;
 	glm::vec4 colour;
 	int diffuseTexIndex;
-	glm::vec3 collisionNormal;
 	glm::vec3 scale;
-	Light* light;
 
 	glm::vec3 pos;
 	glm::vec3 vel;

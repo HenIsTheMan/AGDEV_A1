@@ -157,7 +157,6 @@ void Scene::InitEntities(){
 				terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos / terrainXScale, zPos / terrainZScale) + scaleFactor,
 				zPos
 			),
-			glm::vec3(0.0f, 0.0f, -1.0f),
 			glm::vec3(scaleFactor),
 			glm::vec4(1.0f),
 			-1,
@@ -173,7 +172,6 @@ void Scene::InitEntities(){
 		const glm::vec3 pos = glm::vec3(xPos, terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos / terrainXScale, zPos / terrainZScale) + scaleFactor, zPos);
 		entityManager->CreateCoin({
 			pos,
-			glm::vec3(1.f, 0.f, 0.f),
 			glm::vec3(scaleFactor),
 			glm::vec4(1.0f),
 			-1,
