@@ -674,64 +674,6 @@ void Scene::GameRender(){
 	const glm::vec3 OGTarget = cam.GetTarget();
 	const glm::vec3 OGUp = cam.GetUp();
 
-	cam.SetPos(glm::vec3(0.f, 0.f, 5.f));
-	cam.SetTarget(glm::vec3(0.f));
-	cam.SetUp(glm::vec3(0.f, 1.f, 0.f));
-	view = cam.LookAt();
-	projection = glm::ortho(-float(winWidth) / 2.f, float(winWidth) / 2.f, -float(winHeight) / 2.f, float(winHeight) / 2.f, .1f, 9999.f);
-	forwardSP.SetMat4fv("PV", &(projection * view)[0][0]);
-
-	if(!(RMB && inv[currSlot] == ItemType::Sniper)){
-		///Render items in inv
-		for(short i = 0; i < 5; ++i){
-			forwardSP.Set1i("noNormals", 1);
-			modelStack.PushModel({
-				modelStack.Translate(glm::vec3(float(i) * 100.f - 200.f, -float(winHeight) / 2.3f, -10.f)),
-			});
-			switch(inv[i]){
-				case ItemType::Shotgun:
-					modelStack.PushModel({
-						modelStack.Translate(glm::vec3(18.f, -18.f, 0.f)),
-						modelStack.Rotate(glm::vec4(0.f, 0.f, 1.f, 45.f)),
-						modelStack.Rotate(glm::vec4(0.f, 1.f, 0.f, 90.f)),
-						modelStack.Scale(glm::vec3(21.f)),
-					});
-					models[(int)ModelType::Shotgun]->SetModelForAll(modelStack.GetTopModel());
-					models[(int)ModelType::Shotgun]->Render(forwardSP);
-					modelStack.PopModel();
-					break;
-				case ItemType::Scar:
-					modelStack.PushModel({
-						modelStack.Rotate(glm::vec4(0.f, 0.f, 1.f, 45.f)),
-						modelStack.Rotate(glm::vec4(0.f, 1.f, 0.f, 90.f)),
-						modelStack.Scale(glm::vec3(18.f)),
-					});
-						models[(int)ModelType::Scar]->SetModelForAll(modelStack.GetTopModel());
-						models[(int)ModelType::Scar]->Render(forwardSP);
-					modelStack.PopModel();
-					break;
-				case ItemType::Sniper:
-					modelStack.PushModel({
-						modelStack.Translate(glm::vec3(16.f, -15.f, 0.f)),
-						modelStack.Rotate(glm::vec4(0.f, 0.f, 1.f, 45.f)),
-						modelStack.Scale(glm::vec3(10.f)),
-					});
-						models[(int)ModelType::Sniper]->SetModelForAll(modelStack.GetTopModel());
-						models[(int)ModelType::Sniper]->Render(forwardSP);
-					modelStack.PopModel();
-					break;
-				case ItemType::ShotgunAmmo:
-					break;
-				case ItemType::ScarAmmo:
-					break;
-				case ItemType::SniperAmmo:
-					break;
-			}
-			modelStack.PopModel();
-			forwardSP.Set1i("noNormals", 0);
-		}
-	}
-
 	cam.SetPos(OGPos);
 	cam.SetTarget(OGTarget);
 	cam.SetUp(OGUp);
@@ -831,6 +773,57 @@ void Scene::GameRender(){
 	view = cam.LookAt();
 	projection = glm::ortho(-float(winWidth) / 2.f, float(winWidth) / 2.f, -float(winHeight) / 2.f, float(winHeight) / 2.f, .1f, 9999.f);
 	forwardSP.SetMat4fv("PV", &(projection * view)[0][0]);
+
+	if(!(RMB && inv[currSlot] == ItemType::Sniper)){
+		///Render items in inv
+		for(short i = 0; i < 5; ++i){
+			forwardSP.Set1i("noNormals", 1);
+			modelStack.PushModel({
+				modelStack.Translate(glm::vec3(float(i) * 100.f - 200.f, -float(winHeight) / 2.3f, -10.f)),
+			});
+			switch(inv[i]){
+				case ItemType::Shotgun:
+					modelStack.PushModel({
+						modelStack.Translate(glm::vec3(18.f, -18.f, 0.f)),
+						modelStack.Rotate(glm::vec4(0.f, 0.f, 1.f, 45.f)),
+						modelStack.Rotate(glm::vec4(0.f, 1.f, 0.f, 90.f)),
+						modelStack.Scale(glm::vec3(21.f)),
+					});
+					models[(int)ModelType::Shotgun]->SetModelForAll(modelStack.GetTopModel());
+					models[(int)ModelType::Shotgun]->Render(forwardSP);
+					modelStack.PopModel();
+					break;
+				case ItemType::Scar:
+					modelStack.PushModel({
+						modelStack.Rotate(glm::vec4(0.f, 0.f, 1.f, 45.f)),
+						modelStack.Rotate(glm::vec4(0.f, 1.f, 0.f, 90.f)),
+						modelStack.Scale(glm::vec3(18.f)),
+					});
+						models[(int)ModelType::Scar]->SetModelForAll(modelStack.GetTopModel());
+						models[(int)ModelType::Scar]->Render(forwardSP);
+					modelStack.PopModel();
+					break;
+				case ItemType::Sniper:
+					modelStack.PushModel({
+						modelStack.Translate(glm::vec3(16.f, -15.f, 0.f)),
+						modelStack.Rotate(glm::vec4(0.f, 0.f, 1.f, 45.f)),
+						modelStack.Scale(glm::vec3(10.f)),
+					});
+						models[(int)ModelType::Sniper]->SetModelForAll(modelStack.GetTopModel());
+						models[(int)ModelType::Sniper]->Render(forwardSP);
+					modelStack.PopModel();
+					break;
+				case ItemType::ShotgunAmmo:
+					break;
+				case ItemType::ScarAmmo:
+					break;
+				case ItemType::SniperAmmo:
+					break;
+			}
+			modelStack.PopModel();
+			forwardSP.Set1i("noNormals", 0);
+		}
+	}
 
 	Mesh* const quadMesh = Meshes::meshes[(int)MeshType::Quad];
 
