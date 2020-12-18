@@ -20,6 +20,7 @@
     <ClCompile Include="Src\Collider\Colliders\BoxCollider.cpp" />
     <ClCompile Include="Src\Collider\Colliders\SphereCollider.cpp" />
     <ClCompile Include="Src\Collider\Collider.cpp" />
+    <ClCompile Include="Src\Collider\ColliderManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Admin\App.h" />
@@ -40,6 +41,7 @@
     <ClInclude Include="Src\Collider\Colliders\BoxCollider.h" />
     <ClInclude Include="Src\Collider\Colliders\SphereCollider.h" />
     <ClInclude Include="Src\Collider\Collider.h" />
+    <ClInclude Include="Src\Collider\ColliderManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Blur.fragS" />

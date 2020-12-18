@@ -208,6 +208,8 @@ void EntityManager::CreateTree(const EntityCreationAttribs& attribs){
 	entity->vel = glm::vec3(0.f);
 	entity->mass = 5.f;
 	entity->force = glm::vec3(0.f);
+
+	entity->collider = ;
 }
 
 Entity* const EntityManager::ActivateEntity(const bool movable){

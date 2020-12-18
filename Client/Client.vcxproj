@@ -195,6 +195,7 @@
     <ClCompile Include="Src\Admin\App.cpp" />
     <ClCompile Include="Src\Client.cpp" />
     <ClCompile Include="Src\Collider\Collider.cpp" />
+    <ClCompile Include="Src\Collider\ColliderManager.cpp" />
     <ClCompile Include="Src\Collider\Colliders\BoxCollider.cpp" />
     <ClCompile Include="Src\Collider\Colliders\SphereCollider.cpp" />
     <ClCompile Include="Src\Entity\Entities\Scar.cpp" />
@@ -215,6 +216,7 @@
   <ItemGroup>
     <ClInclude Include="Src\Admin\App.h" />
     <ClInclude Include="Src\Collider\Collider.h" />
+    <ClInclude Include="Src\Collider\ColliderManager.h" />
     <ClInclude Include="Src\Collider\Colliders\BoxCollider.h" />
     <ClInclude Include="Src\Collider\Colliders\SphereCollider.h" />
     <ClInclude Include="Src\Entity\Entities\Scar.h" />

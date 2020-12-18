@@ -8,14 +8,17 @@ enum struct ColliderType: int{
 
 class Collider{ //Abstract class
 public:
-	///Getter
-	ColliderType GetType () const;
+	///Getters
+	bool GetActive() const;
+	ColliderType GetType() const;
 
-	///Setter
+	///Setters
+	void SetActive(const bool active);
 	void SetType(const ColliderType type);
 protected:
 	Collider();
 	Collider(const ColliderType type);
 
+	bool active;
 	ColliderType type;
 };

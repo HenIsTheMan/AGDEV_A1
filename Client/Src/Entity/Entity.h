@@ -2,6 +2,8 @@
 #include <Core.h>
 #include <Engine.h>
 
+#include "../Collider/Collider.h"
+
 class Entity final{
 	friend class EntityManager;
 	friend class Region;
@@ -39,4 +41,6 @@ private:
 	glm::vec3 vel;
 	float mass;
 	glm::vec3 force;
+
+	Collider* collider;
 };
