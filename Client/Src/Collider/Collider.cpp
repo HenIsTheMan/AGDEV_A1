@@ -8,14 +8,6 @@ ColliderType Collider::GetType() const{
 	return type;
 }
 
-void Collider::SetActive(const bool active){
-	this->active = active;
-}
-
-void Collider::SetType(const ColliderType type){
-	this->type = type;
-}
-
 Collider::Collider():
 	Collider(ColliderType::Amt)
 {

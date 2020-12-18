@@ -183,6 +183,10 @@ void EntityManager::CreatePlayer(const EntityCreationAttribs& attribs){
 	entity->force = glm::vec3(0.0f, -400.f, 0.0f);
 
 	entity->collider = colliderManager->ActivateCollider(ColliderType::Box);
+	BoxCollider* const boxCollider = static_cast<BoxCollider*>(entity->collider);
+	boxCollider->SetPos(entity->pos);
+	boxCollider->SetScale(entity->scale);
+
 	entity->moveSpd = 0.0f;
 	entity->facingDir = glm::vec3(0.0f, 0.0f, -1.0f);
 	entity->yMax = FLT_MAX;

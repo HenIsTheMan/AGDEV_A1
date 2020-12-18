@@ -7,16 +7,13 @@ enum struct ColliderType: int{
 };
 
 class Collider{ //Abstract class
+	friend class ColliderManager;
 public:
 	virtual ~Collider() = default;
 
 	///Getters
 	bool GetActive() const;
 	ColliderType GetType() const;
-
-	///Setters
-	void SetActive(const bool active);
-	void SetType(const ColliderType type);
 protected:
 	Collider();
 	Collider(const ColliderType type);

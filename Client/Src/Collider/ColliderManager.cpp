@@ -34,8 +34,8 @@ Collider* ColliderManager::ActivateCollider(const ColliderType type){
 
 	for(size_t i = 0; i < size; ++i){
 		Collider* const collider = colliders[i];
-		if(!collider->GetActive()){
-			collider->SetActive(true);
+		if(!collider->active){
+			collider->active = true;
 			return collider;
 		}
 	}
@@ -51,7 +51,7 @@ Collider* ColliderManager::ActivateCollider(const ColliderType type){
 }
 
 void ColliderManager::DeactivateCollider(Collider* const collider){
-	collider->SetActive(false);
+	collider->active = false;
 }
 
 ColliderManager::ColliderManager():
