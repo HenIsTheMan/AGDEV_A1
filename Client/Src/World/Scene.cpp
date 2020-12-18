@@ -152,21 +152,23 @@ void Scene::InitEntities(){
 	entityManager->Init();
 
 	//* Create Player
-	{
-		const float scaleFactor = 50.0f;
-		const float xPos = 0.0f;
-		const float zPos = 0.0f;
-		entityManager->CreatePlayer({
-			glm::vec3(
-				xPos,
-				terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos / terrainXScale, zPos / terrainZScale, false) + scaleFactor * 0.5f,
-				zPos
-			),
-			glm::vec3(scaleFactor),
-			glm::vec4(1.0f),
-			-1,
-		});
-	}
+	const float playerScaleFactor = 50.0f;
+	const float playerPosX = 0.0f;
+	const float playerPosZ = 0.0f;
+	entityManager->CreatePlayer({
+		glm::vec3(
+			playerPosX,
+			terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(
+				playerPosX / terrainXScale,
+				playerPosZ / terrainZScale,
+				false
+			) + playerScaleFactor * 0.5f,
+			playerPosZ
+		),
+		glm::vec3(playerScaleFactor),
+		glm::vec4(1.0f),
+		-1,
+	});
 	//*/
 
 	//* Create coins
@@ -510,10 +512,13 @@ void Scene::MainMenuUpdate(GLFWwindow* const& win, const POINT& mousePos, float&
 void Scene::GameUpdate(GLFWwindow* const& win){
 	glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-	static float camAttachmentBT = 0.0f;
-	if(Key(GLFW_KEY_B) && camAttachmentBT <= elapsedTime){
+	static bool isPressedB = false;
+
+	if(!isPressedB && Key(GLFW_KEY_B)){
 		isCamDetached = !isCamDetached;
-		camAttachmentBT = elapsedTime + .5f;
+		isPressedB = true;
+	} else if(isPressedB && !Key(GLFW_KEY_B)){
+		isPressedB = false;
 	}
 
 	if(isCamDetached){
@@ -732,9 +737,7 @@ void Scene::GameRender(){
 	cam.SetUp(OGUp);
 	view = cam.LookAt();
 	projection = glm::perspective(glm::radians(angularFOV), cam.GetAspectRatio(), .1f, 9999.f);
-
 	forwardSP.SetMat4fv("PV", &(projection * glm::mat4(glm::mat3(view)))[0][0]);
-
 
 	Mesh* const cubeMesh = Meshes::meshes[(int)MeshType::Cube];
 
@@ -751,6 +754,24 @@ void Scene::GameRender(){
 	glDepthFunc(GL_LESS);
 
 	forwardSP.SetMat4fv("PV", &(projection * view)[0][0]);
+
+	///Terrain
+	modelStack.PushModel({
+		modelStack.Scale(glm::vec3(terrainXScale, terrainYScale, terrainZScale)),
+	});
+		Meshes::meshes[(int)MeshType::Terrain]->SetModel(modelStack.GetTopModel());
+		Meshes::meshes[(int)MeshType::Terrain]->Render(forwardSP);
+	modelStack.PopModel();
+
+	cubeMesh->InstancedRender(forwardSP);
+
+	treeLOD.GetModel(glm::length(cam.GetPos() - glm::vec3()))->InstancedRender(forwardSP); //playerPos?? //lenSquared??
+
+	models[(int)ModelType::Flower]->InstancedRender(forwardSP);
+	models[(int)ModelType::Grass]->InstancedRender(forwardSP);
+	models[(int)ModelType::Rock]->InstancedRender(forwardSP);
+
+	entityManager->Render(forwardSP, cam);
 
 	///Render item held
 	const glm::vec3 front = cam.CalcFront();
@@ -803,28 +824,6 @@ void Scene::GameRender(){
 			break;
 		}
 	}
-
-	///Terrain
-	modelStack.PushModel({
-		modelStack.Scale(glm::vec3(terrainXScale, terrainYScale, terrainZScale)),
-	});
-		Meshes::meshes[(int)MeshType::Terrain]->SetModel(modelStack.GetTopModel());
-		Meshes::meshes[(int)MeshType::Terrain]->Render(forwardSP);
-	modelStack.PopModel();
-
-
-
-
-	cubeMesh->InstancedRender(forwardSP);
-	treeLOD.GetModel(glm::length(cam.GetPos() - glm::vec3()))->InstancedRender(forwardSP); //playerPos?? //lenSquared??
-	models[(int)ModelType::Flower]->InstancedRender(forwardSP);
-	models[(int)ModelType::Grass]->InstancedRender(forwardSP);
-	models[(int)ModelType::Rock]->InstancedRender(forwardSP);
-
-	entityManager->Render(forwardSP, cam);
-
-
-
 
 	cam.SetPos(glm::vec3(0.f, 0.f, 5.f));
 	cam.SetTarget(glm::vec3(0.f));

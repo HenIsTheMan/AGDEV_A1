@@ -59,7 +59,8 @@ void EntityManager::Update(){
 
 				movableEntity->yMin = terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(
 					movableEntity->pos.x / terrainXScale,
-					movableEntity->pos.z / terrainZScale, false
+					movableEntity->pos.z / terrainZScale,
+					false
 				) + movableEntity->scale.y * 0.5f;
 
 				movableEntity->pos.x = std::min(movableEntity->xMax, std::max(movableEntity->xMin, movableEntity->pos.x));
