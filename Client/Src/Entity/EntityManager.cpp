@@ -50,6 +50,7 @@ void EntityManager::Update(){
 				UpdatePlayerHoriz(movableEntity);
 				UpdatePlayerVert(movableEntity);
 
+				const glm::vec3 prevPos = movableEntity->pos;
 				movableEntity->vel += movableEntity->force / movableEntity->mass * dt;
 				movableEntity->pos += movableEntity->vel * dt;
 
@@ -66,6 +67,10 @@ void EntityManager::Update(){
 				movableEntity->pos.x = std::min(movableEntity->xMax, std::max(movableEntity->xMin, movableEntity->pos.x));
 				movableEntity->pos.y = std::min(movableEntity->yMax, std::max(movableEntity->yMin, movableEntity->pos.y));
 				movableEntity->pos.z = std::min(movableEntity->zMax, std::max(movableEntity->zMin, movableEntity->pos.z));
+
+				if(movableEntity->collider != nullptr){
+					static_cast<BoxCollider*>(movableEntity->collider)->SetPos(movableEntity->pos);
+				}
 
 				break;
 		}
