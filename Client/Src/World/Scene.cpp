@@ -674,9 +674,6 @@ void Scene::GameRender(){
 	const glm::vec3 OGTarget = cam.GetTarget();
 	const glm::vec3 OGUp = cam.GetUp();
 
-	cam.SetPos(OGPos);
-	cam.SetTarget(OGTarget);
-	cam.SetUp(OGUp);
 	view = cam.LookAt();
 	projection = glm::perspective(glm::radians(angularFOV), cam.GetAspectRatio(), .1f, 9999.f);
 	forwardSP.SetMat4fv("PV", &(projection * glm::mat4(glm::mat3(view)))[0][0]);
