@@ -17,6 +17,9 @@
     <ClCompile Include="Src\Shared\Meshes.cpp" />
     <ClCompile Include="Src\World\ModelStack.cpp" />
     <ClCompile Include="Src\LOD\LOD.cpp" />
+    <ClCompile Include="Src\Collider\Colliders\BoxCollider.cpp" />
+    <ClCompile Include="Src\Collider\Colliders\SphereCollider.cpp" />
+    <ClCompile Include="Src\Collider\Collider.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Admin\App.h" />
@@ -34,6 +37,9 @@
     <ClInclude Include="Src\Shared\Meshes.h" />
     <ClInclude Include="Src\World\ModelStack.h" />
     <ClInclude Include="Src\LOD\LOD.h" />
+    <ClInclude Include="Src\Collider\Colliders\BoxCollider.h" />
+    <ClInclude Include="Src\Collider\Colliders\SphereCollider.h" />
+    <ClInclude Include="Src\Collider\Collider.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Blur.fragS" />
