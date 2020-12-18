@@ -31,6 +31,30 @@ Region::~Region(){
 	}
 }
 
+void Region::GetEntitiesToUpdate(std::vector<Entity*>& movableEntities, std::vector<Entity*>& stationaryEntities){
+	const bool result = (topLeft && topLeft->active) || (topRight && topRight->active) || (bottomLeft && bottomLeft->active) || (bottomRight && bottomRight->active);
+	if(result){
+		topLeft->GetEntitiesToUpdate(movableEntities, stationaryEntities);
+		topRight->GetEntitiesToUpdate(movableEntities, stationaryEntities);
+		bottomLeft->GetEntitiesToUpdate(movableEntities, stationaryEntities);
+		bottomRight->GetEntitiesToUpdate(movableEntities, stationaryEntities);
+	}
+
+	///Check for inactive??
+
+	if(!result || (result && topLeft->stationaryNodes.empty() && topRight->stationaryNodes.empty() && bottomLeft->stationaryNodes.empty() && bottomRight->stationaryNodes.empty())){ //??
+		for(int i = 0; i < stationaryNodes.size(); ++i){
+			stationaryEntities.emplace_back(stationaryNodes[i]->GetEntity());
+		}
+	}
+
+	if(!result || (result && topLeft->movableNodes.empty() && topRight->movableNodes.empty() && bottomLeft->movableNodes.empty() && bottomRight->movableNodes.empty())){ //??
+		for(int i = 0; i < movableNodes.size(); ++i){
+			movableEntities.emplace_back(movableNodes[i]->GetEntity());
+		}
+	}
+}
+
 void Region::GetEntitiesToRender(std::map<int, Entity*>& entitiesOpaque, std::map<int, Entity*>& entitiesNotOpaque, const Cam& cam){
 	//Check if visible??
 
@@ -45,7 +69,7 @@ void Region::GetEntitiesToRender(std::map<int, Entity*>& entitiesOpaque, std::ma
 	const glm::vec3& camPos = cam.GetPos();
 	const glm::vec3& camFront = cam.CalcFront();
 
-	if(!result || (result && topLeft->stationaryNodes.empty() && topRight->stationaryNodes.empty() && bottomLeft->stationaryNodes.empty() && bottomRight->stationaryNodes.empty())){
+	if(!result || (result && topLeft->stationaryNodes.empty() && topRight->stationaryNodes.empty() && bottomLeft->stationaryNodes.empty() && bottomRight->stationaryNodes.empty())){ //??
 		for(int i = 0; i < stationaryNodes.size(); ++i){
 			//Check if visible??
 
@@ -71,7 +95,7 @@ void Region::GetEntitiesToRender(std::map<int, Entity*>& entitiesOpaque, std::ma
 		}
 	}
 
-	if(!result || (result && topLeft->movableNodes.empty() && topRight->movableNodes.empty() && bottomLeft->movableNodes.empty() && bottomRight->movableNodes.empty())){
+	if(!result || (result && topLeft->movableNodes.empty() && topRight->movableNodes.empty() && bottomLeft->movableNodes.empty() && bottomRight->movableNodes.empty())){ //??
 		for(int i = 0; i < movableNodes.size(); ++i){
 			//Check if visible??
 

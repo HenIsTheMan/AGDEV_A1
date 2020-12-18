@@ -15,6 +15,7 @@ private:
 	Region();
 	~Region();
 
+	void GetEntitiesToUpdate(std::vector<Entity*>& movableEntities, std::vector<Entity*>& stationaryEntities);
 	void GetEntitiesToRender(std::map<int, Entity*>& entitiesOpaque, std::map<int, Entity*>& entitiesNotOpaque, const Cam& cam);
 	void GetLeaves(ShaderProg& SP, std::vector<Region*>& leaves);
 

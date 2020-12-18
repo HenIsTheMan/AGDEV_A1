@@ -36,6 +36,20 @@ void RegionControl::Render(ShaderProg& SP, const Cam& cam){
 }
 
 void RegionControl::UpdateEntities(){
+	std::vector<Entity*> movableEntities;
+	std::vector<Entity*> stationaryEntities;
+	rootRegion->GetEntitiesToUpdate(movableEntities, stationaryEntities);
+
+	for(Entity* const movableEntity: movableEntities){
+		switch(movableEntity->type){
+			case Entity::EntityType::Player:
+
+		}
+	}
+
+	//Update dragon??
+	//for(Entity* const stationaryEntity: stationaryEntities){
+	//}
 }
 
 void RegionControl::RenderEntities(ShaderProg& SP, const Cam& cam){
@@ -121,8 +135,6 @@ void RegionControl::RenderQSP(ShaderProg& SP, const Cam& cam){
 	std::vector<Region*> leaves;
 	rootRegion->GetLeaves(SP, leaves);
 	const size_t size = leaves.size();
-
-	//std::cout << "leaves size: " << size << '\n';
 
 	if(!size){
 		return;
