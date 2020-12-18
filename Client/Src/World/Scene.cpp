@@ -1,6 +1,7 @@
 #include "Scene.h"
 #include "Vendor/stb_image.h"
 #include <glm/gtx/color_space.hpp>
+#include <glm/gtx/norm.hpp>
 
 float terrainXScale = 12000.f;
 float terrainYScale = 700.f;
@@ -213,9 +214,9 @@ void Scene::InitEntities(){
 	CreateTreesAndCubes();
 	CreateDecorations();
 
-	treeLOD.SetDistAndModel(DetailLvl::High, 5000.0f,  models[(int)ModelType::Tree_High]);
-	treeLOD.SetDistAndModel(DetailLvl::Medium, 10000.0f,  models[(int)ModelType::Tree_Medium]);
-	treeLOD.SetDistAndModel(DetailLvl::Low, 15000.0f, models[(int)ModelType::Tree_Low]);
+	treeLOD.SetDistSquaredAndModel(DetailLvl::High, 2000.0f * 2000.0f,  models[(int)ModelType::Tree_High]);
+	treeLOD.SetDistSquaredAndModel(DetailLvl::Medium, 4000.0f * 4000.0f,  models[(int)ModelType::Tree_Medium]);
+	treeLOD.SetDistSquaredAndModel(DetailLvl::Low, 6000.0f * 6000.0f, models[(int)ModelType::Tree_Low]);
 
 	entityManager->SetUpRegionsForStationary();
 }
@@ -699,7 +700,10 @@ void Scene::GameRender(){
 
 	cubeMesh->InstancedRender(forwardSP);
 
-	treeLOD.GetModel(glm::length(cam.GetPos() - glm::vec3()))->InstancedRender(forwardSP); //playerPos?? //lenSquared??
+	Model* const treeModel = treeLOD.GetModel(glm::length2(myPlayer->GetPos().z));
+	if(treeModel != nullptr){
+		treeModel->InstancedRender(forwardSP);
+	}
 
 	models[(int)ModelType::Flower]->InstancedRender(forwardSP);
 	models[(int)ModelType::Grass]->InstancedRender(forwardSP);

@@ -35,10 +35,10 @@ inline static void UpdatePlayerHoriz(Entity* const player){
 	player->vel.x = change.x * player->moveSpd;
 	player->vel.z = change.z * player->moveSpd;
 
-	player->xMin = -terrainXScale * 0.5f + 2.f;
-	player->xMax = terrainXScale * 0.5f - 2.f;
-	player->zMin = -terrainZScale * 0.5f + 2.f;
-	player->zMax = terrainZScale * 0.5f - 2.f;
+	player->xMin = -terrainXScale * 0.5f + player->scale.x * 2.0f;
+	player->xMax = terrainXScale * 0.5f - player->scale.x * 2.0f;
+	player->zMin = -terrainZScale * 0.5f + player->scale.z * 2.0f;
+	player->zMax = terrainZScale * 0.5f - player->scale.z * 2.0f;
 }
 
 inline static void UpdatePlayerVert(Entity* const player){
