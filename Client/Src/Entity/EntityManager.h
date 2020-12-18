@@ -41,6 +41,8 @@ private:
 	void ActivateEntityProcedure(Entity* const entity);
 	void DeactivateEntityProcedure(Entity* const entity);
 
+	bool shldRenderColliders;
+
 	std::vector<Entity*> entityPool;
 	Node* rootNode;
 	RegionControl* regionControl;

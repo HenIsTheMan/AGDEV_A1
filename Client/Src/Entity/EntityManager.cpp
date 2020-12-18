@@ -38,6 +38,14 @@ void EntityManager::Init(){
 }
 
 void EntityManager::Update(){
+	static bool isPressedC = false;
+	if(!isPressedC && Key(GLFW_KEY_C)){
+		shldRenderColliders = !shldRenderColliders;
+		isPressedC = true;
+	} else if(isPressedC && !Key(GLFW_KEY_C)){
+		isPressedC = false;
+	}
+
 	regionControl->Update();
 
 	std::vector<Entity*> movableEntities;
@@ -124,7 +132,7 @@ void EntityManager::Render(ShaderProg& SP, const Cam& cam){
 		}
 		modelStack.PopModel();
 
-		if(entity->collider != nullptr){
+		if(shldRenderColliders && entity->collider != nullptr){
 			SP.Set4fv("customColour", glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
 
 			switch(entity->collider->GetType()){
@@ -175,7 +183,7 @@ void EntityManager::Render(ShaderProg& SP, const Cam& cam){
 		}
 		modelStack.PopModel();
 
-		if(entity->collider != nullptr){
+		if(shldRenderColliders && entity->collider != nullptr){
 			SP.Set1i("useCustomColour", 1);
 			SP.Set4fv("customColour", glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
 
@@ -423,6 +431,7 @@ void EntityManager::DeactivateEntity(Entity* const& entity, const bool movable){
 }
 
 EntityManager::EntityManager():
+	shldRenderColliders(false),
 	entityPool(),
 	rootNode(new Node()),
 	regionControl(RegionControl::GetObjPtr()),
