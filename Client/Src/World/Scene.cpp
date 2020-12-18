@@ -153,7 +153,7 @@ void Scene::InitEntities(){
 
 	//* Create Player
 	{
-		const float scaleFactor = 15.f;
+		const float scaleFactor = 50.0f;
 		const float xPos = 0.0f;
 		const float zPos = 0.0f;
 		entityManager->CreatePlayer({

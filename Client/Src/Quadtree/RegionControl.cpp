@@ -55,8 +55,8 @@ void RegionControl::RenderQuadtree(ShaderProg& SP, const Cam& cam){
 			modelStack.Rotate(glm::vec4(1.0f, 0.0f, 0.0f, 90.0f)),
 			modelStack.Scale(glm::vec3(leaf->size[0] * 0.5f, leaf->size[1] * 0.5f, 1.0f))
 		});
-			Meshes::meshes[(int)MeshType::QuadLineLoop]->SetModel(modelStack.GetTopModel());
-			Meshes::meshes[(int)MeshType::QuadLineLoop]->Render(SP);
+			Meshes::meshes[(int)MeshType::QuadRegion]->SetModel(modelStack.GetTopModel());
+			Meshes::meshes[(int)MeshType::QuadRegion]->Render(SP);
 		modelStack.PopModel();
 	}
 

@@ -117,14 +117,35 @@ void EntityManager::Render(ShaderProg& SP, const Cam& cam){
 				break;
 		}
 		modelStack.PopModel();
+
+		if(entity->collider != nullptr){
+			SP.Set4fv("customColour", glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
+
+			switch(entity->collider->GetType()){
+				case ColliderType::Box: {
+					BoxCollider* const boxCollider = static_cast<BoxCollider*>(entity->collider);
+
+					modelStack.PushModel({
+						modelStack.Translate(boxCollider->GetPos()),
+						modelStack.Scale(boxCollider->GetScale()),
+					});
+						Meshes::meshes[(int)MeshType::CubeBB]->SetModel(modelStack.GetTopModel());
+						Meshes::meshes[(int)MeshType::CubeBB]->Render(SP);
+					break;
+				}
+				case ColliderType::Sphere:
+					break;
+			}
+			modelStack.PopModel();
+		}
 	}
 
-	SP.Set1i("useCustomColour", 0);
 	SP.Set1i("useCustomDiffuseTexIndex", 0);
 
 	///Then render non-opaque entities
 	for(std::map<int, Entity*>::reverse_iterator iter = entitiesNotOpaque.rbegin(); iter != entitiesNotOpaque.rend(); ++iter){
 		Entity* const& entity = iter->second;
+		SP.Set1i("useCustomColour", 0);
 
 		switch(entity->type){
 			case Entity::EntityType::Coin:
@@ -147,9 +168,32 @@ void EntityManager::Render(ShaderProg& SP, const Cam& cam){
 				break;
 		}
 		modelStack.PopModel();
+
+		if(entity->collider != nullptr){
+			SP.Set1i("useCustomColour", 1);
+			SP.Set4fv("customColour", glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
+
+			switch(entity->collider->GetType()){
+				case ColliderType::Box: {
+					BoxCollider* const boxCollider = static_cast<BoxCollider*>(entity->collider);
+
+					modelStack.PushModel({
+						modelStack.Translate(boxCollider->GetPos()),
+						modelStack.Scale(boxCollider->GetScale()),
+					});
+						Meshes::meshes[(int)MeshType::CubeBB]->SetModel(modelStack.GetTopModel());
+						Meshes::meshes[(int)MeshType::CubeBB]->Render(SP);
+					break;
+				}
+				case ColliderType::Sphere:
+					break;
+			}
+			modelStack.PopModel();
+		}
 	}
 
 	SP.Set1i("noNormals", 0);
+	SP.Set1i("useCustomColour", 0);
 }
 
 void EntityManager::SetUpRegionsForStationary(){
