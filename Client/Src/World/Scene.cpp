@@ -178,9 +178,10 @@ void Scene::InitEntities(){
 
 	//* Create coins
 	for(short i = 0; i < 20; ++i){
-		const float scaleFactor = 70.f;
-		const float xPos = PseudorandMinMax(-terrainXScale * 0.5f + 2.0f, terrainXScale * 0.5f - 2.0f);
-		const float zPos = PseudorandMinMax(-terrainZScale * 0.5f + 2.0f, terrainZScale * 0.5f - 2.0f);
+		const float scaleFactor = 70.0f;
+		const float offsetFactor = 5.0f;
+		const float xPos = PseudorandMinMax(-terrainXScale * 0.5f + offsetFactor, terrainXScale * 0.5f - offsetFactor);
+		const float zPos = PseudorandMinMax(-terrainZScale * 0.5f + offsetFactor, terrainZScale * 0.5f - offsetFactor);
 		const glm::vec3 pos = glm::vec3(
 			xPos,
 			terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos / terrainXScale, zPos / terrainZScale, false) + scaleFactor,
@@ -243,8 +244,10 @@ void Scene::CreateTreesAndCubes(){
 	cubeMesh->ReserveDiffuseTexIndices(2000);
 
 	for(int i = 0; i < 2000; ++i){
-		const float xPos = PseudorandMinMax(-terrainXScale * 0.5f + 2.f, terrainXScale * 0.5f - 2.f);
-		const float zPos = PseudorandMinMax(-terrainZScale * 0.5f + 2.f, 2.f);
+		const float scaleFactor = 200.0f;
+		const float offsetFactor = 100.0f;
+		const float xPos = PseudorandMinMax(-terrainXScale * 0.5f + offsetFactor, terrainXScale * 0.5f - offsetFactor);
+		const float zPos = PseudorandMinMax(-terrainZScale * 0.5f + offsetFactor, offsetFactor);
 		const glm::vec3 pos = glm::vec3(
 			xPos,
 			terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos / terrainXScale, zPos / terrainZScale, false),
@@ -254,7 +257,7 @@ void Scene::CreateTreesAndCubes(){
 		modelStack.PushModel({
 			modelStack.Translate(pos),
 			modelStack.Rotate(glm::vec4(0.f, 1.f, 0.f, PseudorandMinMax(0.0f, 360.0f))),
-			modelStack.Scale(glm::vec3(200.0f))
+			modelStack.Scale(glm::vec3(scaleFactor))
 		});
 			const glm::mat4& modelMat = modelStack.GetTopModel();
 			const glm::vec3& color = glm::vec3(PseudorandMinMax(0.1f, 1.0f), 0.0f, 0.0f);
@@ -302,24 +305,27 @@ void Scene::CreateDecorations(){
 	rock->ReserveDiffuseTexIndicesForAll(2000);
 
 	for(int i = 0; i < 2000; ++i){
-		const float xPos0 = PseudorandMinMax(-terrainXScale * 0.5f + 2.f, terrainXScale * 0.5f - 2.f);
-		const float zPos0 = PseudorandMinMax(2.f, terrainZScale * 0.5f - 2.f);
+		const float offsetFactor0 = 50.0f;
+		const float xPos0 = PseudorandMinMax(-terrainXScale * 0.5f + offsetFactor0, terrainXScale * 0.5f - offsetFactor0);
+		const float zPos0 = PseudorandMinMax(offsetFactor0, terrainZScale * 0.5f - offsetFactor0);
 		const glm::vec3 pos0 = glm::vec3(
 			xPos0,
 			terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos0 / terrainXScale, zPos0 / terrainZScale, false),
 			zPos0
 		);
 
-		const float xPos1 = PseudorandMinMax(-terrainXScale * 0.5f + 2.f, terrainXScale * 0.5f - 2.f);
-		const float zPos1 = PseudorandMinMax(2.f, terrainZScale * 0.5f - 2.f);
+		const float offsetFactor1 = 55.0f;
+		const float xPos1 = PseudorandMinMax(-terrainXScale * 0.5f + offsetFactor1, terrainXScale * 0.5f - offsetFactor1);
+		const float zPos1 = PseudorandMinMax(offsetFactor1, terrainZScale * 0.5f - offsetFactor1);
 		const glm::vec3 pos1 = glm::vec3(
 			xPos1,
 			terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos1 / terrainXScale, zPos1 / terrainZScale, false),
 			zPos1
 		);
 
-		const float xPos2 = PseudorandMinMax(-terrainXScale * 0.5f + 2.f, terrainXScale * 0.5f - 2.f);
-		const float zPos2 = PseudorandMinMax(2.f, terrainZScale * 0.5f - 2.f);
+		const float offsetFactor2 = 80.0f;
+		const float xPos2 = PseudorandMinMax(-terrainXScale * 0.5f + offsetFactor2, terrainXScale * 0.5f - offsetFactor2);
+		const float zPos2 = PseudorandMinMax(offsetFactor2, terrainZScale * 0.5f - offsetFactor2);
 		const glm::vec3 pos2 = glm::vec3(
 			xPos2,
 			terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos2 / terrainXScale, zPos2 / terrainZScale, false),
@@ -436,7 +442,7 @@ void Scene::MainMenuUpdate(GLFWwindow* const& win, const POINT& mousePos, float&
 	cam.SetTarget(glm::vec3(0.f));
 	cam.SetUp(glm::vec3(0.f, 1.f, 0.f));
 	view = cam.LookAt();
-	projection = glm::ortho(-float(winWidth) / 2.f, float(winWidth) / 2.f, -float(winHeight) / 2.f, float(winHeight) / 2.f, .1f, 9999.f);
+	projection = glm::ortho(-float(winWidth) / 2.f, float(winWidth) / 2.f, -float(winHeight) / 2.f, float(winHeight) / 2.f, .1f, 99999.0f);
 
 	if(mousePos.x >= (float)winWidth * 0.47f
 		&& mousePos.x <= (float)winWidth * 0.53f
@@ -671,7 +677,7 @@ void Scene::GameRender(){
 	const glm::vec3 OGUp = cam.GetUp();
 
 	view = cam.LookAt();
-	projection = glm::perspective(glm::radians(angularFOV), cam.GetAspectRatio(), .1f, 9999.f);
+	projection = glm::perspective(glm::radians(angularFOV), cam.GetAspectRatio(), .1f, 99999.0f);
 	forwardSP.SetMat4fv("PV", &(projection * glm::mat4(glm::mat3(view)))[0][0]);
 
 	Mesh* const cubeMesh = Meshes::meshes[(int)MeshType::Cube];
@@ -767,7 +773,7 @@ void Scene::GameRender(){
 	cam.SetTarget(glm::vec3(0.f));
 	cam.SetUp(glm::vec3(0.f, 1.f, 0.f));
 	view = cam.LookAt();
-	projection = glm::ortho(-float(winWidth) / 2.f, float(winWidth) / 2.f, -float(winHeight) / 2.f, float(winHeight) / 2.f, .1f, 9999.f);
+	projection = glm::ortho(-float(winWidth) / 2.f, float(winWidth) / 2.f, -float(winHeight) / 2.f, float(winHeight) / 2.f, .1f, 99999.0f);
 	forwardSP.SetMat4fv("PV", &(projection * view)[0][0]);
 
 	if(!(RMB && inv[currSlot] == ItemType::Sniper)){
@@ -921,7 +927,7 @@ void Scene::GameRender(){
 	cam.SetTarget(OGTarget);
 	cam.SetUp(OGUp);
 	view = cam.LookAt();
-	projection = glm::perspective(glm::radians(angularFOV), cam.GetAspectRatio(), .1f, 9999.f);
+	projection = glm::perspective(glm::radians(angularFOV), cam.GetAspectRatio(), .1f, 99999.0f);
 	forwardSP.SetMat4fv("PV", &(projection * view)[0][0]);
 
 	///Render bullet info
