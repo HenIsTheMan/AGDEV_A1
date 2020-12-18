@@ -159,7 +159,7 @@ void Scene::InitEntities(){
 		entityManager->CreatePlayer({
 			glm::vec3(
 				xPos,
-				terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos / terrainXScale, zPos / terrainZScale) + scaleFactor,
+				terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos / terrainXScale, zPos / terrainZScale),
 				zPos
 			),
 			glm::vec3(scaleFactor),
@@ -174,7 +174,11 @@ void Scene::InitEntities(){
 		const float scaleFactor = 15.f;
 		const float xPos = PseudorandMinMax(-terrainXScale * 0.5f + 5.f, terrainXScale * 0.5f - 5.f);
 		const float zPos = PseudorandMinMax(-terrainZScale * 0.5f + 5.f, terrainZScale * 0.5f - 5.f);
-		const glm::vec3 pos = glm::vec3(xPos, terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos / terrainXScale, zPos / terrainZScale) + scaleFactor, zPos);
+		const glm::vec3 pos = glm::vec3(
+			xPos,
+			terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos / terrainXScale, zPos / terrainZScale),
+			zPos
+		);
 		entityManager->CreateCoin({
 			pos,
 			glm::vec3(scaleFactor),
