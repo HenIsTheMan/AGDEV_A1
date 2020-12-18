@@ -334,7 +334,8 @@ void Scene::CreateDecorations(){
 
 		modelStack.PushModel({
 			modelStack.Translate(pos2),
-			modelStack.Scale(glm::vec3(70.0f))
+			modelStack.Rotate(glm::vec4(0.f, 1.f, 0.f, PseudorandMinMax(0.0f, 360.0f))),
+			modelStack.Scale(glm::vec3((float)PseudorandMinMax(60.0f, 90.0f)))
 		});
 			rock->AddModelMatForAll(modelStack.GetTopModel());
 			rock->AddColorForAll(normalColor);
