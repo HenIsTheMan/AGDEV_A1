@@ -605,6 +605,7 @@ void Scene::GameUpdate(GLFWwindow* const& win){
 		cam.UpdateDetached(GLFW_KEY_E, GLFW_KEY_Q, GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_W, GLFW_KEY_S);
 	} else{
 		cam.UpdateAttached(myPlayer->GetPos() + glm::vec3(0.0f, myPlayer->GetScale().y * 0.45f, 0.0f));
+		const_cast<Entity*>(myPlayer)->SetFacingDir(cam.CalcFront());
 	}
 }
 

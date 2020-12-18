@@ -15,8 +15,12 @@ class Entity final{
 	friend void UpdatePlayerHoriz(Entity* const player);
 	friend void UpdatePlayerVert(Entity* const player);
 public:
+	///Getters
 	const glm::vec3& GetPos() const;
 	const glm::vec3& GetScale() const;
+
+	///Setter
+	void SetFacingDir(const glm::vec3& facingDir);
 private:
 	enum class EntityType{
 		Bullet = 0,

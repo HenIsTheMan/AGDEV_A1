@@ -8,6 +8,10 @@ const glm::vec3& Entity::GetScale() const{
 	return scale;
 }
 
+void Entity::SetFacingDir(const glm::vec3& facingDir){
+	this->facingDir = facingDir;
+}
+
 Entity::Entity():
 	type(EntityType::Amt),
 	active(false),
