@@ -17,12 +17,29 @@ Collider* ColliderManager::ActivateCollider(const ColliderType type){
 	const size_t size = colliders.size();
 
 	for(size_t i = 0; i < size; ++i){
-		if(
+		Collider* const collider = colliders[i];
+		if(!collider->GetActive()){
+			collider->SetActive(true);
+			return collider;
+		}
 	}
+
+	if(type == ColliderType::Box){
+		colliders.emplace_back(new BoxCollider());
+	} else{
+		colliders.emplace_back(new SphereCollider());
+	}
+	(void)puts("A collider was added to the pool!\n");
+
+	return colliders.back();
 }
 
-void ColliderManager::DeactivateCollider(const Collider* const collider){
+void ColliderManager::DeactivateCollider(Collider* const collider){
+	collider->SetActive(false);
 }
 
-ColliderManager::ColliderManager(){
+ColliderManager::ColliderManager():
+	boxColliders(),
+	sphereColliders()
+{
 }

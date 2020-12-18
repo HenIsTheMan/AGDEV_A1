@@ -13,7 +13,7 @@ public:
 	void Init(const size_t boxCollidersSize, const size_t sphereCollidersSize);
 
 	Collider* ActivateCollider(const ColliderType type);
-	void DeactivateCollider(const Collider* const collider);
+	void DeactivateCollider(Collider* const collider);
 private:
 	ColliderManager();
 
