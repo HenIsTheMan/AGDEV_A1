@@ -1,5 +1,7 @@
 #include "EntityManager.h"
 
+extern float dt;
+
 EntityManager::~EntityManager(){
 	for(Entity*& entity: entityPool){
 		if(entity){
@@ -43,8 +45,10 @@ void EntityManager::Update(){
 	for(Entity* const movableEntity: movableEntities){
 		switch(movableEntity->type){
 			case Entity::EntityType::Player:
+
 				break;
 		}
+		movableEntity->pos += movableEntity->vel * dt;
 	}
 
 	//Update dragon??
@@ -63,10 +67,6 @@ void EntityManager::Render(ShaderProg& SP, const Cam& cam){
 	std::map<int, Entity*> entitiesOpaque;
 	std::map<int, Entity*> entitiesNotOpaque;
 	regionControl->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
-
-	//std::cout << "entitiesNotOpaque size: " << entitiesNotOpaque.size() << '\n'; //No. varies due to optimisation??
-	//std::cout << rootRegion->movableNodes.size() << '\n';
-	//std::cout << "entitiesOpaque size: " << entitiesOpaque.size() << '\n';
 
 	///Render opaque entities 1st
 	for(std::map<int, Entity*>::reverse_iterator iter = entitiesOpaque.rbegin(); iter != entitiesOpaque.rend(); ++iter){
