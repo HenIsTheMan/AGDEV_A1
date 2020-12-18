@@ -4,12 +4,13 @@
 
 #include "../Shared/RotateVecIn2D.hpp"
 
-inline static void UpdatePlayerHorizVel(Entity* const player){
+inline static void UpdatePlayerHoriz(Entity* const player){
 	int leftRight = (int)Key(GLFW_KEY_A) - (int)Key(GLFW_KEY_D);
 	int frontBack = (int)Key(GLFW_KEY_W) - (int)Key(GLFW_KEY_S);
 
 	if(leftRight == 0 && frontBack == 0){
-		player->vel = glm::vec3();
+		player->vel.x = 0.0f;
+		player->vel.z = 0.0f;
 		return;
 	}
 
@@ -21,8 +22,17 @@ inline static void UpdatePlayerHorizVel(Entity* const player){
 		change = normalize(change);
 	}
 
-	player->vel = change * player->moveSpd;
+	player->vel.x = change.x * player->moveSpd;
+	player->vel.z = change.z * player->moveSpd;
 }
 
-inline static void UpdatePlayerVertVel(Entity* const player){
+inline static void UpdatePlayerVert(Entity* const player){
+	static bool isJumping = false;
+
+	if(!isJumping && Key(VK_SPACE)){
+		player->vel.y = 300.0f;
+		isJumping = true;
+	}
+
+	player->force.y = -1500.f;
 }

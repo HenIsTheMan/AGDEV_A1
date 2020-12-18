@@ -47,10 +47,12 @@ void EntityManager::Update(){
 	for(Entity* const movableEntity: movableEntities){
 		switch(movableEntity->type){
 			case Entity::EntityType::Player:
-				UpdatePlayerHorizVel(movableEntity);
-				UpdatePlayerVertVel(movableEntity);
+				UpdatePlayerHoriz(movableEntity);
+				UpdatePlayerVert(movableEntity);
 				break;
 		}
+
+		movableEntity->vel += movableEntity->force / movableEntity->mass * dt;
 		movableEntity->pos += movableEntity->vel * dt;
 	}
 
@@ -165,7 +167,7 @@ void EntityManager::CreatePlayer(const EntityCreationAttribs& attribs){
 	entity->moveSpd = 0.0f;
 	entity->facingDir = glm::vec3(0.0f, 0.0f, -1.0f);
 	entity->vel = entity->moveSpd * entity->facingDir;
-	entity->mass = 5.f;
+	entity->mass = 1.0f;
 	entity->force = glm::vec3(0.f);
 
 	entity->collider = colliderManager->ActivateCollider(ColliderType::Box);

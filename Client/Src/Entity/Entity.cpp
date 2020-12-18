@@ -12,7 +12,7 @@ Entity::Entity():
 
 	pos(glm::vec3(0.f)),
 	vel(glm::vec3(0.0f)),
-	mass(0.f),
+	mass(1.f),
 	force(glm::vec3(0.f)),
 
 	collider(nullptr),

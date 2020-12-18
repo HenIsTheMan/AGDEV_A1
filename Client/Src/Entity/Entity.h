@@ -12,7 +12,8 @@ class Entity final{
 	friend class Scar;
 	friend class Sniper;
 	friend class Gun;
-	friend void UpdatePlayerHorizVel(Entity* const player);
+	friend void UpdatePlayerHoriz(Entity* const player);
+	friend void UpdatePlayerVert(Entity* const player);
 private:
 	enum class EntityType{
 		Bullet = 0,
