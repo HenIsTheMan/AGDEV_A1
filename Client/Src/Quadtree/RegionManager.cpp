@@ -32,7 +32,7 @@ void RegionManager::Update(){
 	}
 
 	rootRegion->ClearMovableAndDeactivateChildren();
-	//rootRegion->Partition(true);
+	rootRegion->Partition(true);
 }
 
 void RegionManager::Render(ShaderProg& SP, const Cam& cam){
