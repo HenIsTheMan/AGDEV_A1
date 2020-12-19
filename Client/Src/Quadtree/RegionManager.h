@@ -4,10 +4,10 @@
 
 #include "Region.h"
 
-class RegionControl final: public Singleton<RegionControl>{
-	friend Singleton<RegionControl>;
+class RegionManager final: public Singleton<RegionManager>{
+	friend Singleton<RegionManager>;
 public:
-	~RegionControl();
+	~RegionManager();
 
 	void Update();
 	void Render(ShaderProg& SP, const Cam& cam);
@@ -24,7 +24,7 @@ public:
 
 	void InitRegionPool(const size_t& size);
 private:
-	RegionControl();
+	RegionManager();
 
 	bool shldRenderQuadtree;
 	float elapsedTime;

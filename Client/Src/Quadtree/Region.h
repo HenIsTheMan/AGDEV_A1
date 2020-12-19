@@ -10,7 +10,7 @@
 #include "../World/ModelStack.h"
 
 class Region final{
-	friend class RegionControl;
+	friend class RegionManager;
 private:
 	Region();
 	~Region();

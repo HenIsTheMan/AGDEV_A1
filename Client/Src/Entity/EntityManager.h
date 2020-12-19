@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../Entity/Entity.h"
-#include "../Quadtree/RegionControl.h"
+#include "../Quadtree/RegionManager.h"
 #include "../Collider/ColliderManager.h"
 
 class EntityManager final: public Singleton<EntityManager>{
@@ -49,7 +49,7 @@ private:
 
 	std::vector<Entity*> entityPool;
 	Node* rootNode;
-	RegionControl* regionControl;
+	RegionManager* RegionManager;
 
 	ColliderManager* colliderManager;
 	ModelStack modelStack;

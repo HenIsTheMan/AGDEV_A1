@@ -7,7 +7,7 @@
 class Entity final{
 	friend class EntityManager;
 	friend class Region;
-	friend class RegionControl;
+	friend class RegionManager;
 	friend class Shotgun;
 	friend class Scar;
 	friend class Sniper;

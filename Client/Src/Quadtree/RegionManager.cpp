@@ -1,4 +1,4 @@
-#include "RegionControl.h"
+#include "RegionManager.h"
 
 extern float dt;
 
@@ -6,7 +6,7 @@ extern float terrainXScale;
 extern float terrainYScale;
 extern float terrainZScale;
 
-RegionControl::~RegionControl(){
+RegionManager::~RegionManager(){
 	if(rootRegion){
 		rootRegion->DestroyRegionPool();
 		delete rootRegion;
@@ -14,7 +14,7 @@ RegionControl::~RegionControl(){
 	}
 }
 
-void RegionControl::Update(){
+void RegionManager::Update(){
 	elapsedTime += dt;
 
 	static float BT = 0.0f;
@@ -27,13 +27,13 @@ void RegionControl::Update(){
 	rootRegion->Partition(true);
 }
 
-void RegionControl::Render(ShaderProg& SP, const Cam& cam){
+void RegionManager::Render(ShaderProg& SP, const Cam& cam){
 	if(shldRenderQuadtree){
 		RenderQuadtree(SP, cam);
 	}
 }
 
-void RegionControl::RenderQuadtree(ShaderProg& SP, const Cam& cam){
+void RegionManager::RenderQuadtree(ShaderProg& SP, const Cam& cam){
 	std::vector<Region*> leaves;
 	rootRegion->GetLeaves(SP, leaves);
 	const size_t size = leaves.size();
@@ -63,31 +63,31 @@ void RegionControl::RenderQuadtree(ShaderProg& SP, const Cam& cam){
 	SP.Set1i("noNormals", 0);
 }
 
-void RegionControl::GetEntitiesToUpdate(std::vector<Entity*>& movableEntities, std::vector<Entity*>& stationaryEntities){
+void RegionManager::GetEntitiesToUpdate(std::vector<Entity*>& movableEntities, std::vector<Entity*>& stationaryEntities){
 	rootRegion->GetEntitiesToUpdate(movableEntities, stationaryEntities);
 }
 
-void RegionControl::GetEntitiesToRender(std::map<int, Entity*>& entitiesOpaque, std::map<int, Entity*>& entitiesNotOpaque, const Cam& cam){
+void RegionManager::GetEntitiesToRender(std::map<int, Entity*>& entitiesOpaque, std::map<int, Entity*>& entitiesNotOpaque, const Cam& cam){
 	rootRegion->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
 }
 
-const Region* RegionControl::FindRegion(Node* const& node, const bool movable){
+const Region* RegionManager::FindRegion(Node* const& node, const bool movable){
 	return rootRegion->FindRegion(node, movable);
 }
 
-void RegionControl::AddNode(Node* const& node, const bool movable){
+void RegionManager::AddNode(Node* const& node, const bool movable){
 	rootRegion->AddNode(node, movable);
 }
 
-void RegionControl::RemoveNode(Node* const& node, const bool movable){
+void RegionManager::RemoveNode(Node* const& node, const bool movable){
 	rootRegion->RemoveNode(node, movable);
 }
 
-void RegionControl::InitRegionPool(const size_t& size){
+void RegionManager::InitRegionPool(const size_t& size){
 	rootRegion->InitRegionPool(size);
 }
 
-RegionControl::RegionControl():
+RegionManager::RegionManager():
 	shldRenderQuadtree(false),
 	elapsedTime(0.0f),
 	modelStack(),
