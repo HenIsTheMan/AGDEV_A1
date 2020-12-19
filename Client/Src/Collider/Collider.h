@@ -11,13 +11,11 @@ class Collider{ //Abstract class
 public:
 	virtual ~Collider() = default;
 
-	///Getters
-	bool GetActive() const;
+	///Getter
 	ColliderType GetType() const;
 protected:
 	Collider();
 	Collider(const ColliderType type);
 
-	bool active;
 	ColliderType type;
 };
