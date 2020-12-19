@@ -24,7 +24,7 @@ void ColliderManager::Init(const size_t boxCollidersSize, const size_t sphereCol
 
 	sphereColliders.reserve(sphereCollidersSize);
 	for(size_t i = 0; i < sphereCollidersSize; ++i){
-		boxColliders.emplace_back(new SphereCollider());
+		sphereColliders.emplace_back(new SphereCollider());
 	}
 }
 
@@ -47,7 +47,9 @@ Collider* ColliderManager::ActivateCollider(const ColliderType type){
 	}
 	(void)puts("A collider was added to the pool!\n");
 
-	return colliders.back();
+	Collider* const collider = colliders.back();
+	collider->active = true;
+	return collider;
 }
 
 void ColliderManager::DeactivateCollider(Collider* const collider){
