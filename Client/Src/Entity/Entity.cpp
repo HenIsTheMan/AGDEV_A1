@@ -14,7 +14,6 @@ void Entity::SetFacingDir(const glm::vec3& facingDir){
 
 Entity::Entity():
 	type(EntityType::Amt),
-	active(false),
 	movable(false),
 	life(0.f),
 	maxLife(0.f),

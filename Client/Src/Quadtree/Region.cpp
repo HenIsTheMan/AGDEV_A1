@@ -75,7 +75,7 @@ void Region::GetEntitiesToRender(std::map<int, Entity*>& entitiesOpaque, std::ma
 
 			Entity* const entity = stationaryNodes[i]->RetrieveEntity();
 
-			if(entity && entity->active){
+			if(entity){
 				glm::vec3 displacementVec = entity->pos - camPos;
 				if(glm::dot(displacementVec, camFront) > 0.f){
 
@@ -101,7 +101,7 @@ void Region::GetEntitiesToRender(std::map<int, Entity*>& entitiesOpaque, std::ma
 
 			Entity* const entity = movableNodes[i]->RetrieveEntity();
 
-			if(entity && entity->active){
+			if(entity){
 				glm::vec3 displacementVec = entity->pos - camPos;
 				if(glm::dot(displacementVec, camFront) > 0.f){
 
@@ -273,7 +273,7 @@ void Region::Partition(const bool movable){
 	for(Node* const node: nodes){
 		const Entity* const entity = node->GetEntity();
 
-		if(entity && entity->active
+		if(entity
 			&& entity->pos.x + entity->scale.x * 0.5f <= origin[0] + size[0] * 0.5f && entity->pos.x - entity->scale.x * 0.5f >= origin[0] - size[0] * 0.5f
 			&& entity->pos.z + entity->scale.z * 0.5f <= origin[1] + size[1] * 0.5f && entity->pos.z - entity->scale.z * 0.5f >= origin[1] - size[1] * 0.5f
 		){

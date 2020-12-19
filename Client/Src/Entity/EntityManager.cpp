@@ -65,44 +65,46 @@ void EntityManager::Update(){
 	regionManager->GetEntitiesToUpdate(movableEntities, stationaryEntities);
 
 	for(Entity* const movableEntity: movableEntities){
-		switch(movableEntity->type){
-			case Entity::EntityType::Player: {
-				UpdatePlayerHoriz(movableEntity);
-				UpdatePlayerVert(movableEntity);
+		if(movableEntity){
+			switch(movableEntity->type){
+				case Entity::EntityType::Player: {
+					UpdatePlayerHoriz(movableEntity);
+					UpdatePlayerVert(movableEntity);
 
-				const glm::vec3 prevPos = movableEntity->pos;
-				movableEntity->vel += movableEntity->force / movableEntity->mass * dt;
-				movableEntity->pos += movableEntity->vel * dt;
+					const glm::vec3 prevPos = movableEntity->pos;
+					movableEntity->vel += movableEntity->force / movableEntity->mass * dt;
+					movableEntity->pos += movableEntity->vel * dt;
 
-				if(movableEntity->pos.y < movableEntity->yMin){
-					IsAirborneWrapper::isAirborne = false;
+					if(movableEntity->pos.y < movableEntity->yMin){
+						IsAirborneWrapper::isAirborne = false;
+					}
+
+					movableEntity->yMin = terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(
+						movableEntity->pos.x / terrainXScale,
+						movableEntity->pos.z / terrainZScale,
+						false
+					) + movableEntity->scale.y * 0.5f;
+
+					movableEntity->pos.x = std::min(movableEntity->xMax, std::max(movableEntity->xMin, movableEntity->pos.x));
+					movableEntity->pos.y = std::min(movableEntity->yMax, std::max(movableEntity->yMin, movableEntity->pos.y));
+					movableEntity->pos.z = std::min(movableEntity->zMax, std::max(movableEntity->zMin, movableEntity->pos.z));
+
+					if(movableEntity->collider != nullptr){
+						static_cast<BoxCollider*>(movableEntity->collider)->SetPos(movableEntity->pos);
+					}
+
+					break;
 				}
+				case Entity::EntityType::ThinObj:
+					//movableEntity->pos.x += EaseInOutCubic((sinf(elapsedTime * 2.0f) + 1.0f) * 0.5f);
+					movableEntity->pos.x += sinf(elapsedTime * 2.0f);
 
-				movableEntity->yMin = terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(
-					movableEntity->pos.x / terrainXScale,
-					movableEntity->pos.z / terrainZScale,
-					false
-				) + movableEntity->scale.y * 0.5f;
+					if(movableEntity->collider != nullptr){
+						static_cast<BoxCollider*>(movableEntity->collider)->SetPos(movableEntity->pos);
+					}
 
-				movableEntity->pos.x = std::min(movableEntity->xMax, std::max(movableEntity->xMin, movableEntity->pos.x));
-				movableEntity->pos.y = std::min(movableEntity->yMax, std::max(movableEntity->yMin, movableEntity->pos.y));
-				movableEntity->pos.z = std::min(movableEntity->zMax, std::max(movableEntity->zMin, movableEntity->pos.z));
-
-				if(movableEntity->collider != nullptr){
-					static_cast<BoxCollider*>(movableEntity->collider)->SetPos(movableEntity->pos);
-				}
-
-				break;
+					break;
 			}
-			case Entity::EntityType::ThinObj:
-				//movableEntity->pos.x += EaseInOutCubic((sinf(elapsedTime * 2.0f) + 1.0f) * 0.5f);
-				movableEntity->pos.x += sinf(elapsedTime * 2.0f);
-
-				if(movableEntity->collider != nullptr){
-					static_cast<BoxCollider*>(movableEntity->collider)->SetPos(movableEntity->pos);
-				}
-
-				break;
 		}
 	}
 

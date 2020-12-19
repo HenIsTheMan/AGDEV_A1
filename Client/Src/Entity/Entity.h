@@ -43,7 +43,6 @@ private:
 	Entity();
 
 	EntityType type;
-	bool active;
 	bool movable;
 	float life;
 	float maxLife;
