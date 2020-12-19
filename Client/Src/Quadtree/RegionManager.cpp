@@ -51,7 +51,7 @@ void RegionManager::RenderQuadtree(ShaderProg& SP, const Cam& cam){
 		SP.Set4fv("customColour", leaf->color);
 
 		modelStack.PushModel({
-			modelStack.Translate(glm::vec3(leaf->origin[0], terrainYScale, leaf->origin[1])),
+			modelStack.Translate(glm::vec3(leaf->origin[0], terrainYScale * 4.0f, leaf->origin[1])),
 			modelStack.Rotate(glm::vec4(1.0f, 0.0f, 0.0f, 90.0f)),
 			modelStack.Scale(glm::vec3(leaf->size[0] * 0.5f, leaf->size[1] * 0.5f, 1.0f))
 		});

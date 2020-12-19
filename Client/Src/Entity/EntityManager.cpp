@@ -35,7 +35,7 @@ EntityManager::~EntityManager(){
 }
 
 void EntityManager::Init(){
-	const size_t entityPoolSize = 9999;
+	const size_t entityPoolSize = 40000;
 
 	entityFactory->Init(rootNode);
 
