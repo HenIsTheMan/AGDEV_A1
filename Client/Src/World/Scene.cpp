@@ -101,6 +101,7 @@ Scene::Scene():
 	dLightFromTop(nullptr),
 	dLightFromBottom(nullptr),
 	entityManager(EntityManager::GetObjPtr()),
+	regionManager(RegionManager::GetObjPtr()),
 	myPlayer(nullptr)
 {
 }
@@ -147,13 +148,18 @@ Scene::~Scene(){
 		soundEngine->drop();
 	}
 
-	entityManager->Destroy();
+	if(entityManager != nullptr){
+		entityManager->Destroy();
+		entityManager = nullptr;
+	}
+	regionManager = nullptr; //Deleted elsewhere
 }
 
 void Scene::InitEntities(){
 	entityManager->Init();
-
 	CreateEntities();
+	regionManager->SetUpRegionsForStationary();
+
 	CreateTreesAndCubes();
 	CreateDecorations();
 

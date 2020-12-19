@@ -53,6 +53,19 @@ Region* RegionManager::RetrieveRootRegion(){
 	return rootRegion;
 }
 
+void RegionManager::SetUpRegionsForStationary(){
+	rootRegion->Partition(false);
+}
+
+RegionManager::RegionManager():
+	shldRenderQuadtree(false),
+	elapsedTime(0.0f),
+	modelStack(),
+	rootRegion(nullptr),
+	regionPool(ObjPool<Region>::GetObjPtr())
+{
+}
+
 void RegionManager::RenderQuadtree(ShaderProg& SP, const Cam& cam){
 	std::vector<Region*> leaves;
 	rootRegion->GetLeaves(SP, leaves);
@@ -74,20 +87,11 @@ void RegionManager::RenderQuadtree(ShaderProg& SP, const Cam& cam){
 			modelStack.Translate(glm::vec3(leaf->origin[0], terrainYScale * 4.0f, leaf->origin[1])),
 			modelStack.Rotate(glm::vec4(1.0f, 0.0f, 0.0f, 90.0f)),
 			modelStack.Scale(glm::vec3(leaf->size[0] * 0.5f, leaf->size[1] * 0.5f, 1.0f))
-		});
-			Meshes::meshes[(int)MeshType::QuadRegion]->SetModel(modelStack.GetTopModel());
-			Meshes::meshes[(int)MeshType::QuadRegion]->Render(SP);
+			});
+		Meshes::meshes[(int)MeshType::QuadRegion]->SetModel(modelStack.GetTopModel());
+		Meshes::meshes[(int)MeshType::QuadRegion]->Render(SP);
 		modelStack.PopModel();
 	}
 
 	SP.Set1i("noNormals", 0);
-}
-
-RegionManager::RegionManager():
-	shldRenderQuadtree(false),
-	elapsedTime(0.0f),
-	modelStack(),
-	rootRegion(nullptr),
-	regionPool(ObjPool<Region>::GetObjPtr())
-{
 }

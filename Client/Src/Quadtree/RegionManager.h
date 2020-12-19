@@ -17,6 +17,8 @@ public:
 	void DeactivateRegion(Region* const region); //Not used
 
 	Region* RetrieveRootRegion();
+
+	void SetUpRegionsForStationary();
 private:
 	RegionManager();
 

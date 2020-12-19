@@ -231,7 +231,8 @@ void Region::Partition(const bool movable){
 		return;
 	}
 
-	if(!(topLeft == nullptr && topRight == nullptr && bottomLeft == nullptr && bottomRight == nullptr)){
+	if(!(topLeft == nullptr && topRight == nullptr && bottomLeft == nullptr && bottomRight == nullptr)
+		&& !(topLeft != nullptr && topRight != nullptr && bottomLeft != nullptr && bottomRight != nullptr)){
 		return assert(false && "QSP is wrong!");
 	}
 

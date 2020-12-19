@@ -17,6 +17,8 @@
 
 #include "../Shared/RotateVecIn2D.hpp"
 
+#include "../Quadtree/RegionManager.h"
+
 #define BIT(x) 1 << x
 
 class Scene final{
@@ -103,6 +105,8 @@ private:
 	glm::mat4 projection;
 
 	EntityManager* entityManager;
+
+	RegionManager* regionManager;
 
 	bool isCamDetached;
 	float elapsedTime;
