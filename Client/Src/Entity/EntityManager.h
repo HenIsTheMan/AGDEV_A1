@@ -36,8 +36,6 @@ public:
 	void CreateTree(const EntityCreationAttribs& attribs);
 
 	void DeactivateEntity(Entity* const& entity, const bool movable);
-
-	void SetUpRegionsForStationary();
 private:
 	EntityManager();
 

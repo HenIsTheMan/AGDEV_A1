@@ -25,18 +25,16 @@ EntityManager::~EntityManager(){
 }
 
 void EntityManager::Init(){
-	entityPool.resize(9999);
+	const size_t entityPoolSize = 9999;
 
-	const size_t& mySize = entityPool.size();
-	for(size_t i = 0; i < mySize; ++i){
-		entityPool[i] = new Entity();
+	entityPool.reserve(entityPoolSize);
+	for(size_t i = 0; i < entityPoolSize; ++i){
+		entityPool.emplace_back(new Entity());
 	}
 
-	colliderManager->Init(9999, 9999);
+	colliderManager->Init(entityPoolSize, entityPoolSize);
 
-	regionControl->InitRegionPool(500);
-	regionControl->ReserveStationaryNodes(999);
-	regionControl->ReserveMovableNodes(500);
+	regionControl->InitRegionPool(entityPoolSize);
 }
 
 void EntityManager::Update(){
@@ -223,10 +221,6 @@ void EntityManager::Render(ShaderProg& SP, const Cam& cam){
 
 	SP.Set1i("noNormals", 0);
 	SP.Set1i("useCustomColour", 0);
-}
-
-void EntityManager::SetUpRegionsForStationary(){
-	regionControl->SetUpRegionsForStationary();
 }
 
 void EntityManager::ActivateEntityProcedure(Entity* const entity){

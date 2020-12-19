@@ -22,12 +22,7 @@ public:
 	void AddNode(Node* const& node, const bool movable);
 	void RemoveNode(Node* const& node, const bool movable);
 
-	void ReserveStationaryNodes(const size_t& size);
-	void ReserveMovableNodes(const size_t& size);
-
 	void InitRegionPool(const size_t& size);
-
-	void SetUpRegionsForStationary();
 private:
 	RegionControl();
 

@@ -83,24 +83,8 @@ void RegionControl::RemoveNode(Node* const& node, const bool movable){
 	rootRegion->RemoveNode(node, movable);
 }
 
-void RegionControl::ReserveStationaryNodes(const size_t& size){
-	for(Region* const region : Region::regionPool){
-		region->stationaryNodes.reserve(size);
-	}
-}
-
-void RegionControl::ReserveMovableNodes(const size_t& size){
-	for(Region* const region: Region::regionPool){
-		region->movableNodes.reserve(size);
-	}
-}
-
 void RegionControl::InitRegionPool(const size_t& size){
 	rootRegion->InitRegionPool(size);
-}
-
-void RegionControl::SetUpRegionsForStationary(){
-	rootRegion->Partition(false);
 }
 
 RegionControl::RegionControl():
