@@ -20,7 +20,7 @@ EntityManager::~EntityManager(){
 		rootNode = nullptr;
 	}
 
-	RegionManager->Destroy();
+	regionManager->Destroy();
 	colliderManager->Destroy();
 }
 
@@ -34,7 +34,7 @@ void EntityManager::Init(){
 
 	colliderManager->Init(entityPoolSize, entityPoolSize);
 
-	RegionManager->InitRegionPool(entityPoolSize);
+	regionManager->InitRegionPool(entityPoolSize);
 }
 
 void EntityManager::Update(){
@@ -48,11 +48,11 @@ void EntityManager::Update(){
 		isPressedC = false;
 	}
 
-	RegionManager->Update();
+	regionManager->Update();
 
 	std::vector<Entity*> movableEntities;
 	std::vector<Entity*> stationaryEntities;
-	RegionManager->GetEntitiesToUpdate(movableEntities, stationaryEntities);
+	regionManager->GetEntitiesToUpdate(movableEntities, stationaryEntities);
 
 	for(Entity* const movableEntity: movableEntities){
 		switch(movableEntity->type){
@@ -102,7 +102,7 @@ void EntityManager::Update(){
 }
 
 void EntityManager::Render(ShaderProg& SP, const Cam& cam){
-	RegionManager->Render(SP, cam);
+	regionManager->Render(SP, cam);
 
 	SP.Set1i("noNormals", 1);
 	SP.Set1i("useCustomColour", 1);
@@ -111,7 +111,7 @@ void EntityManager::Render(ShaderProg& SP, const Cam& cam){
 	///Use std::map so render order is correct
 	std::map<int, Entity*> entitiesOpaque;
 	std::map<int, Entity*> entitiesNotOpaque;
-	RegionManager->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
+	regionManager->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
 
 	///Render opaque entities 1st
 	for(std::map<int, Entity*>::reverse_iterator iter = entitiesOpaque.rbegin(); iter != entitiesOpaque.rend(); ++iter){
@@ -227,11 +227,11 @@ void EntityManager::ActivateEntityProcedure(Entity* const entity){
 	Node* const node = new Node();
 	node->SetEntity(entity);
 	rootNode->AddChild(node);
-	RegionManager->AddNode(node, entity->movable);
+	regionManager->AddNode(node, entity->movable);
 }
 
 void EntityManager::DeactivateEntityProcedure(Entity* const entity){
-	//RegionManager->RemoveNode(rootNode->DetachChild(entity), entity->movable);
+	//regionManager->RemoveNode(rootNode->DetachChild(entity), entity->movable);
 }
 
 const Entity* EntityManager::CreatePlayer(const EntityCreationAttribs& attribs){
@@ -447,7 +447,7 @@ EntityManager::EntityManager():
 	elapsedTime(0.0f),
 	entityPool(),
 	rootNode(new Node()),
-	RegionManager(RegionManager::GetObjPtr()),
+	regionManager(RegionManager::GetObjPtr()),
 	colliderManager(ColliderManager::GetObjPtr()),
 	modelStack()
 {

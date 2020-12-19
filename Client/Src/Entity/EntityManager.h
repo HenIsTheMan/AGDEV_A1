@@ -49,7 +49,7 @@ private:
 
 	std::vector<Entity*> entityPool;
 	Node* rootNode;
-	RegionManager* RegionManager;
+	RegionManager* regionManager;
 
 	ColliderManager* colliderManager;
 	ModelStack modelStack;
