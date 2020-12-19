@@ -5,6 +5,7 @@
 #include "../Collider/Collider.h"
 
 class Entity final{
+	friend class EntityFactory;
 	friend class EntityManager;
 	friend class Region;
 	friend class RegionManager;

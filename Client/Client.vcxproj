@@ -203,6 +203,7 @@
     <ClCompile Include="Src\Entity\Entities\Sniper.cpp" />
     <ClCompile Include="Src\Entity\Entity.cpp" />
     <ClCompile Include="Src\Entity\Entities\Gun.cpp" />
+    <ClCompile Include="Src\Entity\EntityFactory.cpp" />
     <ClCompile Include="Src\Entity\EntityManager.cpp" />
     <ClCompile Include="Src\LOD\LOD.cpp" />
     <ClCompile Include="Src\Quadtree\Node.cpp" />
@@ -225,6 +226,7 @@
     <ClInclude Include="Src\Entity\Entities\Sniper.h" />
     <ClInclude Include="Src\Entity\Entity.h" />
     <ClInclude Include="Src\Entity\Entities\Gun.h" />
+    <ClInclude Include="Src\Entity\EntityFactory.h" />
     <ClInclude Include="Src\Entity\EntityManager.h" />
     <ClInclude Include="Src\Entity\EntityUpdate.hpp" />
     <ClInclude Include="Src\LOD\LOD.h" />
