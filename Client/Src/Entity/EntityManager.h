@@ -21,12 +21,18 @@ public:
 	void Render(ShaderProg& SP, const Cam& cam);
 
 	const Entity* CreatePlayer(const EntityCreationAttribs& attribs);
+
 	void CreateShotgunBullet(const glm::vec3& camPos, const glm::vec3& camFront);
 	void CreateScarBullet(const glm::vec3& camPos, const glm::vec3& camFront);
 	void CreateSniperBullet(const glm::vec3& camPos, const glm::vec3& camFront);
+
 	void CreateCoin(const EntityCreationAttribs& attribs);
 	void CreateFire(const EntityCreationAttribs& attribs);
+
 	void CreateEnemy(const EntityCreationAttribs& attribs);
+
+	void CreateThinObj(const EntityCreationAttribs& attribs);
+
 	void CreateTree(const EntityCreationAttribs& attribs);
 
 	void DeactivateEntity(Entity* const& entity, const bool movable);

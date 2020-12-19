@@ -153,6 +153,8 @@ Scene::~Scene(){
 void Scene::InitEntities(){
 	entityManager->Init();
 
+	Terrain* const myTerrain = static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain]);
+
 	//* Create Player
 	myPlayer = entityManager->CreatePlayer({
 		glm::vec3(),
@@ -164,15 +166,27 @@ void Scene::InitEntities(){
 	assert(myPlayer != nullptr && "Var 'myPlayer' is nullptr");
 	//*/
 
+	//* Create thin obj
+	const float xyScale = 200.0f;
+	entityManager->CreateThinObj({
+		glm::vec3(0.0f,
+			terrainYScale * myTerrain->GetHeightAtPt(0.0f, terrainZScale * 0.25f / terrainZScale, false) + xyScale,
+			terrainZScale * 0.25f),
+		glm::vec3(xyScale, xyScale, 0.001f),
+		glm::vec4(1.0f),
+		-1,
+	});
+	//*/
+
 	//* Create coins
 	for(short i = 0; i < 20; ++i){
 		const float scaleFactor = 70.0f;
 		const float offsetFactor = 5.0f;
 		const float xPos = PseudorandMinMax(-terrainXScale * 0.5f + offsetFactor, terrainXScale * 0.5f - offsetFactor);
-		const float zPos = PseudorandMinMax(-terrainZScale * 0.5f + offsetFactor, terrainZScale * 0.5f - offsetFactor);
+		const float zPos = PseudorandMinMax(offsetFactor, terrainZScale * 0.5f - offsetFactor);
 		const glm::vec3 pos = glm::vec3(
 			xPos,
-			terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos / terrainXScale, zPos / terrainZScale, false) + scaleFactor,
+			terrainYScale * myTerrain->GetHeightAtPt(xPos / terrainXScale, zPos / terrainZScale, false) + scaleFactor,
 			zPos
 		);
 		entityManager->CreateCoin({
@@ -235,7 +249,7 @@ void Scene::CreateTreesAndCubes(){
 		const float scaleFactor = 200.0f;
 		const float offsetFactor = 100.0f;
 		const float xPos = PseudorandMinMax(-terrainXScale * 0.5f + offsetFactor, terrainXScale * 0.5f - offsetFactor);
-		const float zPos = PseudorandMinMax(-terrainZScale * 0.5f + offsetFactor, offsetFactor);
+		const float zPos = PseudorandMinMax(-terrainZScale * 0.5f + offsetFactor, -offsetFactor);
 		const glm::vec3 pos = glm::vec3(
 			xPos,
 			terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos / terrainXScale, zPos / terrainZScale, false),
@@ -265,7 +279,7 @@ void Scene::CreateTreesAndCubes(){
 		modelStack.PopModel();
 
 		modelStack.PushModel({
-			modelStack.Translate(pos + glm::vec3(0.0f, (float)PseudorandMinMax(1200, 1600), terrainZScale * 0.5f - 2.f)),
+			modelStack.Translate(pos + glm::vec3(0.0f, (float)PseudorandMinMax(1200, 1600), terrainZScale * 0.5f)),
 			modelStack.Rotate(glm::vec4(0.f, 1.f, 0.f, PseudorandMinMax(0.0f, 360.0f))),
 			modelStack.Scale(glm::vec3(40.0f)),
 		});
@@ -292,13 +306,15 @@ void Scene::CreateDecorations(){
 	rock->ReserveColorsForAll(2000);
 	rock->ReserveDiffuseTexIndicesForAll(2000);
 
+	Terrain* const myTerrain = static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain]);
+
 	for(int i = 0; i < 2000; ++i){
 		const float offsetFactor0 = 50.0f;
 		const float xPos0 = PseudorandMinMax(-terrainXScale * 0.5f + offsetFactor0, terrainXScale * 0.5f - offsetFactor0);
 		const float zPos0 = PseudorandMinMax(offsetFactor0, terrainZScale * 0.5f - offsetFactor0);
 		const glm::vec3 pos0 = glm::vec3(
 			xPos0,
-			terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos0 / terrainXScale, zPos0 / terrainZScale, false),
+			terrainYScale * myTerrain->GetHeightAtPt(xPos0 / terrainXScale, zPos0 / terrainZScale, false),
 			zPos0
 		);
 
@@ -307,7 +323,7 @@ void Scene::CreateDecorations(){
 		const float zPos1 = PseudorandMinMax(offsetFactor1, terrainZScale * 0.5f - offsetFactor1);
 		const glm::vec3 pos1 = glm::vec3(
 			xPos1,
-			terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos1 / terrainXScale, zPos1 / terrainZScale, false),
+			terrainYScale * myTerrain->GetHeightAtPt(xPos1 / terrainXScale, zPos1 / terrainZScale, false),
 			zPos1
 		);
 
@@ -316,7 +332,7 @@ void Scene::CreateDecorations(){
 		const float zPos2 = PseudorandMinMax(offsetFactor2, terrainZScale * 0.5f - offsetFactor2);
 		const glm::vec3 pos2 = glm::vec3(
 			xPos2,
-			terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(xPos2 / terrainXScale, zPos2 / terrainZScale, false),
+			terrainYScale * myTerrain->GetHeightAtPt(xPos2 / terrainXScale, zPos2 / terrainZScale, false),
 			zPos2
 		);
 

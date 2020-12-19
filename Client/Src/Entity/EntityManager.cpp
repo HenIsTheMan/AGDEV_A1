@@ -122,6 +122,7 @@ void EntityManager::Render(ShaderProg& SP, const Cam& cam){
 			case Entity::EntityType::ScarAmmo:
 			case Entity::EntityType::SniperAmmo:
 			case Entity::EntityType::Player:
+			case Entity::EntityType::ThinObj:
 				modelStack.PushModel({
 					modelStack.Translate(entity->pos),
 					modelStack.Scale(entity->scale),
@@ -364,6 +365,23 @@ void EntityManager::CreateEnemy(const EntityCreationAttribs& attribs){
 	entity->force = glm::vec3(0.f);
 
 	entity->collider = colliderManager->ActivateCollider(ColliderType::Box); //??
+}
+
+void EntityManager::CreateThinObj(const EntityCreationAttribs& attribs){
+	Entity* const& entity = ActivateEntity(true);
+
+	entity->type = Entity::EntityType::ThinObj;
+	entity->colour = attribs.colour;
+	entity->diffuseTexIndex = attribs.diffuseTexIndex;
+	entity->scale = attribs.scale;
+
+	entity->pos = attribs.pos;
+	entity->mass = 1.0f;
+
+	entity->collider = colliderManager->ActivateCollider(ColliderType::Box);
+	BoxCollider* const boxCollider = static_cast<BoxCollider*>(entity->collider);
+	boxCollider->SetPos(entity->pos);
+	boxCollider->SetScale(entity->scale);
 }
 
 void EntityManager::CreateTree(const EntityCreationAttribs& attribs){

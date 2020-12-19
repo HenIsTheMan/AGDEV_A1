@@ -109,6 +109,7 @@ void Region::GetEntitiesToRender(std::map<int, Entity*>& entitiesOpaque, std::ma
 						case Entity::EntityType::Bullet:
 						case Entity::EntityType::Enemy:
 						case Entity::EntityType::Player:
+						case Entity::EntityType::ThinObj:
 							entitiesOpaque.insert(std::make_pair((int)glm::dot(displacementVec, displacementVec), entity));
 							break;
 					}

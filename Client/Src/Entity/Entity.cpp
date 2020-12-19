@@ -22,13 +22,13 @@ Entity::Entity():
 	diffuseTexIndex(-1),
 	scale(glm::vec3(1.f)),
 
-	pos(glm::vec3(0.f)),
-	vel(glm::vec3(0.0f)),
+	pos(glm::vec3()),
+	vel(glm::vec3()),
 	mass(1.f),
-	force(glm::vec3(0.f)),
+	force(glm::vec3()),
 
 	collider(nullptr),
-	facingDir(glm::vec3(0.0f)),
+	facingDir(glm::vec3()),
 	moveSpd(0.0f),
 
 	xMin(0.0f),
