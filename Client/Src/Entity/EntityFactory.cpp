@@ -2,18 +2,9 @@
 
 EntityFactory::~EntityFactory(){
 	colliderManager = nullptr; //Deleted in EntityManager
-
-	if(nodeManager != nullptr){
-		nodeManager->Destroy();
-		nodeManager = nullptr;
-	}
-
+	nodeManager = nullptr; //Deleted in EntityManager
 	regionManager = nullptr; //Deleted in EntityManager
 	entityPool = nullptr; //Deleted in EntityManager
-}
-
-void EntityFactory::Init(const size_t& inactiveSize, const size_t& activeSize){
-	nodeManager->Init(inactiveSize, activeSize);
 }
 
 const Entity* EntityFactory::CreatePlayer(const EntityCreationAttribs& attribs){

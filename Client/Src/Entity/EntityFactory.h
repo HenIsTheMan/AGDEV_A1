@@ -25,8 +25,6 @@ class EntityFactory final: public Singleton<EntityFactory>{
 public:
 	~EntityFactory();
 
-	void Init(const size_t& inactiveSize, const size_t& activeSize);
-
 	const Entity* CreatePlayer(const EntityCreationAttribs& attribs);
 
 	void CreateShotgunBullet(const glm::vec3& camPos, const glm::vec3& camFront);

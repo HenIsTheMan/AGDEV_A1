@@ -1,8 +1,10 @@
 #pragma once
 
 #include "../Entity/Entity.h"
-#include "../Quadtree/RegionManager.h"
+
 #include "../Collider/ColliderManager.h"
+#include "../Quadtree/NodeManager.h"
+#include "../Quadtree/RegionManager.h"
 
 #include "EntityFactory.h"
 
@@ -27,8 +29,9 @@ private:
 
 	EntityFactory* entityFactory;
 
-	RegionManager* regionManager;
 	ColliderManager* colliderManager;
+	NodeManager* nodeManager;
+	RegionManager* regionManager;
 
 	ObjPool<Entity>* entityPool;
 

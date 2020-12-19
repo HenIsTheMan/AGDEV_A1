@@ -48,6 +48,23 @@ Node* Node::DetachChild(const Node* const child){
 	return nullptr;
 }
 
+Node* Node::DetachChild(const Entity* const entity){
+	for(std::vector<Node*>::iterator iter = children.begin(); iter != children.end(); ++iter){
+		Node* const node = *iter;
+		if(node->GetEntity() == entity){
+			node->parent = nullptr;
+			children.erase(iter);
+			return node;
+		} else{
+			Node* childNode = node->DetachChild(entity);
+			if(childNode != nullptr){
+				return childNode;
+			}
+		}
+	}
+	return nullptr;
+}
+
 bool Node::DestroyChild(const Node* const child){
 	if(!children.size()){
 		return false;

@@ -12,14 +12,19 @@ EntityManager::~EntityManager(){
 		entityFactory = nullptr;
 	}
 
-	if(regionManager != nullptr){
-		regionManager->Destroy();
-		regionManager = nullptr;
-	}
-
 	if(colliderManager != nullptr){
 		colliderManager->Destroy();
 		colliderManager = nullptr;
+	}
+
+	if(nodeManager != nullptr){
+		nodeManager->Destroy();
+		nodeManager = nullptr;
+	}
+
+	if(regionManager != nullptr){
+		regionManager->Destroy();
+		regionManager = nullptr;
 	}
 
 	if(entityPool != nullptr){
@@ -31,12 +36,12 @@ EntityManager::~EntityManager(){
 void EntityManager::Init(){
 	const size_t entityPoolSize = 40000;
 
-	entityFactory->Init(entityPoolSize, entityPoolSize);
-
-	regionManager->InitRegionPool(entityPoolSize);
-
 	colliderManager->InitBoxColliderPool(entityPoolSize, entityPoolSize);
 	colliderManager->InitSphereColliderPool(entityPoolSize, entityPoolSize);
+
+	nodeManager->Init(entityPoolSize, entityPoolSize);
+
+	regionManager->InitRegionPool(entityPoolSize); //??
 
 	entityPool->Init(entityPoolSize, entityPoolSize);
 }
@@ -239,15 +244,22 @@ void EntityManager::DeactivateEntity(Entity* const& entity){
 }
 
 void EntityManager::DeactivateEntityProcedure(Entity* const entity){
-	//regionManager->RemoveNode(rootNode->DetachChild(entity), entity->movable);
+	Node* const node = nodeManager->RetrieveRootNode()->DetachChild(entity);
+	if(node == nullptr){
+		return (void)printf("Var 'node' is nullptr!");
+	}
+
+	node->SetEntity(nullptr);
+	regionManager->RemoveNode(node, entity->movable);
 }
 
 EntityManager::EntityManager():
 	shldRenderColliders(false),
 	elapsedTime(0.0f),
 	entityFactory(EntityFactory::GetObjPtr()),
-	regionManager(RegionManager::GetObjPtr()),
 	colliderManager(ColliderManager::GetObjPtr()),
+	nodeManager(NodeManager::GetObjPtr()),
+	regionManager(RegionManager::GetObjPtr()),
 	entityPool(ObjPool<Entity>::GetObjPtr()),
 	modelStack()
 {

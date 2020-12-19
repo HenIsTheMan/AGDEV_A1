@@ -1,9 +1,6 @@
 #include "Region.h"
 
-std::vector<Region*> Region::regionPool;
-
 Region::Region():
-	active(false),
 	parent(nullptr),
 	origin(glm::vec2()),
 	size(glm::vec2()),
@@ -168,23 +165,6 @@ const Region* Region::FindRegion(Node* const node, const bool movable) const{
 	return nullptr;
 }
 
-Region* Region::FetchRegion(){
-	for(Region* const region: regionPool){
-		if(!region->active){
-			region->active = true;
-			return region;
-		}
-	}
-
-	Region* const region = new Region();
-	region->active = true;
-
-	regionPool.emplace_back(region);
-	(void)puts("A region was added to regionPool!");
-
-	return regionPool.back();
-}
-
 void Region::AddNode(Node* const node, const bool movable){
 	(movable ? movableNodes : stationaryNodes).emplace_back(node);
 }
@@ -301,24 +281,4 @@ void Region::Partition(const bool movable){
 	topRight->Partition(movable);
 	bottomLeft->Partition(movable);
 	bottomRight->Partition(movable);
-}
-
-void Region::InitRegionPool(const size_t& size){
-	if(regionPool.size()){
-		assert(false && "regionPool is not empty!");
-	}
-
-	regionPool.resize(size);
-	for(size_t i = 0; i < size; ++i){
-		regionPool[i] = new Region();
-	}
-}
-
-void Region::DestroyRegionPool(){
-	for(Region*& region: regionPool){
-		if(region){
-			delete region;
-			region = nullptr;
-		}
-	}
 }

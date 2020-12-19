@@ -12,6 +12,7 @@ public:
 
 	void AddChild(Node* const child);
 	Node* DetachChild(const Node* const child);
+	Node* DetachChild(const Entity* const entity);
 	bool DestroyChild(const Node* const child);
 	void DestroyAllChildren();
 

@@ -20,7 +20,6 @@ private:
 	void GetLeaves(ShaderProg& SP, std::vector<Region*>& leaves);
 
 	const Region* FindRegion(Node* const node, const bool movable) const;
-	Region* FetchRegion();
 
 	void AddNode(Node* const node, const bool movable);
 	void RemoveNode(Node* const node, const bool movable);
@@ -28,10 +27,6 @@ private:
 	void ClearMovableAndDeactivateChildren();
 	void Partition(const bool movable);
 
-	void InitRegionPool(const size_t& size);
-	void DestroyRegionPool();
-
-	bool active;
 	Region* parent;
 	glm::vec2 origin;
 	glm::vec2 size;
@@ -44,6 +39,4 @@ private:
 
 	std::vector<Node*> stationaryNodes;
 	std::vector<Node*> movableNodes;
-
-	static std::vector<Region*> regionPool;
 };
