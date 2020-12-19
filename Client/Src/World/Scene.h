@@ -95,6 +95,7 @@ private:
 
 	void InitEntities();
 
+	void CreateEntities();
 	void CreateTreesAndCubes();
 	void CreateDecorations();
 

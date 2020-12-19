@@ -153,6 +153,18 @@ Scene::~Scene(){
 void Scene::InitEntities(){
 	entityManager->Init();
 
+	CreateEntities();
+	CreateTreesAndCubes();
+	CreateDecorations();
+
+	treeLOD.SetDistSquaredAndModel(DetailLvl::High, 2000.0f * 2000.0f,  models[(int)ModelType::Tree_High]);
+	treeLOD.SetDistSquaredAndModel(DetailLvl::Medium, 4000.0f * 4000.0f,  models[(int)ModelType::Tree_Medium]);
+	treeLOD.SetDistSquaredAndModel(DetailLvl::Low, 6000.0f * 6000.0f, models[(int)ModelType::Tree_Low]);
+
+	entityManager->SetUpRegionsForStationary();
+}
+
+void Scene::CreateEntities(){
 	Terrain* const myTerrain = static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain]);
 
 	//* Create Player
@@ -213,15 +225,6 @@ void Scene::InitEntities(){
 		}
 	}
 	//*/
-
-	CreateTreesAndCubes();
-	CreateDecorations();
-
-	treeLOD.SetDistSquaredAndModel(DetailLvl::High, 2000.0f * 2000.0f,  models[(int)ModelType::Tree_High]);
-	treeLOD.SetDistSquaredAndModel(DetailLvl::Medium, 4000.0f * 4000.0f,  models[(int)ModelType::Tree_Medium]);
-	treeLOD.SetDistSquaredAndModel(DetailLvl::Low, 6000.0f * 6000.0f, models[(int)ModelType::Tree_Low]);
-
-	entityManager->SetUpRegionsForStationary();
 }
 
 void Scene::CreateTreesAndCubes(){
