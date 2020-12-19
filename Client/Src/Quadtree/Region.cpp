@@ -32,62 +32,90 @@ Region::~Region(){
 }
 
 void Region::GetEntitiesToUpdate(std::vector<Entity*>& movableEntities, std::vector<Entity*>& stationaryEntities){
-	if(topLeft || topRight || bottomLeft || bottomRight){
+	bool result = topLeft || topRight || bottomLeft || bottomRight;
+	if(result){
 		topLeft->GetEntitiesToUpdate(movableEntities, stationaryEntities);
 		topRight->GetEntitiesToUpdate(movableEntities, stationaryEntities);
 		bottomLeft->GetEntitiesToUpdate(movableEntities, stationaryEntities);
 		bottomRight->GetEntitiesToUpdate(movableEntities, stationaryEntities);
-		return;
 	}
 
-	for(int i = 0; i < stationaryNodes.size(); ++i){
-		stationaryEntities.emplace_back(stationaryNodes[i]->RetrieveEntity());
+	if(!result || (result
+		&& (topLeft && topLeft->stationaryNodes.empty())
+		&& (topRight && topRight->stationaryNodes.empty())
+		&& (bottomLeft && bottomLeft->stationaryNodes.empty())
+		&& (bottomRight && bottomRight->stationaryNodes.empty())
+	)){
+		for(int i = 0; i < stationaryNodes.size(); ++i){
+			stationaryEntities.emplace_back(stationaryNodes[i]->RetrieveEntity());
+		}
 	}
 
-	for(int i = 0; i < movableNodes.size(); ++i){
-		movableEntities.emplace_back(movableNodes[i]->RetrieveEntity());
+	if(!result || (result
+		&& (topLeft && topLeft->movableNodes.empty())
+		&& (topRight && topRight->movableNodes.empty())
+		&& (bottomLeft && bottomLeft->movableNodes.empty())
+		&& (bottomRight && bottomRight->movableNodes.empty())
+	)){
+		for(int i = 0; i < movableNodes.size(); ++i){
+			movableEntities.emplace_back(movableNodes[i]->RetrieveEntity());
+		}
 	}
 }
 
 void Region::GetEntitiesToRender(std::multimap<int, Entity*>& entitiesOpaque, std::multimap<int, Entity*>& entitiesNotOpaque, const Cam& cam){
-	if(topLeft || topRight || bottomLeft || bottomRight){
+	bool result = topLeft || topRight || bottomLeft || bottomRight;
+	if(result){
 		topLeft->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
 		topRight->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
 		bottomLeft->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
 		bottomRight->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
-		return;
 	}
 
 	const glm::vec3& camPos = cam.GetPos();
 	const glm::vec3& camFront = cam.CalcFront();
 
-	for(int i = 0; i < stationaryNodes.size(); ++i){
-		Entity* const entity = stationaryNodes[i]->RetrieveEntity();
-		if(entity){
-			glm::vec3 displacementVec = entity->pos - camPos;
-			if(glm::dot(displacementVec, camFront) > 0.0f){
-				switch(entity->type){
-					case Entity::EntityType::Coin:
-					case Entity::EntityType::Fire:
-						entitiesNotOpaque.insert(std::make_pair((int)glm::dot(displacementVec, displacementVec), entity));
-						break;
+	if(!result || (result
+		&& (topLeft && topLeft->stationaryNodes.empty())
+		&& (topRight && topRight->stationaryNodes.empty())
+		&& (bottomLeft && bottomLeft->stationaryNodes.empty())
+		&& (bottomRight && bottomRight->stationaryNodes.empty())
+	)){
+		for(int i = 0; i < stationaryNodes.size(); ++i){
+			Entity* const entity = stationaryNodes[i]->RetrieveEntity();
+			if(entity){
+				glm::vec3 displacementVec = entity->pos - camPos;
+				if(glm::dot(displacementVec, camFront) > 0.0f){
+					switch(entity->type){
+						case Entity::EntityType::Coin:
+						case Entity::EntityType::Fire:
+							entitiesNotOpaque.insert(std::make_pair((int)glm::dot(displacementVec, displacementVec), entity));
+							break;
+					}
 				}
 			}
 		}
 	}
 
-	for(int i = 0; i < movableNodes.size(); ++i){
-		Entity* const entity = movableNodes[i]->RetrieveEntity();
-		if(entity){
-			glm::vec3 displacementVec = entity->pos - camPos;
-			if(glm::dot(displacementVec, camFront) > 0.0f){
-				switch(entity->type){
-					case Entity::EntityType::Bullet:
-					case Entity::EntityType::Enemy:
-					case Entity::EntityType::Player:
-					case Entity::EntityType::ThinObj:
-						entitiesOpaque.insert(std::make_pair((int)glm::dot(displacementVec, displacementVec), entity));
-						break;
+	if(!result || (result
+		&& (topLeft && topLeft->movableNodes.empty())
+		&& (topRight && topRight->movableNodes.empty())
+		&& (bottomLeft && bottomLeft->movableNodes.empty())
+		&& (bottomRight && bottomRight->movableNodes.empty())
+	)){
+		for(int i = 0; i < movableNodes.size(); ++i){
+			Entity* const entity = movableNodes[i]->RetrieveEntity();
+			if(entity){
+				glm::vec3 displacementVec = entity->pos - camPos;
+				if(glm::dot(displacementVec, camFront) > 0.0f){
+					switch(entity->type){
+						case Entity::EntityType::Bullet:
+						case Entity::EntityType::Enemy:
+						case Entity::EntityType::Player:
+						case Entity::EntityType::ThinObj:
+							entitiesOpaque.insert(std::make_pair((int)glm::dot(displacementVec, displacementVec), entity));
+							break;
+					}
 				}
 			}
 		}
@@ -179,35 +207,35 @@ void Region::ClearMovableAndDeactivateChildren(){
 
 	if(topLeft){
 		topLeft->movableNodes.clear();
-		topLeft->ClearMovableAndDeactivateChildren();
-
 		if(topLeft->stationaryNodes.empty()){
 			++emptyCount;
 		}
+
+		topLeft->ClearMovableAndDeactivateChildren();
 	}
 	if(topRight){
 		topRight->movableNodes.clear();
-		topRight->ClearMovableAndDeactivateChildren();
-
 		if(topRight->stationaryNodes.empty()){
 			++emptyCount;
 		}
+
+		topRight->ClearMovableAndDeactivateChildren();
 	}
 	if(bottomLeft){
 		bottomLeft->movableNodes.clear();
-		bottomLeft->ClearMovableAndDeactivateChildren();
-
 		if(bottomLeft->stationaryNodes.empty()){
 			++emptyCount;
 		}
+
+		bottomLeft->ClearMovableAndDeactivateChildren();
 	}
 	if(bottomRight){
 		bottomRight->movableNodes.clear();
-		bottomRight->ClearMovableAndDeactivateChildren();
-
 		if(bottomRight->stationaryNodes.empty()){
 			++emptyCount;
 		}
+
+		bottomRight->ClearMovableAndDeactivateChildren();
 	}
 
 	if(emptyCount == 4){
