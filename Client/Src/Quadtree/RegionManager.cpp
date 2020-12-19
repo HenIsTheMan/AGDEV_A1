@@ -17,7 +17,7 @@ RegionManager::~RegionManager(){
 void RegionManager::Init(const size_t& inactiveSize, const size_t& activeSize){
 	regionPool->Init(inactiveSize, activeSize);
 
-	rootRegion = regionPool->ActivateObj();
+	rootRegion = ActivateRegion();
 	rootRegion->origin = glm::vec2(0.0f);
 	rootRegion->size = glm::vec2(terrainXScale, terrainZScale);
 }
@@ -31,8 +31,8 @@ void RegionManager::Update(){
 		BT = elapsedTime + .5f;
 	}
 
-	//rootRegion->ClearMovableAndDeactivateChildren();
-	//rootRegion->Partition(true);
+	rootRegion->ClearMovableAndDeactivateChildren();
+	rootRegion->Partition(true);
 }
 
 void RegionManager::Render(ShaderProg& SP, const Cam& cam){

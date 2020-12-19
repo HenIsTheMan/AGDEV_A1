@@ -227,42 +227,33 @@ void Region::ClearMovableAndDeactivateChildren(){
 
 void Region::Partition(const bool movable){
 	const std::vector<Node*>& nodes = movable ? movableNodes : stationaryNodes;
-	if(nodes.size() <= (size_t)1
-		&& topLeft == nullptr //For movable entities to be propagated down the quadtree
-		&& topRight == nullptr //...
-		&& bottomLeft == nullptr //...
-		&& bottomRight == nullptr //...
-	){
+	if(movableNodes.size() + stationaryNodes.size() <= (size_t)1){
 		return;
 	}
 
-	if(topLeft == nullptr){
-		topLeft = FetchRegion();
-		topLeft->parent = this;
-		topLeft->origin = glm::vec2(origin[0] - size[0] * 0.25f, origin[1] - size[1] * 0.25f);
-		topLeft->size = glm::vec2(size[0] * 0.5f, size[1] * 0.5f);
+	if(!(topLeft == nullptr && topRight == nullptr && bottomLeft == nullptr && bottomRight == nullptr)){
+		return assert(false && "QSP is wrong!");
 	}
 
-	if(topRight == nullptr){
-		topRight = FetchRegion();
-		topRight->parent = this;
-		topRight->origin = glm::vec2(origin[0] + size[0] * 0.25f, origin[1] - size[1] * 0.25f);
-		topRight->size = topLeft->size;
-	}
+	topLeft = regionPool->ActivateObj();
+	topLeft->parent = this;
+	topLeft->origin = glm::vec2(origin[0] - size[0] * 0.25f, origin[1] - size[1] * 0.25f);
+	topLeft->size = glm::vec2(size[0] * 0.5f, size[1] * 0.5f);
 
-	if(bottomLeft == nullptr){
-		bottomLeft = FetchRegion();
-		bottomLeft->parent = this;
-		bottomLeft->origin = glm::vec2(origin[0] - size[0] * 0.25f, origin[1] + size[1] * 0.25f);
-		bottomLeft->size = topLeft->size;
-	}
+	topRight = regionPool->ActivateObj();
+	topRight->parent = this;
+	topRight->origin = glm::vec2(origin[0] + size[0] * 0.25f, origin[1] - size[1] * 0.25f);
+	topRight->size = topLeft->size;
 
-	if(bottomRight == nullptr){
-		bottomRight = FetchRegion();
-		bottomRight->parent = this;
-		bottomRight->origin = glm::vec2(origin[0] + size[0] * 0.25f, origin[1] + size[1] * 0.25f);
-		bottomRight->size = topLeft->size;
-	}
+	bottomLeft = regionPool->ActivateObj();
+	bottomLeft->parent = this;
+	bottomLeft->origin = glm::vec2(origin[0] - size[0] * 0.25f, origin[1] + size[1] * 0.25f);
+	bottomLeft->size = topLeft->size;
+
+	bottomRight = regionPool->ActivateObj();
+	bottomRight->parent = this;
+	bottomRight->origin = glm::vec2(origin[0] + size[0] * 0.25f, origin[1] + size[1] * 0.25f);
+	bottomRight->size = topLeft->size;
 
 	for(Node* const node: nodes){
 		const Entity* const entity = node->GetEntity();

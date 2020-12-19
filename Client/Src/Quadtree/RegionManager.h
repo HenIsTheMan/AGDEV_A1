@@ -13,7 +13,7 @@ public:
 	void Update();
 	void Render(ShaderProg& SP, const Cam& cam);
 
-	Region* ActivateRegion(); //Not used
+	Region* ActivateRegion(); //Not used elsewhere
 	void DeactivateRegion(Region* const region); //Not used
 
 	Region* RetrieveRootRegion();
