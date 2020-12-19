@@ -9,6 +9,8 @@
 #include "../Collider/Colliders/BoxCollider.h"
 #include "../Collider/Colliders/SphereCollider.h"
 
+#include "../ObjPool/ObjPool.h"
+
 struct EntityCreationAttribs final{
 	glm::vec3 pos;
 	glm::vec3 scale;
@@ -36,7 +38,11 @@ public:
 
 	void CreateTree(const EntityCreationAttribs& attribs);
 private:
+	ColliderManager* colliderManager;
+	ObjPool<Entity>* entityPool;
+
 	EntityFactory();
 
-	ColliderManager* colliderManager;
+	Entity* ActivateEntity(const bool movable);
+	void ActivateEntityProcedure(Entity* const entity);
 };

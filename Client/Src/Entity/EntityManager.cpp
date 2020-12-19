@@ -7,35 +7,42 @@
 extern float dt;
 
 EntityManager::~EntityManager(){
-	for(Entity*& entity: entityPool){
-		if(entity){
-			delete entity;
-			entity = nullptr;
-		}
-	}
-
 	rootNode->DestroyAllChildren();
 	if(rootNode){
 		delete rootNode;
 		rootNode = nullptr;
 	}
 
-	regionManager->Destroy();
-	colliderManager->Destroy();
+	if(entityFactory != nullptr){
+		entityFactory->Destroy();
+		entityFactory = nullptr;
+	}
+
+	if(regionManager != nullptr){
+		regionManager->Destroy();
+		regionManager = nullptr;
+	}
+
+	if(colliderManager != nullptr){
+		colliderManager->Destroy();
+		colliderManager = nullptr;
+	}
+
+	if(entityPool != nullptr){
+		entityPool->Destroy();
+		entityPool = nullptr;
+	}
 }
 
 void EntityManager::Init(){
 	const size_t entityPoolSize = 9999;
 
-	entityPool.reserve(entityPoolSize);
-	for(size_t i = 0; i < entityPoolSize; ++i){
-		entityPool.emplace_back(new Entity());
-	}
+	entityPool->Init(entityPoolSize, entityPoolSize);
+
+	regionManager->InitRegionPool(entityPoolSize);
 
 	colliderManager->InitBoxColliderPool(entityPoolSize, entityPoolSize);
 	colliderManager->InitSphereColliderPool(entityPoolSize, entityPoolSize);
-
-	regionManager->InitRegionPool(entityPoolSize);
 }
 
 void EntityManager::Update(){
@@ -224,58 +231,21 @@ void EntityManager::Render(ShaderProg& SP, const Cam& cam){
 	SP.Set1i("useCustomColour", 0);
 }
 
-void EntityManager::ActivateEntityProcedure(Entity* const entity){
-	Node* const node = new Node();
-	node->SetEntity(entity);
-	rootNode->AddChild(node);
-	regionManager->AddNode(node, entity->movable);
+void EntityManager::DeactivateEntity(Entity* const& entity, const bool movable){
 }
 
 void EntityManager::DeactivateEntityProcedure(Entity* const entity){
 	//regionManager->RemoveNode(rootNode->DetachChild(entity), entity->movable);
 }
 
-Entity* const EntityManager::ActivateEntity(const bool movable){
-	for(Entity* const& entity: entityPool){
-		if(!entity->active){
-			entity->active = true;
-			entity->movable = movable;
-
-			ActivateEntityProcedure(entity);
-			return entity;
-		}
-	}
-
-	entityPool.emplace_back(new Entity());
-	(void)puts("1 entity was added to entityPool!\n");
-
-	Entity* const entity = entityPool.back();
-	entity->active = true;
-	entity->movable = movable;
-
-	ActivateEntityProcedure(entity);
-	return entity;
-}
-
-void EntityManager::DeactivateEntity(Entity* const& entity, const bool movable){
-	entity->active = false;
-
-	Collider* const collider = entity->collider;
-	if(collider != nullptr){
-		colliderManager->DeactivateCollider(collider);
-	}
-
-	DeactivateEntityProcedure(entity);
-}
-
 EntityManager::EntityManager():
 	shldRenderColliders(false),
 	elapsedTime(0.0f),
-	entityPool(),
 	rootNode(new Node()),
-	regionManager(RegionManager::GetObjPtr()),
 	entityFactory(EntityFactory::GetObjPtr()),
+	regionManager(RegionManager::GetObjPtr()),
 	colliderManager(ColliderManager::GetObjPtr()),
+	entityPool(ObjPool<Entity>::GetObjPtr()),
 	modelStack()
 {
 }

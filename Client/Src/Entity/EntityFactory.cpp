@@ -1,10 +1,8 @@
 #include "EntityFactory.h"
 
 EntityFactory::~EntityFactory(){
-	if(colliderManager != nullptr){
-		colliderManager->Destroy();
-		colliderManager = nullptr;
-	}
+	colliderManager = nullptr; //Deleted in EntityManager
+	entityPool = nullptr; //Deleted in EntityManager
 }
 
 const Entity* EntityFactory::CreatePlayer(const EntityCreationAttribs& attribs){
@@ -183,6 +181,21 @@ void EntityFactory::CreateTree(const EntityCreationAttribs& attribs){
 }
 
 EntityFactory::EntityFactory():
-	colliderManager(ColliderManager::GetObjPtr())
+	colliderManager(ColliderManager::GetObjPtr()),
+	entityPool(ObjPool<Entity>::GetObjPtr())
 {
+}
+
+Entity* EntityFactory::ActivateEntity(const bool movable){
+	Entity* const entity = entityPool->ActivateObj();
+	entity->movable = movable;
+	ActivateEntityProcedure(entity);
+	return entity;
+}
+
+void EntityFactory::ActivateEntityProcedure(Entity* const entity){
+	Node* const node = new Node();
+	node->SetEntity(entity);
+	rootNode->AddChild(node);
+	regionManager->AddNode(node, entity->movable);
 }
