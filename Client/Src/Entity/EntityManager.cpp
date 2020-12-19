@@ -344,6 +344,9 @@ void EntityManager::CreateCoin(const EntityCreationAttribs& attribs){
 	entity->force = glm::vec3(0.f);
 
 	entity->collider = colliderManager->ActivateCollider(ColliderType::Box);
+	BoxCollider* const boxCollider = static_cast<BoxCollider*>(entity->collider);
+	boxCollider->SetPos(entity->pos);
+	boxCollider->SetScale(entity->scale);
 }
 
 void EntityManager::CreateFire(const EntityCreationAttribs& attribs){

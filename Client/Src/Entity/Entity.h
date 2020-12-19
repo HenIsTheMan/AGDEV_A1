@@ -31,6 +31,7 @@ private:
 		ScarAmmo,
 		SniperAmmo,
 		Player,
+		ThinObj,
 		Tree,
 		Amt
 	};
