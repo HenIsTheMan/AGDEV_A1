@@ -2,7 +2,7 @@
 
 NodeManager::~NodeManager(){
 	if(nodePool != nullptr){
-		delete nodePool;
+		nodePool->Destroy();
 		nodePool = nullptr;
 	}
 }

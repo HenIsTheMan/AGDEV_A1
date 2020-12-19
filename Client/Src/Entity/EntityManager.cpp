@@ -32,7 +32,8 @@ void EntityManager::Init(){
 		entityPool.emplace_back(new Entity());
 	}
 
-	colliderManager->Init(entityPoolSize, entityPoolSize);
+	colliderManager->InitBoxColliderPool(entityPoolSize, entityPoolSize);
+	colliderManager->InitSphereColliderPool(entityPoolSize, entityPoolSize);
 
 	regionManager->InitRegionPool(entityPoolSize);
 }

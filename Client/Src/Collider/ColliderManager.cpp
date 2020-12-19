@@ -1,63 +1,43 @@
 #include "ColliderManager.h"
 
 ColliderManager::~ColliderManager(){
-	for(Collider* boxCollider: boxColliders){
-		if(boxCollider){
-			delete boxCollider;
-			boxCollider = nullptr;
-		}
+	if(boxColliderPool != nullptr){
+		boxColliderPool->Destroy();
+		boxColliderPool = nullptr;
 	}
 
-	for(Collider* sphereCollider: sphereColliders){
-		if(sphereCollider){
-			delete sphereCollider;
-			sphereCollider = nullptr;
-		}
+	if(sphereColliderPool != nullptr){
+		sphereColliderPool->Destroy();
+		sphereColliderPool = nullptr;
 	}
 }
 
-void ColliderManager::Init(const size_t boxCollidersSize, const size_t sphereCollidersSize){
-	boxColliders.reserve(boxCollidersSize);
-	for(size_t i = 0; i < boxCollidersSize; ++i){
-		boxColliders.emplace_back(new BoxCollider());
-	}
+void ColliderManager::InitBoxColliderPool(const size_t& inactiveSize, const size_t& activeSize){
+	boxColliderPool->Init(inactiveSize, activeSize);
+}
 
-	sphereColliders.reserve(sphereCollidersSize);
-	for(size_t i = 0; i < sphereCollidersSize; ++i){
-		sphereColliders.emplace_back(new SphereCollider());
-	}
+void ColliderManager::InitSphereColliderPool(const size_t& inactiveSize, const size_t& activeSize){
+	sphereColliderPool->Init(inactiveSize, activeSize);
 }
 
 Collider* ColliderManager::ActivateCollider(const ColliderType type){
-	std::vector<Collider*>& colliders = type == ColliderType::Box ? boxColliders : sphereColliders;
-	const size_t size = colliders.size();
-
-	for(size_t i = 0; i < size; ++i){
-		Collider* const collider = colliders[i];
-		if(!collider->active){
-			collider->active = true;
-			return collider;
-		}
-	}
-
 	if(type == ColliderType::Box){
-		colliders.emplace_back(new BoxCollider());
+		return boxColliderPool->ActivateObj();
 	} else{
-		colliders.emplace_back(new SphereCollider());
+		return sphereColliderPool->ActivateObj();
 	}
-	(void)puts("A collider was added to the pool!\n");
-
-	Collider* const collider = colliders.back();
-	collider->active = true;
-	return collider;
 }
 
 void ColliderManager::DeactivateCollider(Collider* const collider){
-	collider->active = false;
+	if(collider->GetType() == ColliderType::Box){
+		boxColliderPool->DeactivateObj((BoxCollider*)collider);
+	} else{
+		sphereColliderPool->DeactivateObj((SphereCollider*)collider);
+	}
 }
 
 ColliderManager::ColliderManager():
-	boxColliders(),
-	sphereColliders()
+	boxColliderPool(ObjPool<BoxCollider>::GetObjPtr()),
+	sphereColliderPool(ObjPool<SphereCollider>::GetObjPtr())
 {
 }

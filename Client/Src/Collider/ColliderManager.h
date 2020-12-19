@@ -5,18 +5,21 @@
 #include "../Collider/Colliders/BoxCollider.h"
 #include "../Collider/Colliders/SphereCollider.h"
 
+#include "../ObjPool/ObjPool.h"
+
 class ColliderManager final: public Singleton<ColliderManager>{
 	friend Singleton<ColliderManager>;
 public:
 	~ColliderManager();
 
-	void Init(const size_t boxCollidersSize, const size_t sphereCollidersSize);
+	void InitBoxColliderPool(const size_t& inactiveSize, const size_t& activeSize);
+	void InitSphereColliderPool(const size_t& inactiveSize, const size_t& activeSize);
 
 	Collider* ActivateCollider(const ColliderType type);
 	void DeactivateCollider(Collider* const collider);
 private:
 	ColliderManager();
 
-	std::vector<Collider*> boxColliders;
-	std::vector<Collider*> sphereColliders;
+	ObjPool<BoxCollider>* boxColliderPool;
+	ObjPool<SphereCollider>* sphereColliderPool;
 };

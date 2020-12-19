@@ -43,7 +43,7 @@ T* ObjPool<T>::ActivateObj(){
 
 template <class T>
 void ObjPool<T>::DeactivateObj(const T* const obj){
-	std::vector<T*>::iterator iter = std::find(activeObjs.begin(), activeObjs.end(), obj);
+	typename std::vector<T*>::iterator iter = std::find(activeObjs.begin(), activeObjs.end(), obj);
 	if(iter != activeObjs.end()){
 		inactiveObjs.emplace_back(*iter);
 		activeObjs.erase(iter);
