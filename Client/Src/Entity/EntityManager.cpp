@@ -102,6 +102,12 @@ void EntityManager::Update(){
 					}
 
 					break;
+				case Entity::EntityType::Bullet:
+					movableEntity->life -= dt;
+
+					if(movableEntity->life <= 0.0f){
+						DeactivateEntity(movableEntity);
+					}
 			}
 		}
 	}
@@ -259,13 +265,20 @@ void EntityManager::DeactivateEntity(Entity* const& entity){
 }
 
 void EntityManager::DeactivateEntityProcedure(Entity* const entity){
+	static std::vector<Entity*> removedEntities; //For debugging
+
 	Node* const node = nodeManager->RetrieveRootNode()->DetachChild(entity);
 	if(node == nullptr){
-		return (void)printf("Var 'node' is nullptr!");
+		if(std::find(removedEntities.begin(), removedEntities.end(), entity) == removedEntities.end()){
+			return (void)printf("Var 'node' is nullptr!");
+		}
+		return;
 	}
 
 	node->SetEntity(nullptr);
 	regionManager->RetrieveRootRegion()->RemoveNode(node, entity->movable);
+
+	removedEntities.emplace_back(entity);
 }
 
 EntityManager::EntityManager():

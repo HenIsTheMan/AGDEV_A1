@@ -38,8 +38,8 @@ void EntityFactory::CreateShotgunBullet(const glm::vec3& camPos, const glm::vec3
 	Entity* const entity = ActivateEntity(true);
 
 	entity->type = Entity::EntityType::Bullet;
-	entity->life = 5.f;
-	entity->maxLife = 5.f;
+	entity->life = 5.0f;
+	entity->maxLife = 5.0f;
 	entity->colour = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
 	entity->diffuseTexIndex = -1;
 	entity->scale = glm::vec3(10.0f);
@@ -61,8 +61,8 @@ void EntityFactory::CreateScarBullet(const glm::vec3& camPos, const glm::vec3& c
 	Entity* const entity = ActivateEntity(true);
 
 	entity->type = Entity::EntityType::Bullet;
-	entity->life = 5.f;
-	entity->maxLife = 5.f;
+	entity->life = 5.0f;
+	entity->maxLife = 5.0f;
 	entity->colour = glm::vec4(1.0f, 1.0f, 0.0f, 1.0f);
 	entity->diffuseTexIndex = -1;
 	entity->scale = glm::vec3(10.0f);
@@ -84,8 +84,8 @@ void EntityFactory::CreateSniperBullet(const glm::vec3& camPos, const glm::vec3&
 	Entity* const entity = ActivateEntity(true);
 
 	entity->type = Entity::EntityType::Bullet;
-	entity->life = 5.f;
-	entity->maxLife = 5.f;
+	entity->life = 5.0f;
+	entity->maxLife = 5.0f;
 	entity->colour = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
 	entity->diffuseTexIndex = -1;
 	entity->scale = glm::vec3(10.0f);

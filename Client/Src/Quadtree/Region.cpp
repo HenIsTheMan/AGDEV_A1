@@ -193,7 +193,20 @@ void Region::RemoveNode(Node* const node, const bool movable){
 	const std::vector<Node*>::iterator iter = std::find(nodes.begin(), nodes.end(), node);
 
 	if(iter == nodes.end()){
-		return assert(false && "Node could not be found!");
+		return;
+	}
+
+	if(topLeft != nullptr){
+		topLeft->RemoveNode(node, movable);
+	}
+	if(topRight != nullptr){
+		topRight->RemoveNode(node, movable);
+	}
+	if(bottomLeft != nullptr){
+		bottomLeft->RemoveNode(node, movable);
+	}
+	if(bottomRight != nullptr){
+		bottomRight->RemoveNode(node, movable);
 	}
 
 	nodes.erase(iter);
