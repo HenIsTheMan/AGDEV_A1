@@ -2,6 +2,8 @@
 
 #include "EntityUpdate.hpp"
 
+#include "../Shared/Easing.hpp"
+
 extern float dt;
 
 EntityManager::~EntityManager(){
@@ -38,6 +40,8 @@ void EntityManager::Init(){
 }
 
 void EntityManager::Update(){
+	elapsedTime += dt;
+
 	static bool isPressedC = false;
 	if(!isPressedC && Key(GLFW_KEY_C)){
 		shldRenderColliders = !shldRenderColliders;
@@ -54,7 +58,7 @@ void EntityManager::Update(){
 
 	for(Entity* const movableEntity: movableEntities){
 		switch(movableEntity->type){
-			case Entity::EntityType::Player:
+			case Entity::EntityType::Player: {
 				UpdatePlayerHoriz(movableEntity);
 				UpdatePlayerVert(movableEntity);
 
@@ -75,6 +79,16 @@ void EntityManager::Update(){
 				movableEntity->pos.x = std::min(movableEntity->xMax, std::max(movableEntity->xMin, movableEntity->pos.x));
 				movableEntity->pos.y = std::min(movableEntity->yMax, std::max(movableEntity->yMin, movableEntity->pos.y));
 				movableEntity->pos.z = std::min(movableEntity->zMax, std::max(movableEntity->zMin, movableEntity->pos.z));
+
+				if(movableEntity->collider != nullptr){
+					static_cast<BoxCollider*>(movableEntity->collider)->SetPos(movableEntity->pos);
+				}
+
+				break;
+			}
+			case Entity::EntityType::ThinObj:
+				//movableEntity->pos.x += EaseInOutCubic((sinf(elapsedTime * 2.0f) + 1.0f) * 0.5f);
+				movableEntity->pos.x += sinf(elapsedTime * 2.0f);
 
 				if(movableEntity->collider != nullptr){
 					static_cast<BoxCollider*>(movableEntity->collider)->SetPos(movableEntity->pos);
@@ -436,6 +450,7 @@ void EntityManager::DeactivateEntity(Entity* const& entity, const bool movable){
 
 EntityManager::EntityManager():
 	shldRenderColliders(false),
+	elapsedTime(0.0f),
 	entityPool(),
 	rootNode(new Node()),
 	regionControl(RegionControl::GetObjPtr()),

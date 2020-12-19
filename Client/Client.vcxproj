@@ -230,6 +230,7 @@
     <ClInclude Include="Src\Quadtree\Node.h" />
     <ClInclude Include="Src\Quadtree\Region.h" />
     <ClInclude Include="Src\Quadtree\RegionControl.h" />
+    <ClInclude Include="Src\Shared\Easing.hpp" />
     <ClInclude Include="Src\Shared\Meshes.h" />
     <ClInclude Include="Src\Shared\RotateVecIn2D.hpp" />
     <ClInclude Include="Src\World\Cam.h" />

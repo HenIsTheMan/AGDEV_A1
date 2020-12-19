@@ -47,6 +47,7 @@ private:
 	void DeactivateEntityProcedure(Entity* const entity);
 
 	bool shldRenderColliders;
+	float elapsedTime;
 
 	std::vector<Entity*> entityPool;
 	Node* rootNode;

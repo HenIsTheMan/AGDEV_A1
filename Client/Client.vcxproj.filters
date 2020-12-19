@@ -44,6 +44,7 @@
     <ClInclude Include="Src\Collider\Colliders\SphereCollider.h" />
     <ClInclude Include="Src\Entity\EntityUpdate.hpp" />
     <ClInclude Include="Src\Shared\RotateVecIn2D.hpp" />
+    <ClInclude Include="Src\Shared\Easing.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Blur.fragS" />
