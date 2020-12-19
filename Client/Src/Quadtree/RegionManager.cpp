@@ -7,11 +7,19 @@ extern float terrainYScale;
 extern float terrainZScale;
 
 RegionManager::~RegionManager(){
-	if(rootRegion){
-		rootRegion->DestroyRegionPool();
-		delete rootRegion;
-		rootRegion = nullptr;
+	if(regionPool != nullptr){
+		regionPool->Destroy();
+		regionPool = nullptr;
 	}
+	rootRegion = nullptr;
+}
+
+void RegionManager::Init(const size_t& inactiveSize, const size_t& activeSize){
+	regionPool->Init(inactiveSize, activeSize);
+
+	rootRegion = regionPool->ActivateObj();
+	rootRegion->origin = glm::vec2(0.0f);
+	rootRegion->size = glm::vec2(terrainXScale, terrainZScale);
 }
 
 void RegionManager::Update(){
@@ -31,6 +39,10 @@ void RegionManager::Render(ShaderProg& SP, const Cam& cam){
 	if(shldRenderQuadtree){
 		RenderQuadtree(SP, cam);
 	}
+}
+
+Region* RegionManager::RetrieveRootRegion(){
+	return rootRegion;
 }
 
 void RegionManager::RenderQuadtree(ShaderProg& SP, const Cam& cam){
@@ -63,37 +75,11 @@ void RegionManager::RenderQuadtree(ShaderProg& SP, const Cam& cam){
 	SP.Set1i("noNormals", 0);
 }
 
-void RegionManager::GetEntitiesToUpdate(std::vector<Entity*>& movableEntities, std::vector<Entity*>& stationaryEntities){
-	rootRegion->GetEntitiesToUpdate(movableEntities, stationaryEntities);
-}
-
-void RegionManager::GetEntitiesToRender(std::map<int, Entity*>& entitiesOpaque, std::map<int, Entity*>& entitiesNotOpaque, const Cam& cam){
-	rootRegion->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
-}
-
-const Region* RegionManager::FindRegion(Node* const& node, const bool movable){
-	return rootRegion->FindRegion(node, movable);
-}
-
-void RegionManager::AddNode(Node* const& node, const bool movable){
-	rootRegion->AddNode(node, movable);
-}
-
-void RegionManager::RemoveNode(Node* const& node, const bool movable){
-	rootRegion->RemoveNode(node, movable);
-}
-
-void RegionManager::InitRegionPool(const size_t& size){
-	rootRegion->InitRegionPool(size);
-}
-
 RegionManager::RegionManager():
 	shldRenderQuadtree(false),
 	elapsedTime(0.0f),
 	modelStack(),
-	rootRegion(new Region())
+	rootRegion(nullptr),
+	regionPool(ObjPool<Region>::GetObjPtr())
 {
-	rootRegion->active = true;
-	rootRegion->origin = glm::vec2(0.0f);
-	rootRegion->size = glm::vec2(terrainXScale, terrainZScale);
 }

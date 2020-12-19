@@ -4,31 +4,28 @@
 
 #include "Region.h"
 
+#include "../ObjPool/ObjPool.h"
+
 class RegionManager final: public Singleton<RegionManager>{
 	friend Singleton<RegionManager>;
 public:
 	~RegionManager();
 
+	void Init(const size_t& inactiveSize, const size_t& activeSize);
 	void Update();
 	void Render(ShaderProg& SP, const Cam& cam);
 
-	void RenderQuadtree(ShaderProg& SP, const Cam& cam);
-
-	void GetEntitiesToUpdate(std::vector<Entity*>& movableEntities, std::vector<Entity*>& stationaryEntities);
-	void GetEntitiesToRender(std::map<int, Entity*>& entitiesOpaque, std::map<int, Entity*>& entitiesNotOpaque, const Cam& cam);
-
-	const Region* FindRegion(Node* const& node, const bool movable);
-
-	void AddNode(Node* const& node, const bool movable);
-	void RemoveNode(Node* const& node, const bool movable);
-
-	void InitRegionPool(const size_t& size);
+	Region* RetrieveRootRegion();
 private:
 	RegionManager();
+
+	void RenderQuadtree(ShaderProg& SP, const Cam& cam);
 
 	bool shldRenderQuadtree;
 	float elapsedTime;
 
 	ModelStack modelStack;
 	Region* rootRegion;
+
+	ObjPool<Region>* regionPool;
 };

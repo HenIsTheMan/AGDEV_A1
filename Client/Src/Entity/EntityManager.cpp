@@ -106,10 +106,6 @@ void EntityManager::Update(){
 			}
 		}
 	}
-
-	//Update dragon??
-	//for(Entity* const stationaryEntity: stationaryEntities){
-	//}
 }
 
 void EntityManager::Render(ShaderProg& SP, const Cam& cam){
