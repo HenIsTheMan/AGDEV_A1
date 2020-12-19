@@ -20,7 +20,7 @@ const Entity* EntityFactory::CreatePlayer(const EntityCreationAttribs& attribs){
 	entity->pos = attribs.pos;
 	entity->vel = entity->moveSpd * entity->facingDir;
 	entity->mass = 1.0f;
-	entity->force = glm::vec3(0.0f, -400.f, 0.0f);
+	entity->force = glm::vec3(0.0f, -3400.f, 0.0f);
 
 	entity->collider = colliderManager->ActivateCollider(ColliderType::Box);
 	BoxCollider* const boxCollider = static_cast<BoxCollider*>(entity->collider);
@@ -52,6 +52,9 @@ void EntityFactory::CreateShotgunBullet(const glm::vec3& camPos, const glm::vec3
 	entity->force = glm::vec3(0.f);
 
 	entity->collider = colliderManager->ActivateCollider(ColliderType::Sphere);
+	SphereCollider* const sphereCollider = static_cast<SphereCollider*>(entity->collider);
+	sphereCollider->SetPos(entity->pos);
+	sphereCollider->SetRadius(entity->scale[0]);
 }
 
 void EntityFactory::CreateScarBullet(const glm::vec3& camPos, const glm::vec3& camFront){
@@ -72,6 +75,9 @@ void EntityFactory::CreateScarBullet(const glm::vec3& camPos, const glm::vec3& c
 	entity->force = glm::vec3(0.f);
 
 	entity->collider = colliderManager->ActivateCollider(ColliderType::Sphere);
+	SphereCollider* const sphereCollider = static_cast<SphereCollider*>(entity->collider);
+	sphereCollider->SetPos(entity->pos);
+	sphereCollider->SetRadius(entity->scale[0]);
 }
 
 void EntityFactory::CreateSniperBullet(const glm::vec3& camPos, const glm::vec3& camFront){
@@ -92,6 +98,9 @@ void EntityFactory::CreateSniperBullet(const glm::vec3& camPos, const glm::vec3&
 	entity->force = glm::vec3(0.f);
 
 	entity->collider = colliderManager->ActivateCollider(ColliderType::Sphere);
+	SphereCollider* const sphereCollider = static_cast<SphereCollider*>(entity->collider);
+	sphereCollider->SetPos(entity->pos);
+	sphereCollider->SetRadius(entity->scale[0]);
 }
 
 void EntityFactory::CreateCoin(const EntityCreationAttribs& attribs){

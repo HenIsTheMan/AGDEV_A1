@@ -36,4 +36,6 @@ Mesh* Meshes::meshes[(int)MeshType::Amt] = {
 	}),
 	new Mesh(Mesh::MeshType::Cube, GL_LINE_STRIP, {
 	}),
+	new Mesh(Mesh::MeshType::Sphere, GL_LINES, {
+	}),
 };

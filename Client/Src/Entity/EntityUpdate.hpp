@@ -46,7 +46,7 @@ inline static void UpdatePlayerVert(Entity* const player){
 
 	if(!isSpacePressed && Key(VK_SPACE)){
 		if(!IsAirborneWrapper::isAirborne){
-			player->vel.y = 500.0f;
+			player->vel.y = 2800.0f;
 			IsAirborneWrapper::isAirborne = true;
 		}
 

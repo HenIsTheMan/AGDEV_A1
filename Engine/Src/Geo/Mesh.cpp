@@ -628,8 +628,8 @@ void Mesh::CreateCube(){
 
 void Mesh::CreateSphere(){
 	if(!vertices){
-		const uint stackAmt = 50;
-		const uint sliceAmt = 50;
+		const uint stackAmt = 20;
+		const uint sliceAmt = 20;
 		vertices = new std::vector<Vertex>();
 		if(indices){
 			delete indices;

@@ -11,7 +11,8 @@ enum struct MeshType{
 	CoinSpriteAni,
 	FireSpriteAni,
 	QuadRegion,
-	CubeBB,
+	BoundingBox,
+	BoundingSphere,
 	Amt
 };
 

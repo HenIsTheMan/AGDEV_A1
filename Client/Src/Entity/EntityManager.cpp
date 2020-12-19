@@ -161,11 +161,19 @@ void EntityManager::Render(ShaderProg& SP, const Cam& cam){
 						modelStack.Translate(boxCollider->GetPos()),
 						modelStack.Scale(boxCollider->GetScale()),
 					});
-						Meshes::meshes[(int)MeshType::CubeBB]->SetModel(modelStack.GetTopModel());
-						Meshes::meshes[(int)MeshType::CubeBB]->Render(SP);
+						Meshes::meshes[(int)MeshType::BoundingBox]->SetModel(modelStack.GetTopModel());
+						Meshes::meshes[(int)MeshType::BoundingBox]->Render(SP);
 					break;
 				}
 				case ColliderType::Sphere:
+					SphereCollider* const sphereCollider = static_cast<SphereCollider*>(entity->collider);
+
+					modelStack.PushModel({
+						modelStack.Translate(sphereCollider->GetPos()),
+						modelStack.Scale(glm::vec3(sphereCollider->GetRadius())),
+					});
+						Meshes::meshes[(int)MeshType::BoundingSphere]->SetModel(modelStack.GetTopModel());
+						Meshes::meshes[(int)MeshType::BoundingSphere]->Render(SP);
 					break;
 			}
 			modelStack.PopModel();
@@ -213,11 +221,19 @@ void EntityManager::Render(ShaderProg& SP, const Cam& cam){
 						modelStack.Translate(boxCollider->GetPos()),
 						modelStack.Scale(boxCollider->GetScale()),
 					});
-						Meshes::meshes[(int)MeshType::CubeBB]->SetModel(modelStack.GetTopModel());
-						Meshes::meshes[(int)MeshType::CubeBB]->Render(SP);
+						Meshes::meshes[(int)MeshType::BoundingBox]->SetModel(modelStack.GetTopModel());
+						Meshes::meshes[(int)MeshType::BoundingBox]->Render(SP);
 					break;
 				}
 				case ColliderType::Sphere:
+					SphereCollider* const sphereCollider = static_cast<SphereCollider*>(entity->collider);
+
+					modelStack.PushModel({
+						modelStack.Translate(sphereCollider->GetPos()),
+						modelStack.Scale(glm::vec3(sphereCollider->GetRadius())),
+					});
+						Meshes::meshes[(int)MeshType::BoundingSphere]->SetModel(modelStack.GetTopModel());
+						Meshes::meshes[(int)MeshType::BoundingSphere]->Render(SP);
 					break;
 			}
 			modelStack.PopModel();
