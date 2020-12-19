@@ -87,7 +87,7 @@ private:
 	Gun* guns[3];
 	glm::vec4 reticleColour;
 
-	void MainMenuUpdate(GLFWwindow* const& win, const POINT& mousePos, float& buttonBT);
+	void MainMenuUpdate(GLFWwindow* const& win);
 	void GameUpdate(GLFWwindow* const& win);
 
 	void MainMenuRender();

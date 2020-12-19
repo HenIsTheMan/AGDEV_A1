@@ -420,6 +420,19 @@ void Scene::Update(GLFWwindow* const& win){
 		cam.ResetAspectRatio();
 	}
 
+	switch(screen){
+		case Screen::MainMenu:
+			MainMenuUpdate(win);
+			break;
+		case Screen::Game:
+			GameUpdate(win);
+			break;
+	}
+}
+
+void Scene::MainMenuUpdate(GLFWwindow* const& win){
+	glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+
 	POINT mousePos;
 	if(GetCursorPos(&mousePos)){
 		HWND hwnd = ::GetActiveWindow();
@@ -428,19 +441,6 @@ void Scene::Update(GLFWwindow* const& win){
 		(void)puts("Failed to get mouse pos relative to screen!");
 	}
 	static float buttonBT = 0.f;
-
-	switch(screen){
-		case Screen::MainMenu:
-			MainMenuUpdate(win, mousePos, buttonBT);
-			break;
-		case Screen::Game:
-			GameUpdate(win);
-			break;
-	}
-}
-
-void Scene::MainMenuUpdate(GLFWwindow* const& win, const POINT& mousePos, float& buttonBT){
-	glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
 	cam.SetPos(glm::vec3(0.f, 0.f, 5.f));
 	cam.SetTarget(glm::vec3(0.f));
