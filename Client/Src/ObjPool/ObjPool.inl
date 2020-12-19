@@ -35,6 +35,11 @@ void ObjPool<T>::Init(const size_t& inactiveSize, const size_t& activeSize){
 
 template <class T>
 T* ObjPool<T>::ActivateObj(){
+	if(inactiveObjs.empty()){
+		assert(false && "inactiveObjs is empty!");
+		return nullptr;
+	}
+
 	T* const obj = inactiveObjs.front();
 	activeObjs.emplace_back(obj);
 	inactiveObjs.erase(inactiveObjs.begin());
@@ -43,6 +48,11 @@ T* ObjPool<T>::ActivateObj(){
 
 template <class T>
 void ObjPool<T>::DeactivateObj(const T* const obj){
+	if(activeObjs.empty()){
+		assert(false && "activeObjs is empty!");
+		return;
+	}
+
 	typename std::vector<T*>::iterator iter = std::find(activeObjs.begin(), activeObjs.end(), obj);
 	if(iter != activeObjs.end()){
 		inactiveObjs.emplace_back(*iter);
