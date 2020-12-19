@@ -10,7 +10,8 @@ Region::Region():
 	bottomLeft(nullptr),
 	bottomRight(nullptr),
 	stationaryNodes(),
-	movableNodes()
+	movableNodes(),
+	regionPool(ObjPool<Region>::GetObjPtr())
 {
 }
 
@@ -26,6 +27,8 @@ Region::~Region(){
 			node = nullptr;
 		}
 	}
+
+	regionPool = nullptr; //Deleted in RegionManager
 }
 
 void Region::GetEntitiesToUpdate(std::vector<Entity*>& movableEntities, std::vector<Entity*>& stationaryEntities){
@@ -172,92 +175,124 @@ void Region::RemoveNode(Node* const node, const bool movable){
 
 
 void Region::ClearMovableAndDeactivateChildren(){
+	int emptyCount = 0;
+
 	if(topLeft){
 		topLeft->movableNodes.clear();
 		topLeft->ClearMovableAndDeactivateChildren();
+
+		if(topLeft->stationaryNodes.empty()){
+			++emptyCount;
+		}
 	}
 	if(topRight){
 		topRight->movableNodes.clear();
 		topRight->ClearMovableAndDeactivateChildren();
+
+		if(topRight->stationaryNodes.empty()){
+			++emptyCount;
+		}
 	}
 	if(bottomLeft){
 		bottomLeft->movableNodes.clear();
 		bottomLeft->ClearMovableAndDeactivateChildren();
+
+		if(bottomLeft->stationaryNodes.empty()){
+			++emptyCount;
+		}
 	}
 	if(bottomRight){
 		bottomRight->movableNodes.clear();
 		bottomRight->ClearMovableAndDeactivateChildren();
+
+		if(bottomRight->stationaryNodes.empty()){
+			++emptyCount;
+		}
+	}
+
+	if(emptyCount == 4){
+		regionPool->DeactivateObj(topLeft);
+		topLeft = nullptr;
+
+		regionPool->DeactivateObj(topRight);
+		topRight = nullptr;
+
+		regionPool->DeactivateObj(bottomLeft);
+		bottomLeft = nullptr;
+
+		regionPool->DeactivateObj(bottomRight);
+		bottomRight = nullptr;
 	}
 }
 
 void Region::Partition(const bool movable){
-	//const std::vector<Node*>& nodes = movable ? movableNodes : stationaryNodes;
-	//if(nodes.size() <= (size_t)1
-	//	&& topLeft == nullptr //For movable entities to be propagated down the quadtree
-	//	&& topRight == nullptr //...
-	//	&& bottomLeft == nullptr //...
-	//	&& bottomRight == nullptr //...
-	//){
-	//	return;
-	//}
+	const std::vector<Node*>& nodes = movable ? movableNodes : stationaryNodes;
+	if(nodes.size() <= (size_t)1
+		&& topLeft == nullptr //For movable entities to be propagated down the quadtree
+		&& topRight == nullptr //...
+		&& bottomLeft == nullptr //...
+		&& bottomRight == nullptr //...
+	){
+		return;
+	}
 
-	//if(topLeft == nullptr){
-	//	topLeft = FetchRegion();
-	//	topLeft->parent = this;
-	//	topLeft->origin = glm::vec2(origin[0] - size[0] * 0.25f, origin[1] - size[1] * 0.25f);
-	//	topLeft->size = glm::vec2(size[0] * 0.5f, size[1] * 0.5f);
-	//}
+	if(topLeft == nullptr){
+		topLeft = FetchRegion();
+		topLeft->parent = this;
+		topLeft->origin = glm::vec2(origin[0] - size[0] * 0.25f, origin[1] - size[1] * 0.25f);
+		topLeft->size = glm::vec2(size[0] * 0.5f, size[1] * 0.5f);
+	}
 
-	//if(topRight == nullptr){
-	//	topRight = FetchRegion();
-	//	topRight->parent = this;
-	//	topRight->origin = glm::vec2(origin[0] + size[0] * 0.25f, origin[1] - size[1] * 0.25f);
-	//	topRight->size = topLeft->size;
-	//}
+	if(topRight == nullptr){
+		topRight = FetchRegion();
+		topRight->parent = this;
+		topRight->origin = glm::vec2(origin[0] + size[0] * 0.25f, origin[1] - size[1] * 0.25f);
+		topRight->size = topLeft->size;
+	}
 
-	//if(bottomLeft == nullptr){
-	//	bottomLeft = FetchRegion();
-	//	bottomLeft->parent = this;
-	//	bottomLeft->origin = glm::vec2(origin[0] - size[0] * 0.25f, origin[1] + size[1] * 0.25f);
-	//	bottomLeft->size = topLeft->size;
-	//}
+	if(bottomLeft == nullptr){
+		bottomLeft = FetchRegion();
+		bottomLeft->parent = this;
+		bottomLeft->origin = glm::vec2(origin[0] - size[0] * 0.25f, origin[1] + size[1] * 0.25f);
+		bottomLeft->size = topLeft->size;
+	}
 
-	//if(bottomRight == nullptr){
-	//	bottomRight = FetchRegion();
-	//	bottomRight->parent = this;
-	//	bottomRight->origin = glm::vec2(origin[0] + size[0] * 0.25f, origin[1] + size[1] * 0.25f);
-	//	bottomRight->size = topLeft->size;
-	//}
+	if(bottomRight == nullptr){
+		bottomRight = FetchRegion();
+		bottomRight->parent = this;
+		bottomRight->origin = glm::vec2(origin[0] + size[0] * 0.25f, origin[1] + size[1] * 0.25f);
+		bottomRight->size = topLeft->size;
+	}
 
-	//for(Node* const node: nodes){
-	//	const Entity* const entity = node->GetEntity();
+	for(Node* const node: nodes){
+		const Entity* const entity = node->GetEntity();
 
-	//	if(entity
-	//		&& entity->pos.x + entity->scale.x * 0.5f <= origin[0] + size[0] * 0.5f && entity->pos.x - entity->scale.x * 0.5f >= origin[0] - size[0] * 0.5f
-	//		&& entity->pos.z + entity->scale.z * 0.5f <= origin[1] + size[1] * 0.5f && entity->pos.z - entity->scale.z * 0.5f >= origin[1] - size[1] * 0.5f
-	//	){
-	//		if(entity->pos.z - entity->scale.z * 0.5f <= origin[1]){
-	//			if(entity->pos.x - entity->scale.x * 0.5f <= origin[0]){
-	//				topLeft->AddNode(node, entity->movable);
-	//			}
-	//			if(entity->pos.x + entity->scale.x * 0.5f >= origin[0]){
-	//				topRight->AddNode(node, entity->movable);
-	//			}
-	//		}
-	//		if(entity->pos.z + entity->scale.z * 0.5f >= origin[1]){
-	//			if(entity->pos.x - entity->scale.x * 0.5f <= origin[0]){
-	//				bottomLeft->AddNode(node, entity->movable);
-	//			}
-	//			if(entity->pos.x + entity->scale.x * 0.5f >= origin[0]){
-	//				bottomRight->AddNode(node, entity->movable);
-	//			}
-	//		}
-	//	}
-	//}
+		if(entity
+			&& entity->pos.x + entity->scale.x * 0.5f <= origin[0] + size[0] * 0.5f && entity->pos.x - entity->scale.x * 0.5f >= origin[0] - size[0] * 0.5f
+			&& entity->pos.z + entity->scale.z * 0.5f <= origin[1] + size[1] * 0.5f && entity->pos.z - entity->scale.z * 0.5f >= origin[1] - size[1] * 0.5f
+		){
+			if(entity->pos.z - entity->scale.z * 0.5f <= origin[1]){
+				if(entity->pos.x - entity->scale.x * 0.5f <= origin[0]){
+					topLeft->AddNode(node, entity->movable);
+				}
+				if(entity->pos.x + entity->scale.x * 0.5f >= origin[0]){
+					topRight->AddNode(node, entity->movable);
+				}
+			}
+			if(entity->pos.z + entity->scale.z * 0.5f >= origin[1]){
+				if(entity->pos.x - entity->scale.x * 0.5f <= origin[0]){
+					bottomLeft->AddNode(node, entity->movable);
+				}
+				if(entity->pos.x + entity->scale.x * 0.5f >= origin[0]){
+					bottomRight->AddNode(node, entity->movable);
+				}
+			}
+		}
+	}
 
-	/////Use recursion to continue forming the Quadtree
-	//topLeft->Partition(movable);
-	//topRight->Partition(movable);
-	//bottomLeft->Partition(movable);
-	//bottomRight->Partition(movable);
+	///Use recursion to continue forming the Quadtree
+	topLeft->Partition(movable);
+	topRight->Partition(movable);
+	bottomLeft->Partition(movable);
+	bottomRight->Partition(movable);
 }

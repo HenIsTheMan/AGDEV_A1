@@ -9,6 +9,8 @@
 #include "../World/Cam.h"
 #include "../World/ModelStack.h"
 
+#include "../ObjPool/ObjPool.h"
+
 class Region final{
 	friend class RegionManager;
 public:
@@ -39,4 +41,6 @@ private:
 
 	std::vector<Node*> stationaryNodes;
 	std::vector<Node*> movableNodes;
+
+	ObjPool<Region>* regionPool;
 };

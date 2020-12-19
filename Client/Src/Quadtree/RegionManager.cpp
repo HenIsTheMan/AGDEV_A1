@@ -41,6 +41,14 @@ void RegionManager::Render(ShaderProg& SP, const Cam& cam){
 	}
 }
 
+Region* RegionManager::ActivateRegion(){
+	return regionPool->ActivateObj();
+}
+
+void RegionManager::DeactivateRegion(Region* const region){
+	regionPool->DeactivateObj(region);
+}
+
 Region* RegionManager::RetrieveRootRegion(){
 	return rootRegion;
 }
