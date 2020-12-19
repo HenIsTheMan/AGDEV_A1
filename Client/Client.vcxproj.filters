@@ -47,6 +47,7 @@
     <ClInclude Include="Src\Shared\Easing.hpp" />
     <ClInclude Include="Src\Quadtree\RegionManager.h" />
     <ClInclude Include="Src\Quadtree\NodeManager.h" />
+    <ClInclude Include="Src\ObjPool\ObjPool.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Blur.fragS" />
@@ -62,5 +63,6 @@
     <None Include="Shaders\GeoPass.vertexS" />
     <None Include="Shaders\Forward.vertexS" />
     <None Include="Shaders\Normals.geoS" />
+    <None Include="Src\ObjPool\ObjPool.inl" />
   </ItemGroup>
 </Project>

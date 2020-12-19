@@ -228,6 +228,7 @@
     <ClInclude Include="Src\Entity\EntityManager.h" />
     <ClInclude Include="Src\Entity\EntityUpdate.hpp" />
     <ClInclude Include="Src\LOD\LOD.h" />
+    <ClInclude Include="Src\ObjPool\ObjPool.h" />
     <ClInclude Include="Src\Quadtree\Node.h" />
     <ClInclude Include="Src\Quadtree\NodeManager.h" />
     <ClInclude Include="Src\Quadtree\Region.h" />
@@ -253,6 +254,7 @@
     <None Include="Shaders\Screen.fragS" />
     <None Include="Shaders\Text.fragS" />
     <None Include="Shaders\Text.vertexS" />
+    <None Include="Src\ObjPool\ObjPool.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

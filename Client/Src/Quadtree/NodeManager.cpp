@@ -36,7 +36,7 @@ Node* NodeManager::ActivateNode(){
 }
 
 void NodeManager::DeactivateNode(const Node* const node){
-	auto iter = std::find(activeNodes.begin(), activeNodes.end(), node);
+	std::vector<Node*>::iterator iter = std::find(activeNodes.begin(), activeNodes.end(), node);
 	if(iter != activeNodes.end()){
 		inactiveNodes.emplace_back(*iter);
 		activeNodes.erase(iter);
