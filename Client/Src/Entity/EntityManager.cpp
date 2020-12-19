@@ -95,7 +95,6 @@ void EntityManager::Update(){
 					break;
 				}
 				case Entity::EntityType::ThinObj:
-					//movableEntity->pos.x += EaseInOutCubic((sinf(elapsedTime * 2.0f) + 1.0f) * 0.5f);
 					movableEntity->pos.x += sinf(elapsedTime * 2.0f) * 2.0f;
 
 					if(movableEntity->collider != nullptr){
@@ -236,6 +235,11 @@ EntityFactory* EntityManager::RetrieveEntityFactory(){
 
 void EntityManager::DeactivateEntity(Entity* const& entity){
 	DeactivateEntityProcedure(entity);
+
+	if(entity->collider != nullptr){
+		colliderManager->DeactivateCollider(entity->collider);
+	}
+
 	entityPool->DeactivateObj(entity);
 }
 

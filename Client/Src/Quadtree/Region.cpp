@@ -172,7 +172,7 @@ void Region::RemoveNode(Node* const node, const bool movable){
 	std::vector<Node*>& nodes = movable ? movableNodes : stationaryNodes;
 	const std::vector<Node*>::iterator iter = std::find(nodes.begin(), nodes.end(), node);
 
-	if(iter != nodes.end()){
+	if(iter == nodes.end()){
 		return assert(false && "Node could not be found!");
 	}
 
