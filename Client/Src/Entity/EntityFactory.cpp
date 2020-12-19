@@ -2,13 +2,18 @@
 
 EntityFactory::~EntityFactory(){
 	colliderManager = nullptr; //Deleted in EntityManager
+
+	if(nodeManager != nullptr){
+		nodeManager->Destroy();
+		nodeManager = nullptr;
+	}
+
 	regionManager = nullptr; //Deleted in EntityManager
 	entityPool = nullptr; //Deleted in EntityManager
-	rootNode = nullptr; //Deleted in EntityManager
 }
 
-void EntityFactory::Init(Node* const rootNode){
-	this->rootNode = rootNode;
+void EntityFactory::Init(const size_t& inactiveSize, const size_t& activeSize){
+	nodeManager->Init(inactiveSize, activeSize);
 }
 
 const Entity* EntityFactory::CreatePlayer(const EntityCreationAttribs& attribs){
@@ -187,8 +192,8 @@ void EntityFactory::CreateTree(const EntityCreationAttribs& attribs){
 }
 
 EntityFactory::EntityFactory():
-	rootNode(nullptr),
 	colliderManager(ColliderManager::GetObjPtr()),
+	nodeManager(NodeManager::GetObjPtr()),
 	regionManager(RegionManager::GetObjPtr()),
 	entityPool(ObjPool<Entity>::GetObjPtr())
 {
@@ -202,8 +207,8 @@ Entity* EntityFactory::ActivateEntity(const bool movable){
 }
 
 void EntityFactory::ActivateEntityProcedure(Entity* const entity){
-	Node* const node = new Node();
+	Node* const node = nodeManager->ActivateNode();
 	node->SetEntity(entity);
-	rootNode->AddChild(node);
+	nodeManager->RetrieveRootNode()->AddChild(node);
 	regionManager->AddNode(node, entity->movable);
 }

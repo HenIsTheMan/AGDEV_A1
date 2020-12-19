@@ -15,7 +15,10 @@ public:
 
 	Node* ActivateNode();
 	void DeactivateNode(Node* const node);
+
+	Node* RetrieveRootNode();
 private:
+	Node* rootNode;
 	ObjPool<Node>* nodePool;
 
 	NodeManager();

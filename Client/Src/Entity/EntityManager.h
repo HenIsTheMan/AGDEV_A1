@@ -25,8 +25,6 @@ private:
 	bool shldRenderColliders;
 	float elapsedTime;
 
-	Node* rootNode;
-
 	EntityFactory* entityFactory;
 
 	RegionManager* regionManager;

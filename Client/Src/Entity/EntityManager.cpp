@@ -7,12 +7,6 @@
 extern float dt;
 
 EntityManager::~EntityManager(){
-	rootNode->DestroyAllChildren();
-	if(rootNode){
-		delete rootNode;
-		rootNode = nullptr;
-	}
-
 	if(entityFactory != nullptr){
 		entityFactory->Destroy();
 		entityFactory = nullptr;
@@ -37,7 +31,7 @@ EntityManager::~EntityManager(){
 void EntityManager::Init(){
 	const size_t entityPoolSize = 40000;
 
-	entityFactory->Init(rootNode);
+	entityFactory->Init(entityPoolSize, entityPoolSize);
 
 	regionManager->InitRegionPool(entityPoolSize);
 
@@ -251,7 +245,6 @@ void EntityManager::DeactivateEntityProcedure(Entity* const entity){
 EntityManager::EntityManager():
 	shldRenderColliders(false),
 	elapsedTime(0.0f),
-	rootNode(new Node()),
 	entityFactory(EntityFactory::GetObjPtr()),
 	regionManager(RegionManager::GetObjPtr()),
 	colliderManager(ColliderManager::GetObjPtr()),

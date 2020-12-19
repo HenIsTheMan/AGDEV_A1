@@ -20,10 +20,6 @@ Node::Node():
 Node::~Node(){
 	entity = nullptr;
 	parent = nullptr;
-
-	for(Node*& child: children){
-		child = nullptr;
-	}
 }
 
 void Node::AddChild(Node* const child){
