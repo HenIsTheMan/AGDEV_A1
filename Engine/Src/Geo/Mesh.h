@@ -10,6 +10,7 @@ public:
 		Cube,
 		Sphere,
 		Cylinder,
+		Frustum,
 		Amt
 	};
 	enum struct TexType{
@@ -93,4 +94,5 @@ protected:
 	void CreateCube(); //2x2x2
 	void CreateSphere(); //2x2x2
 	void CreateCylinder(); //2x2x2
+	void CreateFrustum();
 };

@@ -214,6 +214,9 @@ void Mesh::InstancedRender(ShaderProg& SP, const bool& autoConfig){
 			case MeshType::Cylinder:
 				CreateCylinder();
 				break;
+			case MeshType::Frustum:
+				CreateFrustum();
+				break;
 		}
 		glGenVertexArrays(1, &instancingVAO);
 		glGenBuffers(1, &instancingVBO);
@@ -382,6 +385,9 @@ void Mesh::Render(ShaderProg& SP, const bool& autoConfig){
 			case MeshType::Cylinder:
 				CreateCylinder();
 				break;
+			case MeshType::Frustum:
+				CreateFrustum();
+				break;
 		}
 		glGenVertexArrays(1, &VAO);
 		glGenBuffers(1, &VBO);
@@ -506,16 +512,16 @@ void Mesh::CreateQuad(){
 		const glm::vec2 UVs[4]{glm::vec2(0.f, 1.f), glm::vec2(0.f, 0.f), glm::vec2(1.f, 0.f), glm::vec2(1.f, 1.f)};
 
 		///T and B lie on the same plane as normal map surface and align with tex axes U and V so calc them with vertices (to get edges of...) and texCoords (since in tangent space) of primitives
-		glm::vec3 tangent[2];
-		for(short i = 0; i < 2; ++i){
-			const glm::vec3 edges[2]{pos[!i ? 1 : 3] - pos[2 * i], pos[2 * !i] - pos[2 * i]};
-			const glm::vec2 deltaUVs[2]{UVs[!i ? 1 : 3] - UVs[2 * i], UVs[2 * !i] - UVs[2 * i]};
-			const float reciprocal = 1.f / (deltaUVs[0].x * deltaUVs[1].y - deltaUVs[1].x * deltaUVs[0].y);
+		//glm::vec3 tangent[2];
+		//for(short i = 0; i < 2; ++i){
+		//	const glm::vec3 edges[2]{pos[!i ? 1 : 3] - pos[2 * i], pos[2 * !i] - pos[2 * i]};
+		//	const glm::vec2 deltaUVs[2]{UVs[!i ? 1 : 3] - UVs[2 * i], UVs[2 * !i] - UVs[2 * i]};
+		//	const float reciprocal = 1.f / (deltaUVs[0].x * deltaUVs[1].y - deltaUVs[1].x * deltaUVs[0].y);
 
-			tangent[i].x = reciprocal * (deltaUVs[1].y * edges[0].x - deltaUVs[0].y * edges[1].x);
-			tangent[i].y = reciprocal * (deltaUVs[1].y * edges[0].x - deltaUVs[0].y * edges[1].x);
-			tangent[i].z = reciprocal * (deltaUVs[1].y * edges[0].x - deltaUVs[0].y * edges[1].x);
-		}
+		//	tangent[i].x = reciprocal * (deltaUVs[1].y * edges[0].x - deltaUVs[0].y * edges[1].x);
+		//	tangent[i].y = reciprocal * (deltaUVs[1].y * edges[0].x - deltaUVs[0].y * edges[1].x);
+		//	tangent[i].z = reciprocal * (deltaUVs[1].y * edges[0].x - deltaUVs[0].y * edges[1].x);
+		//}
 
 		vertices = new std::vector<Vertex>(4);
 		for(short i = 0; i < 4; ++i){
@@ -524,7 +530,7 @@ void Mesh::CreateQuad(){
 				glm::vec4(.7f, .4f, .1f, 1.f),
 				UVs[i],
 				glm::vec3(0.f, 0.f, 1.f),
-				tangent[!(i % 3)],
+				glm::vec3(),
 			};
 		}
 
@@ -717,4 +723,7 @@ void Mesh::CreateCylinder(){
 			indices->emplace_back(0 + sliceAmt * 3 + 3 + 1); //...
 		}
 	}
+}
+
+void Mesh::CreateFrustum(){
 }

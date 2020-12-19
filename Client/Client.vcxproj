@@ -205,6 +205,7 @@
     <ClCompile Include="Src\Entity\Entities\Gun.cpp" />
     <ClCompile Include="Src\Entity\EntityFactory.cpp" />
     <ClCompile Include="Src\Entity\EntityManager.cpp" />
+    <ClCompile Include="Src\FrustumCulling\FrustumCulling.cpp" />
     <ClCompile Include="Src\LOD\LOD.cpp" />
     <ClCompile Include="Src\Quadtree\Node.cpp" />
     <ClCompile Include="Src\Quadtree\NodeManager.cpp" />
@@ -229,6 +230,7 @@
     <ClInclude Include="Src\Entity\EntityFactory.h" />
     <ClInclude Include="Src\Entity\EntityManager.h" />
     <ClInclude Include="Src\Entity\EntityUpdate.hpp" />
+    <ClInclude Include="Src\FrustumCulling\FrustumCulling.h" />
     <ClInclude Include="Src\LOD\LOD.h" />
     <ClInclude Include="Src\ObjPool\ObjPool.h" />
     <ClInclude Include="Src\Quadtree\Node.h" />
