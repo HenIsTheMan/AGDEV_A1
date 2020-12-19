@@ -136,9 +136,6 @@ void EntityManager::Render(ShaderProg& SP, const Cam& cam){
 					Meshes::meshes[(int)MeshType::Sphere]->SetModel(modelStack.GetTopModel());
 					Meshes::meshes[(int)MeshType::Sphere]->Render(SP);
 				break;
-			case Entity::EntityType::ShotgunAmmo:
-			case Entity::EntityType::ScarAmmo:
-			case Entity::EntityType::SniperAmmo:
 			case Entity::EntityType::Player:
 			case Entity::EntityType::ThinObj:
 				modelStack.PushModel({
