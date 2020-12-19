@@ -5,11 +5,14 @@
 #include "Entity.h"
 
 #include "../Collider/ColliderManager.h"
+#include "../Quadtree/RegionManager.h"
 
 #include "../Collider/Colliders/BoxCollider.h"
 #include "../Collider/Colliders/SphereCollider.h"
 
 #include "../ObjPool/ObjPool.h"
+
+#include "../Quadtree/Node.h"
 
 struct EntityCreationAttribs final{
 	glm::vec3 pos;
@@ -22,6 +25,8 @@ class EntityFactory final: public Singleton<EntityFactory>{
 	friend Singleton<EntityFactory>;
 public:
 	~EntityFactory();
+
+	void Init(Node* const rootNode);
 
 	const Entity* CreatePlayer(const EntityCreationAttribs& attribs);
 
@@ -38,7 +43,11 @@ public:
 
 	void CreateTree(const EntityCreationAttribs& attribs);
 private:
+	Node* rootNode;
+
 	ColliderManager* colliderManager;
+	RegionManager* regionManager;
+
 	ObjPool<Entity>* entityPool;
 
 	EntityFactory();

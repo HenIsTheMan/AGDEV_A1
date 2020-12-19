@@ -2,7 +2,13 @@
 
 EntityFactory::~EntityFactory(){
 	colliderManager = nullptr; //Deleted in EntityManager
+	regionManager = nullptr; //Deleted in EntityManager
 	entityPool = nullptr; //Deleted in EntityManager
+	rootNode = nullptr; //Deleted in EntityManager
+}
+
+void EntityFactory::Init(Node* const rootNode){
+	this->rootNode = rootNode;
 }
 
 const Entity* EntityFactory::CreatePlayer(const EntityCreationAttribs& attribs){
@@ -181,7 +187,9 @@ void EntityFactory::CreateTree(const EntityCreationAttribs& attribs){
 }
 
 EntityFactory::EntityFactory():
+	rootNode(nullptr),
 	colliderManager(ColliderManager::GetObjPtr()),
+	regionManager(RegionManager::GetObjPtr()),
 	entityPool(ObjPool<Entity>::GetObjPtr())
 {
 }

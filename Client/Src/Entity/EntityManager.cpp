@@ -37,12 +37,14 @@ EntityManager::~EntityManager(){
 void EntityManager::Init(){
 	const size_t entityPoolSize = 9999;
 
-	entityPool->Init(entityPoolSize, entityPoolSize);
+	entityFactory->Init(rootNode);
 
 	regionManager->InitRegionPool(entityPoolSize);
 
 	colliderManager->InitBoxColliderPool(entityPoolSize, entityPoolSize);
 	colliderManager->InitSphereColliderPool(entityPoolSize, entityPoolSize);
+
+	entityPool->Init(entityPoolSize, entityPoolSize);
 }
 
 void EntityManager::Update(){
@@ -231,7 +233,9 @@ void EntityManager::Render(ShaderProg& SP, const Cam& cam){
 	SP.Set1i("useCustomColour", 0);
 }
 
-void EntityManager::DeactivateEntity(Entity* const& entity, const bool movable){
+void EntityManager::DeactivateEntity(Entity* const& entity){
+	DeactivateEntityProcedure(entity);
+	entityPool->DeactivateObj(entity);
 }
 
 void EntityManager::DeactivateEntityProcedure(Entity* const entity){

@@ -17,7 +17,7 @@ public:
 private:
 	EntityManager();
 
-	void DeactivateEntity(Entity* const& entity, const bool movable);
+	void DeactivateEntity(Entity* const& entity);
 	void DeactivateEntityProcedure(Entity* const entity);
 
 	bool shldRenderColliders;
