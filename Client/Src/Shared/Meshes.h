@@ -13,6 +13,7 @@ enum struct MeshType{
 	QuadRegion,
 	BoundingBox,
 	BoundingSphere,
+	ViewingFrustum,
 	Amt
 };
 

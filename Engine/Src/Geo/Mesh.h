@@ -21,11 +21,6 @@ public:
 		Bump,
 		Amt
 	};
-	//struct BatchRenderParams final{
-	//	glm::mat4 model;
-	//	glm::vec4 colour;
-	//	int diffuseTexIndex;
-	//};
 
 	Mesh();
 	Mesh(const MeshType& type, const int& primitive, const std::initializer_list<std::tuple<str, TexType, uint>>& iL);
