@@ -157,9 +157,9 @@ void Scene::InitEntities(){
 	CreateTreesAndCubes();
 	CreateDecorations();
 
-	treeLOD.SetDistSquaredAndModel(DetailLvl::High, 2000.0f * 2000.0f,  models[(int)ModelType::Tree_High]);
-	treeLOD.SetDistSquaredAndModel(DetailLvl::Medium, 4000.0f * 4000.0f,  models[(int)ModelType::Tree_Medium]);
-	treeLOD.SetDistSquaredAndModel(DetailLvl::Low, 6000.0f * 6000.0f, models[(int)ModelType::Tree_Low]);
+	treeLOD.SetDistSquaredAndModel(DetailLvl::High, 2500.0f * 2500.0f,  models[(int)ModelType::Tree_High]);
+	treeLOD.SetDistSquaredAndModel(DetailLvl::Medium, 4500.0f * 4500.0f,  models[(int)ModelType::Tree_Medium]);
+	treeLOD.SetDistSquaredAndModel(DetailLvl::Low, 6500.0f * 6500.0f, models[(int)ModelType::Tree_Low]);
 }
 
 void Scene::CreateEntities(){
@@ -709,7 +709,7 @@ void Scene::GameRender(){
 
 	cubeMesh->InstancedRender(forwardSP);
 
-	Model* const treeModel = treeLOD.GetModel(glm::length2(myPlayer->GetPos().z + (angularFOV - 45.0f) * 100.0f));
+	Model* const treeModel = treeLOD.GetModel(glm::length2(myPlayer->GetPos().z) + (angularFOV - 45.0f) * 10000.0f); //??
 	if(treeModel != nullptr){
 		treeModel->InstancedRender(forwardSP);
 	}

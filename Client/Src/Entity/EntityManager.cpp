@@ -83,7 +83,7 @@ void EntityManager::Update(){
 						movableEntity->pos.x / terrainXScale,
 						movableEntity->pos.z / terrainZScale,
 						false
-					) + movableEntity->scale.y * 0.5f;
+					) + movableEntity->scale.y;
 
 					movableEntity->pos.x = std::min(movableEntity->xMax, std::max(movableEntity->xMin, movableEntity->pos.x));
 					movableEntity->pos.y = std::min(movableEntity->yMax, std::max(movableEntity->yMin, movableEntity->pos.y));
@@ -97,7 +97,7 @@ void EntityManager::Update(){
 				}
 				case Entity::EntityType::ThinObj:
 					//movableEntity->pos.x += EaseInOutCubic((sinf(elapsedTime * 2.0f) + 1.0f) * 0.5f);
-					movableEntity->pos.x += sinf(elapsedTime * 2.0f);
+					movableEntity->pos.x += sinf(elapsedTime * 2.0f) * 2.0f;
 
 					if(movableEntity->collider != nullptr){
 						static_cast<BoxCollider*>(movableEntity->collider)->SetPos(movableEntity->pos);
