@@ -29,6 +29,8 @@ public:
 	void ClearMovableAndDeactivateChildren();
 	void Partition(const bool movable);
 private:
+	bool visible;
+
 	Region* parent;
 	glm::vec2 origin;
 	glm::vec2 size;

@@ -1,6 +1,7 @@
 #include "Region.h"
 
 Region::Region():
+	visible(false),
 	parent(nullptr),
 	origin(glm::vec2()),
 	size(glm::vec2()),
@@ -64,6 +65,10 @@ void Region::GetEntitiesToUpdate(std::vector<Entity*>& movableEntities, std::vec
 }
 
 void Region::GetEntitiesToRender(std::multimap<int, Entity*>& entitiesOpaque, std::multimap<int, Entity*>& entitiesNotOpaque, const Cam& cam){
+	if(!visible){
+		return;
+	}
+
 	bool result = topLeft || topRight || bottomLeft || bottomRight;
 	if(result){
 		topLeft->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
@@ -211,9 +216,6 @@ void Region::RemoveNode(Node* const node, const bool movable){
 
 	nodes.erase(iter);
 }
-
-
-
 
 void Region::ClearMovableAndDeactivateChildren(){
 	int emptyCount = 0;
