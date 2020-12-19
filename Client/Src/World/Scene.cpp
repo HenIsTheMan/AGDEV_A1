@@ -546,16 +546,16 @@ void Scene::GameUpdate(GLFWwindow* const& win){
 		if(RMB){ //Control angularFOV of perspective projection based on item selected in inv
 			switch(inv[currSlot]){
 				case ItemType::Shotgun:
-					angularFOV = 40.f;
+					angularFOV = 40.0f;
 					break;
 				case ItemType::Scar:
-					angularFOV = 30.f;
+					angularFOV = 30.0f;
 					break;
 				case ItemType::Sniper:
-					if(angularFOV != 15.f){
+					if(angularFOV != 15.0f){
 						soundEngine->play2D("Audio/Sounds/Scope.wav", false);
 					}
-					angularFOV = 15.f;
+					angularFOV = 15.0f;
 					break;
 			}
 		} else{
@@ -689,7 +689,7 @@ void Scene::GameRender(){
 
 	cubeMesh->InstancedRender(forwardSP);
 
-	Model* const treeModel = treeLOD.GetModel(glm::length2(myPlayer->GetPos().z));
+	Model* const treeModel = treeLOD.GetModel(glm::length2(myPlayer->GetPos().z + (angularFOV - 45.0f) * 100.0f));
 	if(treeModel != nullptr){
 		treeModel->InstancedRender(forwardSP);
 	}
