@@ -29,7 +29,7 @@ Region::~Region(){
 }
 
 void Region::GetEntitiesToUpdate(std::vector<Entity*>& movableEntities, std::vector<Entity*>& stationaryEntities){
-	const bool result = (topLeft && topLeft->active) || (topRight && topRight->active) || (bottomLeft && bottomLeft->active) || (bottomRight && bottomRight->active);
+	const bool result = topLeft || topRight || bottomLeft || bottomRight;
 	if(result){
 		topLeft->GetEntitiesToUpdate(movableEntities, stationaryEntities);
 		topRight->GetEntitiesToUpdate(movableEntities, stationaryEntities);
@@ -55,7 +55,7 @@ void Region::GetEntitiesToUpdate(std::vector<Entity*>& movableEntities, std::vec
 void Region::GetEntitiesToRender(std::map<int, Entity*>& entitiesOpaque, std::map<int, Entity*>& entitiesNotOpaque, const Cam& cam){
 	//Check if visible??
 
-	const bool result = (topLeft && topLeft->active) || (topRight && topRight->active) || (bottomLeft && bottomLeft->active) || (bottomRight && bottomRight->active);
+	const bool result = topLeft || topRight || bottomLeft || bottomRight;
 	if(result){
 		topLeft->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
 		topRight->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
@@ -117,7 +117,8 @@ void Region::GetEntitiesToRender(std::map<int, Entity*>& entitiesOpaque, std::ma
 }
 
 void Region::GetLeaves(ShaderProg& SP, std::vector<Region*>& leaves){
-	if((topLeft && topLeft->active) || (topRight && topRight->active) || (bottomLeft && bottomLeft->active) || (bottomRight && bottomRight->active)){
+	const bool result = topLeft || topRight || bottomLeft || bottomRight;
+	if(result){
 		topLeft->GetLeaves(SP, leaves);
 		topRight->GetLeaves(SP, leaves);
 		bottomLeft->GetLeaves(SP, leaves);
@@ -128,37 +129,35 @@ void Region::GetLeaves(ShaderProg& SP, std::vector<Region*>& leaves){
 }
 
 const Region* Region::FindRegion(Node* const node, const bool movable) const{
-	if(topLeft && topLeft->active){
+	if(topLeft){
 		const Region* const& region = topLeft->FindRegion(node, movable);
 		if(region){
 			return region;
 		}
 	}
-	if(topRight && topRight->active){
+	if(topRight){
 		const Region* const& region = topRight->FindRegion(node, movable);
 		if(region){
 			return region;
 		}
 	}
-	if(bottomLeft && bottomLeft->active){
+	if(bottomLeft){
 		const Region* const& region = bottomLeft->FindRegion(node, movable);
 		if(region){
 			return region;
 		}
 	}
-	if(bottomRight && bottomRight->active){
+	if(bottomRight){
 		const Region* const& region = bottomRight->FindRegion(node, movable);
 		if(region){
 			return region;
 		}
 	}
 
-	if(active){
-		const std::vector<Node*>& nodes = movable ? movableNodes : stationaryNodes;
-		for(const Node* const& myNode : nodes){
-			if(myNode == node){
-				return this;
-			}
+	const std::vector<Node*>& nodes = movable ? movableNodes : stationaryNodes;
+	for(const Node* const& myNode : nodes){
+		if(myNode == node){
+			return this;
 		}
 	}
 
@@ -183,102 +182,90 @@ void Region::RemoveNode(Node* const node, const bool movable){
 void Region::ClearMovableAndDeactivateChildren(){
 	if(topLeft){
 		topLeft->movableNodes.clear();
-		if(topLeft->stationaryNodes.empty()){
-			topLeft->active = false;
-		}
 		topLeft->ClearMovableAndDeactivateChildren();
 	}
 	if(topRight){
 		topRight->movableNodes.clear();
-		if(topRight->stationaryNodes.empty()){
-			topRight->active = false;
-		}
 		topRight->ClearMovableAndDeactivateChildren();
 	}
 	if(bottomLeft){
 		bottomLeft->movableNodes.clear();
-		if(bottomLeft->stationaryNodes.empty()){
-			bottomLeft->active = false;
-		}
 		bottomLeft->ClearMovableAndDeactivateChildren();
 	}
 	if(bottomRight){
 		bottomRight->movableNodes.clear();
-		if(bottomRight->stationaryNodes.empty()){
-			bottomRight->active = false;
-		}
 		bottomRight->ClearMovableAndDeactivateChildren();
 	}
 }
 
 void Region::Partition(const bool movable){
-	const std::vector<Node*>& nodes = movable ? movableNodes : stationaryNodes;
-	if(nodes.size() <= (size_t)1
-		&& (topLeft == nullptr || !topLeft->active) //For movable entities to be propagated down the quadtree
-		&& (topRight == nullptr || !topRight->active) //...
-		&& (bottomLeft == nullptr || !bottomLeft->active) //...
-		&& (bottomRight == nullptr || !bottomRight->active) //...
-	){
-		return;
-	}
+	//const std::vector<Node*>& nodes = movable ? movableNodes : stationaryNodes;
+	//if(nodes.size() <= (size_t)1
+	//	&& topLeft == nullptr //For movable entities to be propagated down the quadtree
+	//	&& topRight == nullptr //...
+	//	&& bottomLeft == nullptr //...
+	//	&& bottomRight == nullptr //...
+	//){
+	//	return;
+	//}
 
-	if(topLeft == nullptr || !topLeft->active){
-		topLeft = FetchRegion();
-		topLeft->parent = this;
-		topLeft->origin = glm::vec2(origin[0] - size[0] * 0.25f, origin[1] - size[1] * 0.25f);
-		topLeft->size = glm::vec2(size[0] * 0.5f, size[1] * 0.5f);
-	}
+	//if(topLeft == nullptr){
+	//	topLeft = FetchRegion();
+	//	topLeft->parent = this;
+	//	topLeft->origin = glm::vec2(origin[0] - size[0] * 0.25f, origin[1] - size[1] * 0.25f);
+	//	topLeft->size = glm::vec2(size[0] * 0.5f, size[1] * 0.5f);
+	//}
 
-	if(topRight == nullptr || !topRight->active){
-		topRight = FetchRegion();
-		topRight->parent = this;
-		topRight->origin = glm::vec2(origin[0] + size[0] * 0.25f, origin[1] - size[1] * 0.25f);
-		topRight->size = topLeft->size;
-	}
+	//if(topRight == nullptr){
+	//	topRight = FetchRegion();
+	//	topRight->parent = this;
+	//	topRight->origin = glm::vec2(origin[0] + size[0] * 0.25f, origin[1] - size[1] * 0.25f);
+	//	topRight->size = topLeft->size;
+	//}
 
-	if(bottomLeft == nullptr || !bottomLeft->active){
-		bottomLeft = FetchRegion();
-		bottomLeft->parent = this;
-		bottomLeft->origin = glm::vec2(origin[0] - size[0] * 0.25f, origin[1] + size[1] * 0.25f);
-		bottomLeft->size = topLeft->size;
-	}
+	//if(bottomLeft == nullptr){
+	//	bottomLeft = FetchRegion();
+	//	bottomLeft->parent = this;
+	//	bottomLeft->origin = glm::vec2(origin[0] - size[0] * 0.25f, origin[1] + size[1] * 0.25f);
+	//	bottomLeft->size = topLeft->size;
+	//}
 
-	if(bottomRight == nullptr || !bottomRight->active){
-		bottomRight = FetchRegion();
-		bottomRight->parent = this;
-		bottomRight->origin = glm::vec2(origin[0] + size[0] * 0.25f, origin[1] + size[1] * 0.25f);
-		bottomRight->size = topLeft->size;
-	}
+	//if(bottomRight == nullptr){
+	//	bottomRight = FetchRegion();
+	//	bottomRight->parent = this;
+	//	bottomRight->origin = glm::vec2(origin[0] + size[0] * 0.25f, origin[1] + size[1] * 0.25f);
+	//	bottomRight->size = topLeft->size;
+	//}
 
-	for(Node* const node: nodes){
-		const Entity* const entity = node->GetEntity();
+	//for(Node* const node: nodes){
+	//	const Entity* const entity = node->GetEntity();
 
-		if(entity
-			&& entity->pos.x + entity->scale.x * 0.5f <= origin[0] + size[0] * 0.5f && entity->pos.x - entity->scale.x * 0.5f >= origin[0] - size[0] * 0.5f
-			&& entity->pos.z + entity->scale.z * 0.5f <= origin[1] + size[1] * 0.5f && entity->pos.z - entity->scale.z * 0.5f >= origin[1] - size[1] * 0.5f
-		){
-			if(entity->pos.z - entity->scale.z * 0.5f <= origin[1]){
-				if(entity->pos.x - entity->scale.x * 0.5f <= origin[0]){
-					topLeft->AddNode(node, entity->movable);
-				}
-				if(entity->pos.x + entity->scale.x * 0.5f >= origin[0]){
-					topRight->AddNode(node, entity->movable);
-				}
-			}
-			if(entity->pos.z + entity->scale.z * 0.5f >= origin[1]){
-				if(entity->pos.x - entity->scale.x * 0.5f <= origin[0]){
-					bottomLeft->AddNode(node, entity->movable);
-				}
-				if(entity->pos.x + entity->scale.x * 0.5f >= origin[0]){
-					bottomRight->AddNode(node, entity->movable);
-				}
-			}
-		}
-	}
+	//	if(entity
+	//		&& entity->pos.x + entity->scale.x * 0.5f <= origin[0] + size[0] * 0.5f && entity->pos.x - entity->scale.x * 0.5f >= origin[0] - size[0] * 0.5f
+	//		&& entity->pos.z + entity->scale.z * 0.5f <= origin[1] + size[1] * 0.5f && entity->pos.z - entity->scale.z * 0.5f >= origin[1] - size[1] * 0.5f
+	//	){
+	//		if(entity->pos.z - entity->scale.z * 0.5f <= origin[1]){
+	//			if(entity->pos.x - entity->scale.x * 0.5f <= origin[0]){
+	//				topLeft->AddNode(node, entity->movable);
+	//			}
+	//			if(entity->pos.x + entity->scale.x * 0.5f >= origin[0]){
+	//				topRight->AddNode(node, entity->movable);
+	//			}
+	//		}
+	//		if(entity->pos.z + entity->scale.z * 0.5f >= origin[1]){
+	//			if(entity->pos.x - entity->scale.x * 0.5f <= origin[0]){
+	//				bottomLeft->AddNode(node, entity->movable);
+	//			}
+	//			if(entity->pos.x + entity->scale.x * 0.5f >= origin[0]){
+	//				bottomRight->AddNode(node, entity->movable);
+	//			}
+	//		}
+	//	}
+	//}
 
-	///Use recursion to continue forming the Quadtree
-	topLeft->Partition(movable);
-	topRight->Partition(movable);
-	bottomLeft->Partition(movable);
-	bottomRight->Partition(movable);
+	/////Use recursion to continue forming the Quadtree
+	//topLeft->Partition(movable);
+	//topRight->Partition(movable);
+	//bottomLeft->Partition(movable);
+	//bottomRight->Partition(movable);
 }

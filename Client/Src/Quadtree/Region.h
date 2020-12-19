@@ -11,7 +11,7 @@
 
 class Region final{
 	friend class RegionManager;
-private:
+public:
 	Region();
 	~Region();
 
@@ -26,7 +26,7 @@ private:
 
 	void ClearMovableAndDeactivateChildren();
 	void Partition(const bool movable);
-
+private:
 	Region* parent;
 	glm::vec2 origin;
 	glm::vec2 size;

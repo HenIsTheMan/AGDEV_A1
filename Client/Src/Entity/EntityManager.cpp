@@ -41,7 +41,7 @@ void EntityManager::Init(){
 
 	nodeManager->Init(entityPoolSize, entityPoolSize);
 
-	regionManager->InitRegionPool(entityPoolSize); //??
+	regionManager->Init(entityPoolSize, entityPoolSize);
 
 	entityPool->Init(entityPoolSize, entityPoolSize);
 }
@@ -61,7 +61,7 @@ void EntityManager::Update(){
 
 	std::vector<Entity*> movableEntities;
 	std::vector<Entity*> stationaryEntities;
-	regionManager->GetEntitiesToUpdate(movableEntities, stationaryEntities);
+	regionManager->RetrieveRootRegion()->GetEntitiesToUpdate(movableEntities, stationaryEntities);
 
 	for(Entity* const movableEntity: movableEntities){
 		if(movableEntity){
@@ -118,7 +118,7 @@ void EntityManager::Render(ShaderProg& SP, const Cam& cam){
 	///Use std::map so render order is correct
 	std::map<int, Entity*> entitiesOpaque;
 	std::map<int, Entity*> entitiesNotOpaque;
-	regionManager->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
+	regionManager->RetrieveRootRegion()->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
 
 	///Render opaque entities 1st
 	for(std::map<int, Entity*>::reverse_iterator iter = entitiesOpaque.rbegin(); iter != entitiesOpaque.rend(); ++iter){
@@ -246,7 +246,7 @@ void EntityManager::DeactivateEntityProcedure(Entity* const entity){
 	}
 
 	node->SetEntity(nullptr);
-	regionManager->RemoveNode(node, entity->movable);
+	regionManager->RetrieveRootRegion()->RemoveNode(node, entity->movable);
 }
 
 EntityManager::EntityManager():

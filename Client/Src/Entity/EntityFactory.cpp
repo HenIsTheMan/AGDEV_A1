@@ -201,5 +201,5 @@ void EntityFactory::ActivateEntityProcedure(Entity* const entity){
 	Node* const node = nodeManager->ActivateNode();
 	node->SetEntity(entity);
 	nodeManager->RetrieveRootNode()->AddChild(node);
-	regionManager->AddNode(node, entity->movable);
+	regionManager->RetrieveRootRegion()->AddNode(node, entity->movable);
 }
