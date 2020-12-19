@@ -5,8 +5,8 @@ Scar::Scar(){
 	shotCooldownTime = .1f;
 	loadedBullets = 40;
 	maxLoadedBullets = 40;
-	unloadedBullets = 120;
-	maxUnloadedBullets = 2400;
+	unloadedBullets = 400000;
+	maxUnloadedBullets = 400000;
 }
 
 void Scar::Shoot(const float& elapsedTime, const glm::vec3& camPos, const glm::vec3& camFront, ISoundEngine* const& soundEngine){

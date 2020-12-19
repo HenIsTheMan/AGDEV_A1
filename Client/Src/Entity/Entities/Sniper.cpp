@@ -5,8 +5,8 @@ Sniper::Sniper(){
 	shotCooldownTime = 0.f;
 	loadedBullets = 1;
 	maxLoadedBullets = 1;
-	unloadedBullets = 10;
-	maxUnloadedBullets = 30;
+	unloadedBullets = 400;
+	maxUnloadedBullets = 400;
 }
 
 void Sniper::Shoot(const float& elapsedTime, const glm::vec3& camPos, const glm::vec3& camFront, ISoundEngine* const& soundEngine){

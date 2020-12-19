@@ -5,8 +5,8 @@ Shotgun::Shotgun(){
 	shotCooldownTime = .7f;
 	loadedBullets = 12;
 	maxLoadedBullets = 12;
-	unloadedBullets = 18;
-	maxUnloadedBullets = 360;
+	unloadedBullets = 4000;
+	maxUnloadedBullets = 4000;
 }
 
 void Shotgun::Shoot(const float& elapsedTime, const glm::vec3& camPos, const glm::vec3& camFront, ISoundEngine* const& soundEngine){

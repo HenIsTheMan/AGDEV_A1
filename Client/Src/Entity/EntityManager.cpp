@@ -312,23 +312,6 @@ void EntityManager::CreateSniperBullet(const glm::vec3& camPos, const glm::vec3&
 	entity->collider = colliderManager->ActivateCollider(ColliderType::Sphere);
 }
 
-void EntityManager::CreateAmmo(const Entity::EntityType type, const EntityCreationAttribs& attribs){
-	Entity* const& entity = ActivateEntity(false);
-
-	entity->type = type;
-	entity->life = 0.f;
-	entity->maxLife = 0.f;
-	entity->colour = attribs.colour;
-	entity->diffuseTexIndex = attribs.diffuseTexIndex;
-	entity->scale = attribs.scale;
-
-	entity->pos = attribs.pos;
-	entity->mass = 5.f;
-	entity->force = glm::vec3(0.f);
-
-	entity->collider = colliderManager->ActivateCollider(ColliderType::Box);
-}
-
 void EntityManager::CreateCoin(const EntityCreationAttribs& attribs){
 	Entity* const& entity = ActivateEntity(false);
 
