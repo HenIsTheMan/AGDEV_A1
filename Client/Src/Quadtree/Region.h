@@ -16,7 +16,7 @@ public:
 	~Region();
 
 	void GetEntitiesToUpdate(std::vector<Entity*>& movableEntities, std::vector<Entity*>& stationaryEntities);
-	void GetEntitiesToRender(std::map<int, Entity*>& entitiesOpaque, std::map<int, Entity*>& entitiesNotOpaque, const Cam& cam);
+	void GetEntitiesToRender(std::multimap<int, Entity*>& entitiesOpaque, std::multimap<int, Entity*>& entitiesNotOpaque, const Cam& cam);
 	void GetLeaves(ShaderProg& SP, std::vector<Region*>& leaves);
 
 	const Region* FindRegion(Node* const node, const bool movable) const;

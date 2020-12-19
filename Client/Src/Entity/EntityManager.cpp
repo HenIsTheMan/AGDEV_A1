@@ -114,13 +114,15 @@ void EntityManager::Render(ShaderProg& SP, const Cam& cam){
 	SP.Set1i("useCustomColour", 1);
 	SP.Set1i("useCustomDiffuseTexIndex", 1);
 
-	///Use std::map so render order is correct
-	std::map<int, Entity*> entitiesOpaque;
-	std::map<int, Entity*> entitiesNotOpaque;
+	///2 std::multimap for opaque entities and non-opaque entities
+	///std::multimap so each elment will be sorted by its key
+	///std::multimap instead of std::map to allow for duplicate keys
+	std::multimap<int, Entity*> entitiesOpaque;
+	std::multimap<int, Entity*> entitiesNotOpaque;
 	regionManager->RetrieveRootRegion()->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
 
 	///Render opaque entities 1st
-	for(std::map<int, Entity*>::reverse_iterator iter = entitiesOpaque.rbegin(); iter != entitiesOpaque.rend(); ++iter){
+	for(std::multimap<int, Entity*>::reverse_iterator iter = entitiesOpaque.rbegin(); iter != entitiesOpaque.rend(); ++iter){
 		Entity* const& entity = iter->second;
 
 		SP.Set4fv("customColour", entity->colour);
@@ -173,7 +175,7 @@ void EntityManager::Render(ShaderProg& SP, const Cam& cam){
 	SP.Set1i("useCustomDiffuseTexIndex", 0);
 
 	///Then render non-opaque entities
-	for(std::map<int, Entity*>::reverse_iterator iter = entitiesNotOpaque.rbegin(); iter != entitiesNotOpaque.rend(); ++iter){
+	for(std::multimap<int, Entity*>::reverse_iterator iter = entitiesNotOpaque.rbegin(); iter != entitiesNotOpaque.rend(); ++iter){
 		Entity* const& entity = iter->second;
 		SP.Set1i("useCustomColour", 0);
 

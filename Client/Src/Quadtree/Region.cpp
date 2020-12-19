@@ -46,7 +46,7 @@ void Region::GetEntitiesToUpdate(std::vector<Entity*>& movableEntities, std::vec
 	}
 }
 
-void Region::GetEntitiesToRender(std::map<int, Entity*>& entitiesOpaque, std::map<int, Entity*>& entitiesNotOpaque, const Cam& cam){
+void Region::GetEntitiesToRender(std::multimap<int, Entity*>& entitiesOpaque, std::multimap<int, Entity*>& entitiesNotOpaque, const Cam& cam){
 	if(topLeft || topRight || bottomLeft || bottomRight){
 		topLeft->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
 		topRight->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
