@@ -14,7 +14,7 @@ void Shotgun::Shoot(const float& elapsedTime, const glm::vec3& camPos, const glm
 	if(canShoot && loadedBullets && bulletBT <= elapsedTime){
 		soundEngine->play2D("Audio/Sounds/Shotgun.wav", false);
 
-		entityManager->CreateShotgunBullet(camPos, camFront);
+		entityFactory->CreateShotgunBullet(camPos, camFront);
 
 		--loadedBullets;
 		bulletBT = elapsedTime + shotCooldownTime;

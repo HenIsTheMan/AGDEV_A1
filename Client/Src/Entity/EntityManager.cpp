@@ -233,6 +233,10 @@ void EntityManager::Render(ShaderProg& SP, const Cam& cam){
 	SP.Set1i("useCustomColour", 0);
 }
 
+EntityFactory* EntityManager::RetrieveEntityFactory(){
+	return entityFactory;
+}
+
 void EntityManager::DeactivateEntity(Entity* const& entity){
 	DeactivateEntityProcedure(entity);
 	entityPool->DeactivateObj(entity);

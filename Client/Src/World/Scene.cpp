@@ -165,8 +165,10 @@ void Scene::InitEntities(){
 void Scene::CreateEntities(){
 	Terrain* const myTerrain = static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain]);
 
+	EntityFactory* const entityFactory = entityManager->RetrieveEntityFactory();
+
 	//* Create Player
-	myPlayer = entityManager->CreatePlayer({
+	myPlayer = entityFactory->CreatePlayer({
 		glm::vec3(),
 		glm::vec3(50.0f, 200.0f, 50.0f),
 		glm::vec4(1.0f),
@@ -178,7 +180,7 @@ void Scene::CreateEntities(){
 
 	//* Create thin obj
 	const float xyScale = 200.0f;
-	entityManager->CreateThinObj({
+	entityFactory->CreateThinObj({
 		glm::vec3(0.0f,
 			terrainYScale * myTerrain->GetHeightAtPt(0.0f, terrainZScale * 0.25f / terrainZScale, false) + xyScale,
 			terrainZScale * 0.25f),
@@ -199,7 +201,7 @@ void Scene::CreateEntities(){
 			terrainYScale * myTerrain->GetHeightAtPt(xPos / terrainXScale, zPos / terrainZScale, false) + scaleFactor,
 			zPos
 		);
-		entityManager->CreateCoin({
+		entityFactory->CreateCoin({
 			pos,
 			glm::vec3(scaleFactor),
 			glm::vec4(1.0f),

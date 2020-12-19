@@ -14,7 +14,7 @@ void Scar::Shoot(const float& elapsedTime, const glm::vec3& camPos, const glm::v
 	if(canShoot && loadedBullets && bulletBT <= elapsedTime){
 		soundEngine->play2D("Audio/Sounds/Sniper.wav", false);
 
-		entityManager->CreateScarBullet(camPos, camFront);
+		entityFactory->CreateScarBullet(camPos, camFront);
 
 		--loadedBullets;
 		bulletBT = elapsedTime + shotCooldownTime;

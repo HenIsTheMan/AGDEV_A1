@@ -41,7 +41,7 @@ protected:
 	int unloadedBullets;
 	int maxUnloadedBullets;
 
-	EntityManager* entityManager;
+	EntityFactory* entityFactory;
 private:
 	bool reloading;
 };

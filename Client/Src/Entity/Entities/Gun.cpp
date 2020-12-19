@@ -11,7 +11,7 @@ Gun::Gun():
 	maxLoadedBullets(0),
 	unloadedBullets(0),
 	maxUnloadedBullets(0),
-	entityManager(EntityManager::GetObjPtr()),
+	entityFactory(EntityManager::GetObjPtr()->RetrieveEntityFactory()),
 	reloading(false)
 {
 }

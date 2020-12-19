@@ -5,6 +5,9 @@
 #include "../Collider/Collider.h"
 
 class Entity final{
+	template <class T>
+	friend class ObjPool;
+
 	friend class EntityFactory;
 	friend class EntityManager;
 	friend class Region;
