@@ -73,7 +73,16 @@ bool Collision::DetectRayBoxIntersection(const glm::vec3& rayStart, const glm::v
 }
 
 bool Collision::CalcIntersection(const float dist0, const float dist1, const glm::vec3& rayStart, const glm::vec3& rayEnd, glm::vec3& collisionPt){
+	if(dist0 * dist1 >= 0.0f || dist0 == dist1){
+		return false;
+	}
+
+	collisionPt = rayStart + (rayEnd - rayStart) * (-rayEnd / (rayStart - rayEnd));
+	return true;
 }
 
 bool Collision::WithinBox(const Axis axis, const glm::vec3& minAABB, const glm::vec3& maxAABB, glm::vec3& collisionPt){
+	return (axis == Axis::x && collisionPt.z > minAABB.z && collisionPt.z < maxAABB.z && collisionPt.y > minAABB.y && collisionPt.y < maxAABB.y)
+		|| (axis == Axis::y && collisionPt.z > minAABB.z && collisionPt.z < maxAABB.z && collisionPt.x > minAABB.x && collisionPt.x < maxAABB.x)
+		|| (axis == Axis::z && collisionPt.x > minAABB.x && collisionPt.x < maxAABB.x && collisionPt.y > minAABB.y && collisionPt.y < maxAABB.y);
 }
