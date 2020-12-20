@@ -110,6 +110,7 @@ private:
 	RegionManager* regionManager;
 
 	bool isCamDetached;
+	bool shldRenderViewingFrustum;
 	float elapsedTime;
 
 	Light* dLightFromTop;

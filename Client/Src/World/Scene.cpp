@@ -97,6 +97,7 @@ Scene::Scene():
 	view(glm::mat4(1.f)),
 	projection(glm::mat4(1.f)),
 	isCamDetached(true),
+	shldRenderViewingFrustum(false),
 	elapsedTime(0.f),
 	modelStack(),
 	polyModes(),
@@ -559,6 +560,15 @@ void Scene::GameUpdate(GLFWwindow* const& win){
 		isPressedB = false;
 	}
 
+	static bool isPressedM = false;
+	if(!isPressedM && Key(GLFW_KEY_M)){
+		shldRenderViewingFrustum = !shldRenderViewingFrustum;
+
+		isPressedM = true;
+	} else if(isPressedM && !Key(GLFW_KEY_M)){
+		isPressedM = false;
+	}
+
 	static float polyModeBT = 0.f;
 	if(Key(VK_F2) && polyModeBT <= elapsedTime){
 		polyModes[0] += polyModes[0] == GL_FILL ? -2 : 1;
@@ -741,17 +751,17 @@ void Scene::GameRender(){
 
 	entityManager->Render(forwardSP, cam);
 
-	//* Render viewing frustum
-	viewingFrustumSP.Use();
+	if(shldRenderViewingFrustum){
+		viewingFrustumSP.Use();
 
-	modelStack.PushModel({
-	});
-		viewingFrustumSP.SetMat4fv("MVP", &(projection * view * modelStack.GetTopModel())[0][0]);
-		Meshes::meshes[(int)MeshType::ViewingFrustum]->Render(viewingFrustumSP);
-	modelStack.PopModel();
+		modelStack.PushModel({
+		});
+			viewingFrustumSP.SetMat4fv("MVP", &(projection * view * modelStack.GetTopModel())[0][0]);
+			Meshes::meshes[(int)MeshType::ViewingFrustum]->Render(viewingFrustumSP);
+		modelStack.PopModel();
 
-	forwardSP.Use();
-	//*/
+		forwardSP.Use();
+	}
 
 	///Render item held
 	if(!isCamDetached){
