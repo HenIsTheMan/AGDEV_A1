@@ -99,9 +99,21 @@ void Cam::UpdateDetached(const int& up, const int& down, const int& left, const 
 	pos += camSpd * change;
 	target += camSpd * change;
 
-	glm::mat4 yawPitch = glm::rotate(glm::rotate(glm::mat4(1.f), glm::radians(yaw), {0.f, 1.f, 0.f}), glm::radians(pitch), CalcRight());
-	target = pos + glm::vec3(yawPitch * glm::vec4(camFront, 0.f));
-	this->up = glm::vec3(yawPitch * glm::vec4(this->up, 0.f));
+	pitchCheck += pitch;
+	if(pitchCheck > 75.0f || pitchCheck < -75.0f){
+		pitch = 75.0f - (pitchCheck - pitch);
+	}
+	if(pitchCheck < 75.0f && pitchCheck > -75.0f){
+		glm::mat4 yawPitch = glm::rotate(glm::rotate(glm::mat4(1.f), glm::radians(yaw), {0.f, 1.f, 0.f}), glm::radians(pitch), CalcRight());
+		target = this->pos + glm::vec3(yawPitch * glm::vec4(CalcFront(), 0.f));
+		this->up = glm::vec3(yawPitch * glm::vec4(this->up, 0.f));
+	}
+	if(pitchCheck > 75.0f){
+		pitchCheck = 75.0f;
+	}
+	if(pitchCheck < -75.0f){
+		pitchCheck = -75.0f;
+	}
 	yaw = pitch = 0.f;
 }
 
