@@ -1,11 +1,14 @@
 #include "FrustumCulling.h"
 
+#include "../Shared/Meshes.h"
+
 FrustumCulling::FrustumCulling():
 	view(),
 	projection(),
 	m_planes(),
 	m_points()
 {
+	static_cast<SquareFrustum*>(Meshes::meshes[(int)MeshType::ViewingFrustum])->Init();
 }
 
 void FrustumCulling::Update(const glm::mat4& view, const glm::mat4& projection){
@@ -13,9 +16,54 @@ void FrustumCulling::Update(const glm::mat4& view, const glm::mat4& projection){
 	this->projection = projection;
 
 	UpdateFrustum();
+
+	glm::vec3 vertices[24]{
+		m_points[0],
+		m_points[2],
+
+		m_points[2],
+		m_points[3],
+
+		m_points[3],
+		m_points[1],
+
+		m_points[1],
+		m_points[0],
+
+		m_points[4],
+		m_points[6],
+
+		m_points[6],
+		m_points[7],
+
+		m_points[7],
+		m_points[5],
+
+		m_points[5],
+		m_points[4],
+
+		m_points[0],
+		m_points[4],
+
+		m_points[2],
+		m_points[6],
+
+		m_points[3],
+		m_points[7],
+
+		m_points[1],
+		m_points[5]
+	};
+	static_cast<SquareFrustum*>(Meshes::meshes[(int)MeshType::ViewingFrustum])->Update(vertices);
 }
 
 void FrustumCulling::Render(ShaderProg& SP){
+	//modelStack.PushModel({
+	//	modelStack.Scale(glm::vec3(terrainXScale, terrainYScale, terrainZScale)),
+	//});
+		Meshes::meshes[(int)MeshType::ViewingFrustum]->SetModel(glm::mat4(1.0f));
+		Meshes::meshes[(int)MeshType::ViewingFrustum]->Render(SP);
+	//modelStack.PopModel();
 }
 
 bool FrustumCulling::ShldBeVisible(const glm::vec3& minPt, const glm::vec3& maxPt) const{

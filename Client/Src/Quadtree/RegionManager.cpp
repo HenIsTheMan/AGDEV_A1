@@ -42,6 +42,8 @@ void RegionManager::Update(){
 }
 
 void RegionManager::Render(ShaderProg& SP, const Cam& cam){
+	frustumCulling->Render(SP);
+
 	if(shldRenderQuadtree){
 		RenderQuadtree(SP, cam);
 	}
