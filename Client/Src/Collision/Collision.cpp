@@ -1,7 +1,7 @@
 #include "Collision.h"
 
-#include "../Collider/Colliders/BoxCollider.h"
-#include "../Collider/Colliders/SphereCollider.h"
+#include "../Collision/Collider/Colliders/BoxCollider.h"
+#include "../Collision/Collider/Colliders/SphereCollider.h"
 
 #include <glm/gtx/intersect.hpp>
 

@@ -4,12 +4,12 @@
 
 #include "Entity.h"
 
-#include "../Collider/ColliderManager.h"
+#include "../Collision/Collider/ColliderManager.h"
 #include "../Quadtree/NodeManager.h"
 #include "../Quadtree/RegionManager.h"
 
-#include "../Collider/Colliders/BoxCollider.h"
-#include "../Collider/Colliders/SphereCollider.h"
+#include "../Collision/Collider/Colliders/BoxCollider.h"
+#include "../Collision/Collider/Colliders/SphereCollider.h"
 
 #include "../ObjPool/ObjPool.h"
 

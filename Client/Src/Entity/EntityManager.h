@@ -2,7 +2,7 @@
 
 #include "../Entity/Entity.h"
 
-#include "../Collider/ColliderManager.h"
+#include "../Collision/Collider/ColliderManager.h"
 #include "../Quadtree/NodeManager.h"
 #include "../Quadtree/RegionManager.h"
 

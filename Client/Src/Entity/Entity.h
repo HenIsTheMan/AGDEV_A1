@@ -2,7 +2,7 @@
 #include <Core.h>
 #include <Engine.h>
 
-#include "../Collider/Collider.h"
+#include "../Collision/Collider/Collider.h"
 
 class Entity final{
 	template <class T>

@@ -2,10 +2,10 @@
 
 #include <Engine.h>
 
-#include "../Collider/Colliders/BoxCollider.h"
-#include "../Collider/Colliders/SphereCollider.h"
+#include "Colliders/BoxCollider.h"
+#include "Colliders/SphereCollider.h"
 
-#include "../ObjPool/ObjPool.h"
+#include "../../ObjPool/ObjPool.h"
 
 class ColliderManager final: public Singleton<ColliderManager>{
 	friend Singleton<ColliderManager>;

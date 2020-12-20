@@ -13,4 +13,5 @@ private:
 	static bool WithinBox(const Axis axis, const glm::vec3& minAABB, const glm::vec3& maxAABB, glm::vec3& collisionPt);
 
 	Collision() = delete;
+	~Collision() = delete;
 };

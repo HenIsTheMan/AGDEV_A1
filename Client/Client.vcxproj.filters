@@ -16,15 +16,15 @@
     <ClCompile Include="Src\Shared\Meshes.cpp" />
     <ClCompile Include="Src\World\ModelStack.cpp" />
     <ClCompile Include="Src\LOD\LOD.cpp" />
-    <ClCompile Include="Src\Collider\Collider.cpp" />
-    <ClCompile Include="Src\Collider\ColliderManager.cpp" />
-    <ClCompile Include="Src\Collider\Colliders\BoxCollider.cpp" />
-    <ClCompile Include="Src\Collider\Colliders\SphereCollider.cpp" />
     <ClCompile Include="Src\Quadtree\RegionManager.cpp" />
     <ClCompile Include="Src\Quadtree\NodeManager.cpp" />
     <ClCompile Include="Src\Entity\EntityFactory.cpp" />
     <ClCompile Include="Src\FrustumCulling\FrustumCulling.cpp" />
     <ClCompile Include="Src\Collision\Collision.cpp" />
+    <ClCompile Include="Src\Collision\Collider\Colliders\BoxCollider.cpp" />
+    <ClCompile Include="Src\Collision\Collider\Colliders\SphereCollider.cpp" />
+    <ClCompile Include="Src\Collision\Collider\Collider.cpp" />
+    <ClCompile Include="Src\Collision\Collider\ColliderManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Admin\App.h" />
@@ -41,10 +41,6 @@
     <ClInclude Include="Src\Shared\Meshes.h" />
     <ClInclude Include="Src\World\ModelStack.h" />
     <ClInclude Include="Src\LOD\LOD.h" />
-    <ClInclude Include="Src\Collider\Collider.h" />
-    <ClInclude Include="Src\Collider\ColliderManager.h" />
-    <ClInclude Include="Src\Collider\Colliders\BoxCollider.h" />
-    <ClInclude Include="Src\Collider\Colliders\SphereCollider.h" />
     <ClInclude Include="Src\Entity\EntityUpdate.hpp" />
     <ClInclude Include="Src\Shared\RotateVecIn2D.hpp" />
     <ClInclude Include="Src\Shared\Easing.hpp" />
@@ -55,6 +51,10 @@
     <ClInclude Include="Src\FrustumCulling\FrustumCulling.h" />
     <ClInclude Include="Src\Collision\Collision.h" />
     <ClInclude Include="Src\Shared\Axis.hpp" />
+    <ClInclude Include="Src\Collision\Collider\Colliders\BoxCollider.h" />
+    <ClInclude Include="Src\Collision\Collider\Colliders\SphereCollider.h" />
+    <ClInclude Include="Src\Collision\Collider\Collider.h" />
+    <ClInclude Include="Src\Collision\Collider\ColliderManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Blur.fragS" />
