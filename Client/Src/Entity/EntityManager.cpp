@@ -68,7 +68,7 @@ void EntityManager::Update(){
 			switch(movableEntity->type){
 				case Entity::EntityType::Player: {
 					UpdatePlayerHoriz(movableEntity, isCamDetached);
-					UpdatePlayerVert(movableEntity, isCamDetached);
+					UpdatePlayerVert(movableEntity);
 
 					const glm::vec3 prevPos = movableEntity->pos;
 					movableEntity->vel += movableEntity->force / movableEntity->mass * dt;

@@ -52,7 +52,7 @@ inline static void UpdatePlayerHoriz(Entity* const player, const bool isCamDetac
 	player->zMax = terrainZScale * 0.5f - player->scale.z * 2.0f;
 }
 
-inline static void UpdatePlayerVert(Entity* const player, const bool isCamDetached){
+inline static void UpdatePlayerVert(Entity* const player){
 	static bool isSpacePressed = false;
 
 	if(!isSpacePressed && Key(VK_SPACE)){
@@ -67,8 +67,5 @@ inline static void UpdatePlayerVert(Entity* const player, const bool isCamDetach
 			player->vel.y = 0.0f;
 		}
 		isSpacePressed = false;
-	}
-
-	if(isCamDetached){
 	}
 }
