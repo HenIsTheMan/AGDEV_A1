@@ -68,5 +68,7 @@
     <None Include="Shaders\Forward.vertexS" />
     <None Include="Shaders\Normals.geoS" />
     <None Include="Src\ObjPool\ObjPool.inl" />
+    <None Include="Shaders\ViewingFrustum.vertexS" />
+    <None Include="Shaders\ViewingFrustum.fragS" />
   </ItemGroup>
 </Project>

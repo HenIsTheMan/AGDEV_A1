@@ -2,6 +2,8 @@
 
 #include <Engine.h>
 
+#include "../World/ModelStack.h"
+
 class FrustumCulling final{
 public:
 	enum struct Planes: int{
@@ -34,10 +36,12 @@ private:
 	template <Planes a, Planes b, Planes c>
 	glm::vec3 CalcIntersection(const glm::vec3* crosses) const;
 
-	glm::mat4 model;
 	glm::mat4 view;
 	glm::mat4 projection;
 
 	glm::vec4 m_planes[(int)Planes::Count];
 	glm::vec3 m_points[8];
+
+	ModelStack modelStack;
+	ShaderProg viewingFrustumSP;
 };

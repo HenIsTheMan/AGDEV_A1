@@ -2,11 +2,17 @@
 
 #include "../Shared/Meshes.h"
 
+extern float terrainXScale;
+extern float terrainYScale;
+extern float terrainZScale;
+
 FrustumCulling::FrustumCulling():
 	view(),
 	projection(),
 	m_planes(),
-	m_points()
+	m_points(),
+	modelStack(),
+	viewingFrustumSP{"Shaders/ViewingFrustum.vertexS", "Shaders/ViewingFrustum.fragS"}
 {
 }
 
@@ -57,12 +63,16 @@ void FrustumCulling::Update(const glm::mat4& view, const glm::mat4& projection){
 }
 
 void FrustumCulling::Render(ShaderProg& SP){
-	//modelStack.PushModel({
-	//	modelStack.Scale(glm::vec3(terrainXScale, terrainYScale, terrainZScale)),
-	//});
-		Meshes::meshes[(int)MeshType::ViewingFrustum]->SetModel(glm::mat4(1.0f));
+	viewingFrustumSP.Use();
+
+	modelStack.PushModel({
+		modelStack.Translate(glm::vec3(0.0f, terrainYScale, 0.0f)),
+	});
+		viewingFrustumSP.SetMat4fv("MVP", &(projection * view * modelStack.GetTopModel())[0][0]);
 		Meshes::meshes[(int)MeshType::ViewingFrustum]->Render(SP);
-	//modelStack.PopModel();
+	modelStack.PopModel();
+
+	SP.Use();
 }
 
 bool FrustumCulling::ShldBeVisible(const glm::vec3& minPt, const glm::vec3& maxPt) const{
