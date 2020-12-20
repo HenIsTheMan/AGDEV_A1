@@ -21,6 +21,7 @@
     <ClInclude Include="Src\SDPs\Singleton.h" />
     <ClInclude Include="Src\Core.h" />
     <ClInclude Include="Src\Engine.h" />
+    <ClInclude Include="Src\Geo\Frustum.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Geo\Mesh.cpp" />
@@ -31,5 +32,6 @@
     <ClCompile Include="Src\Graphics\ShaderProg.cpp" />
     <ClCompile Include="Src\Graphics\TextChief.cpp" />
     <ClCompile Include="Src\Vendor\glad.c" />
+    <ClCompile Include="Src\Geo\Frustum.cpp" />
   </ItemGroup>
 </Project>

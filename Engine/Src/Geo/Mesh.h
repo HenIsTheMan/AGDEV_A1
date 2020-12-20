@@ -10,7 +10,6 @@ public:
 		Cube,
 		Sphere,
 		Cylinder,
-		Frustum,
 		Amt
 	};
 	enum struct TexType{
@@ -72,8 +71,6 @@ protected:
 	std::vector<glm::vec3> colors;
 	std::vector<int> diffuseTexIndices;
 
-	//std::vector<BatchRenderParams> paramsVec;
-	//int geoMaxAmt;
 	uint batchVAO;
 	uint batchVBO;
 	uint batchEBO;
@@ -89,5 +86,4 @@ protected:
 	void CreateCube(); //2x2x2
 	void CreateSphere(); //2x2x2
 	void CreateCylinder(); //2x2x2
-	void CreateFrustum();
 };

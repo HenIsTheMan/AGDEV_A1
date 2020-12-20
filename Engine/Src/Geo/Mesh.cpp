@@ -214,9 +214,6 @@ void Mesh::InstancedRender(ShaderProg& SP, const bool& autoConfig){
 			case MeshType::Cylinder:
 				CreateCylinder();
 				break;
-			case MeshType::Frustum:
-				CreateFrustum();
-				break;
 		}
 		glGenVertexArrays(1, &instancingVAO);
 		glGenBuffers(1, &instancingVBO);
@@ -384,9 +381,6 @@ void Mesh::Render(ShaderProg& SP, const bool& autoConfig){
 				break;
 			case MeshType::Cylinder:
 				CreateCylinder();
-				break;
-			case MeshType::Frustum:
-				CreateFrustum();
 				break;
 		}
 		glGenVertexArrays(1, &VAO);
@@ -723,83 +717,4 @@ void Mesh::CreateCylinder(){
 			indices->emplace_back(0 + sliceAmt * 3 + 3 + 1); //...
 		}
 	}
-}
-
-void Mesh::CreateFrustum(){
-	//if(!vertices){
-	//	vertices = new std::vector<Vertex>();
-
-	//	//glm::mat4 inv = camera.getViewMatrix().inverse();
-
-	//	float ar = (float)winWidth / (float)winHeight;
-	//	float nearPlane = .1f;
-	//	float farPlane = 99999.0f;
-	//	float halfHeight = tanf(glm::radians(angularFOV / 2.f));
-	//	float halfWidth = halfHeight * ar;
-
-	//	float xn = halfWidth * nearPlane;
-	//	float xf = halfWidth * farPlane;
-	//	float yn = halfHeight * nearPlane;
-	//	float yf = halfHeight * farPlane;
-
-	//	glm::vec4 f[8u] ={
-	//		// near face
-	//		{xn, yn, nearPlane, 1.f},
-	//		{-xn, yn, nearPlane, 1.f},
-	//		{xn, -yn, nearPlane, 1.f},
-	//		{-xn, -yn, nearPlane, 1.f},
-
-	//		// far face
-	//		{xf, yf, farPlane, 1.f},
-	//		{-xf, yf,farPlane, 1.f},
-	//		{xf, -yf, farPlane, 1.f},
-	//		{-xf, -yf, farPlane, 1.f},
-	//	};
-
-	//	glm::vec3 v[8];
-	//	for (int i = 0; i < 8; i++)
-	//	{
-	//		glm::vec4 ff = inv * f[i];
-	//		v[i].x = ff.x / ff.w;
-	//		v[i].y = ff.y / ff.w;
-	//		v[i].z = ff.z / ff.w;
-	//	}
-
-	//	///Near
-	//	vertices->push_back({
-	//		glm::vec3(-1.0f, -1.0f, .1f)
-	//	});
-	//	vertices->push_back({
-	//		glm::vec3(1.0f, -1.0f, .1f)
-	//	});
-	//	vertices->push_back({
-	//		glm::vec3(1.0f, 1.0f, .1f)
-	//	});
-	//	vertices->push_back({
-	//		glm::vec3(-1.0f, 1.0f, .1f)
-	//	});
-
-	//	///Far
-	//	vertices->push_back({
-	//		glm::vec3(-1.0f, -1.0f, 99999.0f)
-	//	});
-	//	vertices->push_back({
-	//		glm::vec3(1.0f, -1.0f, 99999.0f)
-	//	});
-	//	vertices->push_back({
-	//		glm::vec3(1.0f, 1.0f, 99999.0f)
-	//	});
-	//	vertices->push_back({
-	//		glm::vec3(-1.0f, 1.0f, 99999.0f)
-	//	});
-	//}
-
-	//float vertices[] = {
-	//	bottomLeft.x, bottomLeft.y, bottomLeft.z,
-	//	topRight.x, bottomLeft.y, bottomLeft.z,
-	//	topRight.x, bottomLeft.y, topRight.z,
-	//	topRight.x, bottomLeft.y, topRight.z,
-	//	bottomLeft.x, bottomLeft.y, topRight.z,
-	//	bottomLeft.x, bottomLeft.y, bottomLeft.z,
-	//};
 }
