@@ -49,9 +49,4 @@ private:
 	std::vector<Node*> movableNodes;
 
 	ObjPool<Region>* regionPool;
-
-	void IGetEntitiesToRender(std::multimap<int, Entity*>& entitiesOpaque, std::multimap<int, Entity*>& entitiesNotOpaque, const Cam& cam, const bool movable);
-
-
-	void GetVisibleLeaves(std::vector<Region*>& visibleLeaves);
 };

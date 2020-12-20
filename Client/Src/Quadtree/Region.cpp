@@ -67,27 +67,28 @@ void Region::GetEntitiesToUpdate(std::vector<Entity*>& movableEntities, std::vec
 }
 
 void Region::GetEntitiesToRender(std::multimap<int, Entity*>& entitiesOpaque, std::multimap<int, Entity*>& entitiesNotOpaque, const Cam& cam){
-	std::vector<Region*> visibleLeaves;
-	GetVisibleLeaves(visibleLeaves);
+	if(!visible){ //Optimization
+		return;
+	}
+
+	bool result = topLeft || topRight || bottomLeft || bottomRight;
+	if(result){
+		topLeft->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
+		topRight->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
+		bottomLeft->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
+		bottomRight->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
+	}
+
 	const glm::vec3& camPos = cam.GetPos();
 
-	for(Region* const region: visibleLeaves){
-		for(int i = 0; i < region->movableNodes.size(); ++i){
-			Entity* const entity = region->movableNodes[i]->RetrieveEntity();
-			if(entity){
-				switch(entity->type){
-					case Entity::EntityType::Bullet:
-					case Entity::EntityType::Enemy:
-					case Entity::EntityType::Player:
-					case Entity::EntityType::ThinObj:
-						entitiesOpaque.insert(std::make_pair((int)glm::length2(entity->pos - camPos), entity));
-						break;
-				}
-			}
-		}
-
-		for(int i = 0; i < region->stationaryNodes.size(); ++i){
-			Entity* const entity = region->stationaryNodes[i]->RetrieveEntity();
+	if(!result || (result
+		&& (topLeft && topLeft->stationaryNodes.empty())
+		&& (topRight && topRight->stationaryNodes.empty())
+		&& (bottomLeft && bottomLeft->stationaryNodes.empty())
+		&& (bottomRight && bottomRight->stationaryNodes.empty())
+	)){
+		for(int i = 0; i < stationaryNodes.size(); ++i){
+			Entity* const entity = stationaryNodes[i]->RetrieveEntity();
 			if(entity){
 				switch(entity->type){
 					case Entity::EntityType::Coin:
@@ -99,49 +100,26 @@ void Region::GetEntitiesToRender(std::multimap<int, Entity*>& entitiesOpaque, st
 		}
 	}
 
-	//bool result = topLeft || topRight || bottomLeft || bottomRight;
-	//if(result){
-	//	topLeft->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
-	//	topRight->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
-	//	bottomLeft->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
-	//	bottomRight->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
-
-	//	if(topLeft != nullptr){
-	//		if(topLeft->stationaryNodes.empty()){
-	//			topLeft->IGetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam, false);
-	//		}
-	//		if(topLeft->movableNodes.empty()){
-	//			topLeft->IGetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam, true);
-	//		}
-	//	}
-	//	if(topRight != nullptr){
-	//		if(topRight->stationaryNodes.empty()){
-	//			topRight->IGetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam, false);
-	//		}
-	//		if(topRight->movableNodes.empty()){
-	//			topRight->IGetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam, true);
-	//		}
-	//	}
-	//	if(bottomLeft != nullptr){
-	//		if(bottomLeft->stationaryNodes.empty()){
-	//			bottomLeft->IGetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam, false);
-	//		}
-	//		if(bottomLeft->movableNodes.empty()){
-	//			bottomLeft->IGetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam, true);
-	//		}
-	//	}
-	//	if(bottomRight != nullptr){
-	//		if(bottomRight->stationaryNodes.empty()){
-	//			bottomRight->IGetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam, false);
-	//		}
-	//		if(bottomRight->movableNodes.empty()){
-	//			bottomRight->IGetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam, true);
-	//		}
-	//	}
-	//} else{
-	//	IGetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam, true);
-	//	IGetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam, false);
-	//}
+	if(!result || (result
+		&& (topLeft && topLeft->movableNodes.empty())
+		&& (topRight && topRight->movableNodes.empty())
+		&& (bottomLeft && bottomLeft->movableNodes.empty())
+		&& (bottomRight && bottomRight->movableNodes.empty())
+	)){
+		for(int i = 0; i < movableNodes.size(); ++i){
+			Entity* const entity = movableNodes[i]->RetrieveEntity();
+			if(entity){
+				switch(entity->type){
+					case Entity::EntityType::Bullet:
+					case Entity::EntityType::Enemy:
+					case Entity::EntityType::Player:
+					case Entity::EntityType::ThinObj:
+						entitiesOpaque.insert(std::make_pair((int)glm::length2(entity->pos - camPos), entity));
+						break;
+				}
+			}
+		}
+	}
 }
 
 void Region::GetLeaves(std::vector<Region*>& leaves){
@@ -391,66 +369,4 @@ void Region::MakeSelfAndChildrenInvisible(){
 	if(bottomRight != nullptr){
 		bottomRight->MakeSelfAndChildrenInvisible();
 	}
-}
-
-void Region::IGetEntitiesToRender(std::multimap<int, Entity*>& entitiesOpaque, std::multimap<int, Entity*>& entitiesNotOpaque, const Cam& cam, const bool movable){
-	const glm::vec3& camPos = cam.GetPos();
-
-	if(movable){
-		for(int i = 0; i < movableNodes.size(); ++i){
-			Entity* const entity = movableNodes[i]->RetrieveEntity();
-			if(entity){
-				switch(entity->type){
-					case Entity::EntityType::Bullet:
-					case Entity::EntityType::Enemy:
-					case Entity::EntityType::Player:
-					case Entity::EntityType::ThinObj:
-						entitiesOpaque.insert(std::make_pair((int)glm::length2(entity->pos - camPos), entity));
-						break;
-				}
-			}
-		}
-	} else{
-		for(int i = 0; i < stationaryNodes.size(); ++i){
-			Entity* const entity = stationaryNodes[i]->RetrieveEntity();
-			if(entity){
-				switch(entity->type){
-					case Entity::EntityType::Coin:
-					case Entity::EntityType::Fire:
-						entitiesNotOpaque.insert(std::make_pair((int)glm::length2(entity->pos - camPos), entity));
-						break;
-				}
-			}
-		}
-	}
-}
-
-void Region::GetVisibleLeaves(std::vector<Region*>& visibleLeaves){
-	if(!visible){ //Optimization
-		return;
-	}
-
-	bool isParent = false;
-
-	if(topLeft){
-		topLeft->GetVisibleLeaves(visibleLeaves);
-		isParent = true;
-	}
-	if(topRight){
-		topRight->GetVisibleLeaves(visibleLeaves);
-		isParent = true;
-	}
-	if(bottomLeft){
-		bottomLeft->GetVisibleLeaves(visibleLeaves);
-		isParent = true;
-	}
-	if(bottomRight){
-		bottomRight->GetVisibleLeaves(visibleLeaves);
-		isParent = true;
-	}
-
-	if(isParent){
-		return;
-	}
-	visibleLeaves.emplace_back(this);
 }
