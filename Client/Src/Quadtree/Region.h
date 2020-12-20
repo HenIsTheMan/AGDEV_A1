@@ -11,6 +11,8 @@
 
 #include "../ObjPool/ObjPool.h"
 
+#include "../FrustumCulling/FrustumCulling.h"
+
 class Region final{
 	friend class RegionManager;
 public:
@@ -28,6 +30,7 @@ public:
 
 	void ClearMovableAndDeactivateChildren();
 	void Partition(const bool movable);
+	void VisibilityCheck(const FrustumCulling* const frustumCulling);
 private:
 	bool visible;
 

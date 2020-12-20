@@ -29,7 +29,7 @@ void FrustumCulling::Update(const glm::mat4& view, const glm::mat4& projection){
 void FrustumCulling::Render(ShaderProg& SP){
 }
 
-bool FrustumCulling::IsBoxInside(const glm::vec3& minPt, const glm::vec3& maxPt) const{
+bool FrustumCulling::ShldBeVisible(const glm::vec3& minPt, const glm::vec3& maxPt) const{
 	for(int i = 0; i < (int)Planes::Count; i++){
 		if(glm::dot(m_planes[i], glm::vec4(minPt.x, minPt.y, minPt.z, 1.0f)) < 0.0 &&
 			glm::dot(m_planes[i], glm::vec4(maxPt.x, minPt.y, minPt.z, 1.0f)) < 0.0 &&

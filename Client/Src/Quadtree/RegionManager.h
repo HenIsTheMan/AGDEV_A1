@@ -4,8 +4,6 @@
 
 #include "Region.h"
 
-#include "../FrustumCulling/FrustumCulling.h"
-
 class RegionManager final: public Singleton<RegionManager>{
 	friend Singleton<RegionManager>;
 public:

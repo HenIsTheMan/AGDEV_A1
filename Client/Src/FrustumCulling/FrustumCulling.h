@@ -21,7 +21,7 @@ public:
 	void Update(const glm::mat4& view, const glm::mat4& projection);
 	void Render(ShaderProg& SP);
 
-	bool IsBoxInside(const glm::vec3& minPt, const glm::vec3& maxPt) const;
+	bool ShldBeVisible(const glm::vec3& minPt, const glm::vec3& maxPt) const;
 private:
 	template<Planes i, Planes j>
 	struct ij2k final{

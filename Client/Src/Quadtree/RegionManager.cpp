@@ -38,6 +38,7 @@ void RegionManager::Update(){
 
 	rootRegion->ClearMovableAndDeactivateChildren();
 	rootRegion->Partition(true);
+	rootRegion->VisibilityCheck(frustumCulling);
 }
 
 void RegionManager::Render(ShaderProg& SP, const Cam& cam){
