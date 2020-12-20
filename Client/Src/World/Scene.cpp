@@ -102,7 +102,8 @@ Scene::Scene():
 	dLightFromBottom(nullptr),
 	entityManager(EntityManager::GetObjPtr()),
 	regionManager(RegionManager::GetObjPtr()),
-	myPlayer(nullptr)
+	myPlayer(nullptr),
+	mySP{"Shaders/ViewingFrustum.vertexS", "Shaders/ViewingFrustum.fragS"}
 {
 }
 
@@ -565,7 +566,9 @@ void Scene::GameUpdate(GLFWwindow* const& win){
 		cam.UpdateDetached(GLFW_KEY_E, GLFW_KEY_Q, GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_W, GLFW_KEY_S);
 		const glm::vec3& playerPos = myPlayer->GetPos();
 		const glm::vec3& playerFacingDir = myPlayer->GetFacingDir();
-		regionManager->UpdateFrustumCulling(view, projection);
+		regionManager->UpdateFrustumCulling(glm::lookAt(playerPos, playerPos + playerFacingDir,
+			glm::normalize(glm::cross(glm::normalize(glm::cross(playerFacingDir, glm::vec3(0.0f, 1.0f, 0.0f))), playerFacingDir))),
+			glm::perspective(glm::radians(angularFOV), cam.GetAspectRatio(), .1f, 50000.0f));
 	} else{
 		cam.UpdateAttached(myPlayer->GetPos() + glm::vec3(0.0f, myPlayer->GetScale().y * 0.5f, 0.0f));
 		const_cast<Entity*>(myPlayer)->SetFacingDir(cam.CalcFront());
@@ -575,7 +578,7 @@ void Scene::GameUpdate(GLFWwindow* const& win){
 		const glm::vec3& playerFacingDir = myPlayer->GetFacingDir();
 		regionManager->UpdateFrustumCulling(glm::lookAt(camPos, camPos + playerFacingDir,
 			glm::normalize(glm::cross(glm::normalize(glm::cross(playerFacingDir, glm::vec3(0.0f, 1.0f, 0.0f))), playerFacingDir))),
-			glm::perspective(glm::radians(angularFOV), cam.GetAspectRatio(), .1f, 99999.0f));
+			glm::perspective(glm::radians(angularFOV), cam.GetAspectRatio(), .1f, 50000.0f));
 
 		if(RMB){ //Control angularFOV of perspective projection based on item selected in inv
 			switch(inv[currSlot]){
@@ -735,6 +738,16 @@ void Scene::GameRender(){
 	models[(int)ModelType::Rock]->InstancedRender(forwardSP);
 
 	entityManager->Render(forwardSP, cam);
+
+	mySP.Use();
+
+	modelStack.PushModel({
+	});
+		mySP.SetMat4fv("MVP", &(projection * view * modelStack.GetTopModel())[0][0]);
+		Meshes::meshes[(int)MeshType::ViewingFrustum]->Render(mySP);
+	modelStack.PopModel();
+
+	forwardSP.Use();
 
 	///Render item held
 	if(!isCamDetached){

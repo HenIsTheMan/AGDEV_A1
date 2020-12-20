@@ -117,4 +117,9 @@ private:
 	ModelStack modelStack;
 
 	const Entity* myPlayer;
+
+
+
+
+	ShaderProg mySP;
 };
