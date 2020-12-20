@@ -565,9 +565,7 @@ void Scene::GameUpdate(GLFWwindow* const& win){
 		cam.UpdateDetached(GLFW_KEY_E, GLFW_KEY_Q, GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_W, GLFW_KEY_S);
 		const glm::vec3& playerPos = myPlayer->GetPos();
 		const glm::vec3& playerFacingDir = myPlayer->GetFacingDir();
-		regionManager->UpdateFrustumCulling(glm::lookAt(playerPos, playerPos + playerFacingDir,
-			glm::normalize(glm::cross(glm::normalize(glm::cross(playerFacingDir, glm::vec3(0.0f, 1.0f, 0.0f))), playerFacingDir))),
-			glm::perspective(glm::radians(angularFOV), cam.GetAspectRatio(), .1f, 99999.0f));
+		regionManager->UpdateFrustumCulling(view, projection);
 	} else{
 		cam.UpdateAttached(myPlayer->GetPos() + glm::vec3(0.0f, myPlayer->GetScale().y * 0.5f, 0.0f));
 		const_cast<Entity*>(myPlayer)->SetFacingDir(cam.CalcFront());

@@ -12,7 +12,7 @@ void SquareFrustum::Update(const glm::vec3 (&vertexPos)[24]){
 	}
 }
 
-void SquareFrustum::Render(ShaderProg& SP, const bool& autoConfig){ //??
+void SquareFrustum::Render(ShaderProg& SP, const bool& autoConfig){
 	if(!VAO){ //Lazy Initialization (Init on 1st use)
 		glGenVertexArrays(1, &VAO);
 		glGenBuffers(1, &VBO);

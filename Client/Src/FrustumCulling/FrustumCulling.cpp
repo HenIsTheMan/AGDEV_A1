@@ -66,10 +66,9 @@ void FrustumCulling::Render(ShaderProg& SP){
 	viewingFrustumSP.Use();
 
 	modelStack.PushModel({
-		modelStack.Translate(glm::vec3(0.0f, terrainYScale, 0.0f)),
 	});
 		viewingFrustumSP.SetMat4fv("MVP", &(projection * view * modelStack.GetTopModel())[0][0]);
-		Meshes::meshes[(int)MeshType::ViewingFrustum]->Render(SP);
+		Meshes::meshes[(int)MeshType::ViewingFrustum]->Render(viewingFrustumSP);
 	modelStack.PopModel();
 
 	SP.Use();
