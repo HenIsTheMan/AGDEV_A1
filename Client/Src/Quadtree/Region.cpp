@@ -349,5 +349,7 @@ void Region::VisibilityCheck(const FrustumCulling* const frustumCulling){
 		bottomRight->VisibilityCheck(frustumCulling);
 	}
 
-	visible = frustumCulling->ShldBeVisible(glm::vec3(origin[0] - size[0] * 0.5f, 0.0f, origin[1] + size[1]), glm::vec3(origin[0] + size[0] * 0.5f, 0.0f, origin[1] - size[1]));
+	visible = frustumCulling->ShldBeVisible(
+		glm::vec3(origin[0] - size[0] * 0.5f, 0.0f, origin[1] - size[1] * 0.5f),
+		glm::vec3(origin[0] + size[0] * 0.5f, 0.0f, origin[1] + size[1] * 0.5f));
 }
