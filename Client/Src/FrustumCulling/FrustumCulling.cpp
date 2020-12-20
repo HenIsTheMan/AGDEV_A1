@@ -30,7 +30,7 @@ void FrustumCulling::Render(ShaderProg& SP){
 }
 
 bool FrustumCulling::ShldBeVisible(const glm::vec3& minPt, const glm::vec3& maxPt) const{
-	for(int i = 0; i < (int)Planes::Count; i++){
+	for(int i = 0; i < (int)Planes::Count; ++i){
 		if(glm::dot(m_planes[i], glm::vec4(minPt.x, minPt.y, minPt.z, 1.0f)) < 0.0 &&
 			glm::dot(m_planes[i], glm::vec4(maxPt.x, minPt.y, minPt.z, 1.0f)) < 0.0 &&
 			glm::dot(m_planes[i], glm::vec4(minPt.x, maxPt.y, minPt.z, 1.0f)) < 0.0 &&
@@ -45,12 +45,12 @@ bool FrustumCulling::ShldBeVisible(const glm::vec3& minPt, const glm::vec3& maxP
 	}
 
 	int out;
-	out = 0; for (int i = 0; i<8; i++) out += ((m_points[i].x > maxPt.x) ? 1 : 0); if (out == 8) return false;
-	out = 0; for (int i = 0; i<8; i++) out += ((m_points[i].x < minPt.x) ? 1 : 0); if (out == 8) return false;
-	out = 0; for (int i = 0; i<8; i++) out += ((m_points[i].y > maxPt.y) ? 1 : 0); if (out == 8) return false;
-	out = 0; for (int i = 0; i<8; i++) out += ((m_points[i].y < minPt.y) ? 1 : 0); if (out == 8) return false;
-	out = 0; for (int i = 0; i<8; i++) out += ((m_points[i].z > maxPt.z) ? 1 : 0); if (out == 8) return false;
-	out = 0; for (int i = 0; i<8; i++) out += ((m_points[i].z < minPt.z) ? 1 : 0); if (out == 8) return false;
+	out = 0; for(int i = 0; i < 8; ++i) out += ((m_points[i].x > maxPt.x) ? 1 : 0); if (out == 8) return false;
+	out = 0; for(int i = 0; i < 8; ++i) out += ((m_points[i].x < minPt.x) ? 1 : 0); if (out == 8) return false;
+	out = 0; for(int i = 0; i < 8; ++i) out += ((m_points[i].y > maxPt.y) ? 1 : 0); if (out == 8) return false;
+	out = 0; for(int i = 0; i < 8; ++i) out += ((m_points[i].y < minPt.y) ? 1 : 0); if (out == 8) return false;
+	out = 0; for(int i = 0; i < 8; ++i) out += ((m_points[i].z > maxPt.z) ? 1 : 0); if (out == 8) return false;
+	out = 0; for(int i = 0; i < 8; ++i) out += ((m_points[i].z < minPt.z) ? 1 : 0); if (out == 8) return false;
 
 	return true;
 }
