@@ -29,8 +29,6 @@ private:
 
 	void RenderQuadtree(ShaderProg& SP);
 
-	bool isCalledUpdateFrustumCulling;
-
 	bool shldRenderQuadtree;
 	float elapsedTime;
 

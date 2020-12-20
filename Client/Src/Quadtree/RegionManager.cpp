@@ -39,10 +39,7 @@ void RegionManager::Update(){
 	rootRegion->ClearMovableAndDeactivateChildren();
 	rootRegion->Partition(true);
 
-	if(isCalledUpdateFrustumCulling){
-		rootRegion->VisibilityCheck(frustumCulling);
-		isCalledUpdateFrustumCulling = false;
-	}
+	rootRegion->VisibilityCheck(frustumCulling);
 }
 
 void RegionManager::Render(ShaderProg& SP){
@@ -52,7 +49,6 @@ void RegionManager::Render(ShaderProg& SP){
 }
 
 void RegionManager::UpdateFrustumCulling(const glm::mat4& view, const glm::mat4& projection, const float yOffset){
-	isCalledUpdateFrustumCulling = true;
 	frustumCulling->Update(view, projection, yOffset);
 }
 
@@ -77,7 +73,6 @@ const FrustumCulling* RegionManager::GetFrustumCulling() const{
 }
 
 RegionManager::RegionManager():
-	isCalledUpdateFrustumCulling(false),
 	shldRenderQuadtree(false),
 	elapsedTime(0.0f),
 	modelStack(),
