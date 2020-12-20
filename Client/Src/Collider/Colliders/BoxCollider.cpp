@@ -12,6 +12,10 @@ BoxCollider::BoxCollider(const glm::vec3& pos, const glm::vec3& scale):
 {
 }
 
+float BoxCollider::CalcDiagLen(){
+	return sqrt(scale.x * scale.x + scale.y * scale.y + scale.z * scale.z);
+}
+
 const glm::vec3& BoxCollider::GetPos() const{
 	return pos;
 }

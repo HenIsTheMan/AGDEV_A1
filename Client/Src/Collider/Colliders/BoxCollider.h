@@ -9,6 +9,8 @@ public:
 	BoxCollider();
 	BoxCollider(const glm::vec3& pos, const glm::vec3& scale);
 
+	float CalcDiagLen();
+
 	///Getters
 	const glm::vec3& GetPos() const;
 	const glm::vec3& GetScale() const;

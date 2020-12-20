@@ -8,6 +8,7 @@ class Entity final{
 	template <class T>
 	friend class ObjPool;
 
+	friend class Collision;
 	friend class EntityFactory;
 	friend class EntityManager;
 	friend class Region;
@@ -23,7 +24,6 @@ public:
 	const glm::vec3& GetPos() const;
 	const glm::vec3& GetScale() const;
 	const glm::vec3& GetFacingDir() const;
-	const glm::vec3& GetPrevPos() const;
 
 	///Setter
 	void SetFacingDir(const glm::vec3& facingDir);

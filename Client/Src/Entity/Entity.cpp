@@ -12,10 +12,6 @@ const glm::vec3& Entity::GetFacingDir() const{
 	return facingDir;
 }
 
-const glm::vec3& Entity::GetPrevPos() const{
-	return prevPos;
-}
-
 void Entity::SetFacingDir(const glm::vec3& facingDir){
 	this->facingDir = facingDir;
 }
