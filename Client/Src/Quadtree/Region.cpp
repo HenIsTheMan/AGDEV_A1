@@ -1,5 +1,7 @@
 #include "Region.h"
 
+#include <glm/gtx/norm.hpp>
+
 Region::Region():
 	visible(false),
 	parent(nullptr),
@@ -78,7 +80,6 @@ void Region::GetEntitiesToRender(std::multimap<int, Entity*>& entitiesOpaque, st
 	}
 
 	const glm::vec3& camPos = cam.GetPos();
-	const glm::vec3& camFront = cam.CalcFront();
 
 	if(!result || (result
 		&& (topLeft && topLeft->stationaryNodes.empty())
@@ -89,14 +90,11 @@ void Region::GetEntitiesToRender(std::multimap<int, Entity*>& entitiesOpaque, st
 		for(int i = 0; i < stationaryNodes.size(); ++i){
 			Entity* const entity = stationaryNodes[i]->RetrieveEntity();
 			if(entity){
-				glm::vec3 displacementVec = entity->pos - camPos;
-				if(glm::dot(displacementVec, camFront) > 0.0f){
-					switch(entity->type){
-						case Entity::EntityType::Coin:
-						case Entity::EntityType::Fire:
-							entitiesNotOpaque.insert(std::make_pair((int)glm::dot(displacementVec, displacementVec), entity));
-							break;
-					}
+				switch(entity->type){
+					case Entity::EntityType::Coin:
+					case Entity::EntityType::Fire:
+						entitiesNotOpaque.insert(std::make_pair((int)glm::length2(entity->pos - camPos), entity));
+						break;
 				}
 			}
 		}
@@ -111,16 +109,13 @@ void Region::GetEntitiesToRender(std::multimap<int, Entity*>& entitiesOpaque, st
 		for(int i = 0; i < movableNodes.size(); ++i){
 			Entity* const entity = movableNodes[i]->RetrieveEntity();
 			if(entity){
-				glm::vec3 displacementVec = entity->pos - camPos;
-				if(glm::dot(displacementVec, camFront) > 0.0f){
-					switch(entity->type){
-						case Entity::EntityType::Bullet:
-						case Entity::EntityType::Enemy:
-						case Entity::EntityType::Player:
-						case Entity::EntityType::ThinObj:
-							entitiesOpaque.insert(std::make_pair((int)glm::dot(displacementVec, displacementVec), entity));
-							break;
-					}
+				switch(entity->type){
+					case Entity::EntityType::Bullet:
+					case Entity::EntityType::Enemy:
+					case Entity::EntityType::Player:
+					case Entity::EntityType::ThinObj:
+						entitiesOpaque.insert(std::make_pair((int)glm::length2(entity->pos - camPos), entity));
+						break;
 				}
 			}
 		}

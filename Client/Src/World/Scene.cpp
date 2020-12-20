@@ -627,7 +627,7 @@ void Scene::GameUpdate(GLFWwindow* const& win){
 	const glm::vec3& playerFacingDir = myPlayer->GetFacingDir();
 	regionManager->UpdateFrustumCulling(glm::lookAt(camAttachedPos, camAttachedPos + playerFacingDir,
 		glm::normalize(glm::cross(glm::normalize(glm::cross(playerFacingDir, glm::vec3(0.0f, 1.0f, 0.0f))), playerFacingDir))),
-		glm::perspective(glm::radians(angularFOV), cam.GetAspectRatio(), .1f, 50000.0f));
+		glm::perspective(glm::radians(angularFOV), cam.GetAspectRatio(), .1f, 70000.0f));
 
 	entityManager->Update();
 }

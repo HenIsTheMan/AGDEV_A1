@@ -41,9 +41,9 @@ void RegionManager::Update(){
 	rootRegion->VisibilityCheck(frustumCulling);
 }
 
-void RegionManager::Render(ShaderProg& SP, const Cam& cam){
+void RegionManager::Render(ShaderProg& SP){
 	if(shldRenderQuadtree){
-		RenderQuadtree(SP, cam);
+		RenderQuadtree(SP);
 	}
 }
 
@@ -77,7 +77,7 @@ RegionManager::RegionManager():
 {
 }
 
-void RegionManager::RenderQuadtree(ShaderProg& SP, const Cam& cam){
+void RegionManager::RenderQuadtree(ShaderProg& SP){
 	std::vector<Region*> leaves;
 	rootRegion->GetLeaves(SP, leaves);
 	const size_t size = leaves.size();

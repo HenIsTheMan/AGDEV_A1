@@ -114,7 +114,7 @@ void EntityManager::Update(){
 }
 
 void EntityManager::Render(ShaderProg& SP, const Cam& cam){
-	regionManager->Render(SP, cam);
+	regionManager->Render(SP);
 
 	SP.Set1i("noNormals", 1);
 	SP.Set1i("useCustomColour", 1);

@@ -20,6 +20,6 @@ public:
 	void SetModel(const DetailLvl lvl, Model* const model);
 	void SetDistSquaredAndModel(const DetailLvl lvl, const float distSquared, Model* const model);
 private:
-	float squaredDists[(int)DetailLvl::Amt];
+	float squaredDists[(int)DetailLvl::Amt]; //Optimization
 	Model* models[(int)DetailLvl::Amt];
 };
