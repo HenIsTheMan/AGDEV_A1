@@ -330,12 +330,10 @@ void Region::Partition(const bool movable){
 	bottomRight->Partition(movable);
 }
 
-extern float terrainYScale;
-
 void Region::VisibilityCheck(const FrustumCulling* const frustumCulling){
 	if(!frustumCulling->ShldBeVisible(
-		glm::vec3(origin[0] - size[0] * 0.5f, terrainYScale, origin[1] - size[1] * 0.5f),
-		glm::vec3(origin[0] + size[0] * 0.5f, terrainYScale, origin[1] + size[1] * 0.5f))
+		glm::vec3(origin[0] - size[0] * 0.5f, frustumCulling->yFloorAtPlayerPos, origin[1] - size[1] * 0.5f),
+		glm::vec3(origin[0] + size[0] * 0.5f, frustumCulling->yFloorAtPlayerPos, origin[1] + size[1] * 0.5f))
 	){ //Optimization
 		return MakeSelfAndChildrenInvisible();
 	}

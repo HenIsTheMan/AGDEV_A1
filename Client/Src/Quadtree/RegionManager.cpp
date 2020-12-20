@@ -47,8 +47,8 @@ void RegionManager::Render(ShaderProg& SP){
 	}
 }
 
-void RegionManager::UpdateFrustumCulling(const glm::mat4& view, const glm::mat4& projection){
-	frustumCulling->Update(view, projection);
+void RegionManager::UpdateFrustumCulling(const glm::mat4& view, const glm::mat4& projection, const float yFloorAtPlayerPos){
+	frustumCulling->Update(view, projection, yFloorAtPlayerPos);
 }
 
 Region* RegionManager::ActivateRegion(){
