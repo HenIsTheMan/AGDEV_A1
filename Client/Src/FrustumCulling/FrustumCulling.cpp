@@ -8,7 +8,6 @@ FrustumCulling::FrustumCulling():
 	m_planes(),
 	m_points()
 {
-	static_cast<SquareFrustum*>(Meshes::meshes[(int)MeshType::ViewingFrustum])->Init();
 }
 
 void FrustumCulling::Update(const glm::mat4& view, const glm::mat4& projection){
