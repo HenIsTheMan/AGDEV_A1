@@ -66,6 +66,7 @@ Scene::Scene():
 		}),
 	},
 	forwardSP{"Shaders/Forward.vertexS", "Shaders/Forward.fragS"},
+	viewingFrustumSP{"Shaders/ViewingFrustum.vertexS", "Shaders/ViewingFrustum.fragS"},
 	textSP{"Shaders/Text.vertexS", "Shaders/Text.fragS"},
 	cubemapRefID(0),
 	currSlot(0),
@@ -102,8 +103,7 @@ Scene::Scene():
 	dLightFromBottom(nullptr),
 	entityManager(EntityManager::GetObjPtr()),
 	regionManager(RegionManager::GetObjPtr()),
-	myPlayer(nullptr),
-	mySP{"Shaders/ViewingFrustum.vertexS", "Shaders/ViewingFrustum.fragS"}
+	myPlayer(nullptr)
 {
 }
 
@@ -739,15 +739,17 @@ void Scene::GameRender(){
 
 	entityManager->Render(forwardSP, cam);
 
-	mySP.Use();
+	//* Render viewing frustum
+	viewingFrustumSP.Use();
 
 	modelStack.PushModel({
 	});
-		mySP.SetMat4fv("MVP", &(projection * view * modelStack.GetTopModel())[0][0]);
-		Meshes::meshes[(int)MeshType::ViewingFrustum]->Render(mySP);
+		viewingFrustumSP.SetMat4fv("MVP", &(projection * view * modelStack.GetTopModel())[0][0]);
+		Meshes::meshes[(int)MeshType::ViewingFrustum]->Render(viewingFrustumSP);
 	modelStack.PopModel();
 
 	forwardSP.Use();
+	//*/
 
 	///Render item held
 	if(!isCamDetached){

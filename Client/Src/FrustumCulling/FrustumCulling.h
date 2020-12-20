@@ -2,8 +2,6 @@
 
 #include <Engine.h>
 
-#include "../World/ModelStack.h"
-
 class FrustumCulling final{
 public:
 	enum struct Planes: int{
@@ -20,7 +18,6 @@ public:
 	FrustumCulling();
 
 	void Update(const glm::mat4& view, const glm::mat4& projection);
-	void Render(ShaderProg& SP);
 
 	bool ShldBeVisible(const glm::vec3& minPt, const glm::vec3& maxPt) const;
 private:
@@ -41,7 +38,4 @@ private:
 
 	glm::vec4 m_planes[(int)Planes::Count];
 	glm::vec3 m_points[8];
-
-	ModelStack modelStack;
-	ShaderProg viewingFrustumSP;
 };

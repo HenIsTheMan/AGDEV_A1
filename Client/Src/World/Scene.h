@@ -59,6 +59,7 @@ private:
 	Model* models[(int)ModelType::Amt];
 
 	ShaderProg forwardSP;
+	ShaderProg viewingFrustumSP;
 	ShaderProg textSP;
 
 	uint cubemapRefID;
@@ -117,9 +118,4 @@ private:
 	ModelStack modelStack;
 
 	const Entity* myPlayer;
-
-
-
-
-	ShaderProg mySP;
 };
