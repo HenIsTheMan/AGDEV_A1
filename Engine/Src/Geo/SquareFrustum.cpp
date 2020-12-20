@@ -32,4 +32,7 @@ void SquareFrustum::Render(ShaderProg& SP, const bool& autoConfig){
 	glBufferSubData(GL_ARRAY_BUFFER, 0, 24 * sizeof(glm::vec3), vertexPos);
 
 	glDrawArrays(GL_LINES, 0, 24);
+	++normalDrawCalls;
+	vertexCount += 24;
+	polygonCount += 8;
 }

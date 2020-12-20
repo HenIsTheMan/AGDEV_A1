@@ -260,6 +260,9 @@ void Region::Partition(const bool movable){
 	if(movableNodes.size() + stationaryNodes.size() <= (size_t)1){ //Optimization
 		return;
 	}
+	if(size.x <= 1.0f){
+		return;
+	}
 
 	if(!topLeft){
 		topLeft = regionPool->ActivateObj();
