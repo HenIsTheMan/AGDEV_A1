@@ -18,6 +18,8 @@ public:
 	void Render(ShaderProg& SP, const Cam& cam);
 
 	EntityFactory* RetrieveEntityFactory();
+
+	bool isCamDetached;
 private:
 	EntityManager();
 

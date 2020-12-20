@@ -16,7 +16,7 @@ class Entity final{
 	friend class Scar;
 	friend class Sniper;
 	friend class Gun;
-	friend void UpdatePlayerHoriz(Entity* const player);
+	friend void UpdatePlayerHoriz(Entity* const player, const bool isCamDetached);
 	friend void UpdatePlayerVert(Entity* const player);
 public:
 	///Getters

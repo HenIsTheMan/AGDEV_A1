@@ -14,9 +14,17 @@ struct IsAirborneWrapper final{
 
 bool IsAirborneWrapper::isAirborne = false;
 
-inline static void UpdatePlayerHoriz(Entity* const player){
-	int leftRight = (int)Key(VK_LEFT) - (int)Key(VK_RIGHT);
-	int frontBack = (int)Key(VK_UP) - (int)Key(VK_DOWN);
+inline static void UpdatePlayerHoriz(Entity* const player, const bool isCamDetached){
+	int leftRight;
+	int frontBack;
+
+	if(isCamDetached){
+		leftRight = (int)Key(VK_LEFT) - (int)Key(VK_RIGHT);
+		frontBack = (int)Key(VK_UP) - (int)Key(VK_DOWN);
+	} else{
+		leftRight = (int)Key('A') - (int)Key('D');
+		frontBack = (int)Key('W') - (int)Key('S');
+	}
 
 	if(leftRight == 0 && frontBack == 0){
 		player->vel.x = 0.0f;

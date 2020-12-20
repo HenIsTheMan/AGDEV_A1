@@ -67,7 +67,7 @@ void EntityManager::Update(){
 		if(movableEntity){
 			switch(movableEntity->type){
 				case Entity::EntityType::Player: {
-					UpdatePlayerHoriz(movableEntity);
+					UpdatePlayerHoriz(movableEntity, isCamDetached);
 					UpdatePlayerVert(movableEntity);
 
 					const glm::vec3 prevPos = movableEntity->pos;
@@ -282,6 +282,7 @@ void EntityManager::DeactivateEntityProcedure(Entity* const entity){
 }
 
 EntityManager::EntityManager():
+	isCamDetached(false),
 	shldRenderColliders(false),
 	elapsedTime(0.0f),
 	entityFactory(EntityFactory::GetObjPtr()),

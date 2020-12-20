@@ -1,5 +1,6 @@
 #include "Scene.h"
 #include "Vendor/stb_image.h"
+
 #include <glm/gtx/color_space.hpp>
 #include <glm/gtx/norm.hpp>
 
@@ -548,6 +549,7 @@ void Scene::GameUpdate(GLFWwindow* const& win){
 	static bool isPressedB = false;
 	if(!isPressedB && Key(GLFW_KEY_B)){
 		isCamDetached = !isCamDetached;
+		entityManager->isCamDetached = isCamDetached;
 		angularFOV = 45.f;
 
 		isPressedB = true;
