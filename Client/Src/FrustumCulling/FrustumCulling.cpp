@@ -7,14 +7,14 @@ FrustumCulling::FrustumCulling():
 	projection(glm::mat4(1.0f)),
 	m_planes(),
 	m_points(),
-	yFloorAtPlayerPos(0.0f)
+	yOffset(0.0f)
 {
 }
 
-void FrustumCulling::Update(const glm::mat4& view, const glm::mat4& projection, const float yFloorAtPlayerPos){
+void FrustumCulling::Update(const glm::mat4& view, const glm::mat4& projection, const float yOffset){
 	this->view = view;
 	this->projection = projection;
-	this->yFloorAtPlayerPos = yFloorAtPlayerPos;
+	this->yOffset = yOffset;
 
 	UpdateFrustum();
 

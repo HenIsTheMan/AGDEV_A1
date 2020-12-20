@@ -17,11 +17,11 @@ public:
 
 	FrustumCulling();
 
-	void Update(const glm::mat4& view, const glm::mat4& projection, const float yFloorAtPlayerPos);
+	void Update(const glm::mat4& view, const glm::mat4& projection, const float yOffset);
 
 	bool ShldBeVisible(const glm::vec3& minPt, const glm::vec3& maxPt) const;
 
-	float yFloorAtPlayerPos;
+	float yOffset;
 private:
 	template<Planes i, Planes j>
 	struct ij2k final{

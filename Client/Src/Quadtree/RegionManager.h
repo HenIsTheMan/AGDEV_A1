@@ -13,7 +13,7 @@ public:
 	void Update();
 	void Render(ShaderProg& SP);
 
-	void UpdateFrustumCulling(const glm::mat4& view, const glm::mat4& projection, const float yFloorAtPlayerPos);
+	void UpdateFrustumCulling(const glm::mat4& view, const glm::mat4& projection, const float yOffset);
 
 	Region* ActivateRegion(); //Not used elsewhere
 	void DeactivateRegion(Region* const region); //Not used

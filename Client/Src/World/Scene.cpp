@@ -631,7 +631,7 @@ void Scene::GameUpdate(GLFWwindow* const& win){
 	regionManager->UpdateFrustumCulling(glm::lookAt(camAttachedPos, camAttachedPos + playerFacingDir,
 		glm::normalize(glm::cross(glm::normalize(glm::cross(playerFacingDir, glm::vec3(0.0f, 1.0f, 0.0f))), playerFacingDir))),
 		glm::perspective(glm::radians(angularFOV), cam.GetAspectRatio(), .1f, 70000.0f),
-		terrainYScale * myTerrain->GetHeightAtPt(playerPos.x / terrainXScale, playerPos.z / terrainZScale, true) + myPlayer->GetScale().y);
+		camAttachedPos.y);
 
 	entityManager->Update();
 }
