@@ -18,15 +18,10 @@ public:
 	FrustumCulling();
 
 	void Init(const glm::vec3& topRight, const glm::vec3& bottomLeft);
-	void Update();
+	void Update(const glm::mat4& view, const glm::mat4& projection);
 	void Render(ShaderProg& SP);
 
 	bool IsBoxInside(const glm::vec3& minPt, const glm::vec3& maxPt) const;
-
-	///Setters
-	void SetModel(const glm::mat4& model);
-	void SetView(const glm::mat4& view);
-	void SetProjection(const glm::mat4& projection);
 private:
 	template<Planes i, Planes j>
 	struct ij2k final{

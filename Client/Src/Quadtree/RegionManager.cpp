@@ -7,6 +7,11 @@ extern float terrainYScale;
 extern float terrainZScale;
 
 RegionManager::~RegionManager(){
+	if(frustumCulling != nullptr){
+		delete frustumCulling;
+		frustumCulling = nullptr;
+	}
+
 	if(regionPool != nullptr){
 		regionPool->Destroy();
 		regionPool = nullptr;
@@ -41,6 +46,10 @@ void RegionManager::Render(ShaderProg& SP, const Cam& cam){
 	}
 }
 
+void RegionManager::UpdateFrustumCulling(const glm::mat4& view, const glm::mat4& projection){
+	frustumCulling->Update(view, projection);
+}
+
 Region* RegionManager::ActivateRegion(){
 	return regionPool->ActivateObj();
 }
@@ -62,7 +71,8 @@ RegionManager::RegionManager():
 	elapsedTime(0.0f),
 	modelStack(),
 	rootRegion(nullptr),
-	regionPool(ObjPool<Region>::GetObjPtr())
+	regionPool(ObjPool<Region>::GetObjPtr()),
+	frustumCulling(new FrustumCulling())
 {
 }
 

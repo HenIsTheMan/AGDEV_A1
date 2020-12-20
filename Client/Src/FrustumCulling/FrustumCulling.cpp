@@ -1,7 +1,6 @@
 #include "FrustumCulling.h"
 
 FrustumCulling::FrustumCulling():
-	model(),
 	view(),
 	projection(),
 	m_planes(),
@@ -20,7 +19,10 @@ void FrustumCulling::Init(const glm::vec3& topRight, const glm::vec3& bottomLeft
 	//};
 }
 
-void FrustumCulling::Update(){
+void FrustumCulling::Update(const glm::mat4& view, const glm::mat4& projection){
+	this->view = view;
+	this->projection = projection;
+
 	UpdateFrustum();
 }
 
@@ -51,18 +53,6 @@ bool FrustumCulling::IsBoxInside(const glm::vec3& minPt, const glm::vec3& maxPt)
 	out = 0; for (int i = 0; i<8; i++) out += ((m_points[i].z < minPt.z) ? 1 : 0); if (out == 8) return false;
 
 	return true;
-}
-
-void FrustumCulling::SetModel(const glm::mat4& model){
-	this->model = model;
-}
-
-void FrustumCulling::SetView(const glm::mat4& view){
-	this->view = view;
-}
-
-void FrustumCulling::SetProjection(const glm::mat4& projection){
-	this->projection = projection;
 }
 
 void FrustumCulling::UpdateFrustum(){
@@ -104,8 +94,6 @@ void FrustumCulling::UpdateFrustum(){
 
 template <FrustumCulling::Planes a, FrustumCulling::Planes b, FrustumCulling::Planes c>
 inline glm::vec3 FrustumCulling::CalcIntersection(const glm::vec3* crosses) const{
-	float D = glm::dot(glm::vec3(m_planes[(int)a]), crosses[ij2k<b, c>::k]);
-	
 	const glm::vec3 res = glm::mat3(crosses[ij2k<b, c>::k], -crosses[ij2k<a, c>::k], crosses[ij2k<a, b>::k]) * glm::vec3(m_planes[(int)a].w, m_planes[(int)b].w, m_planes[(int)c].w);
-	return res * (-1.0f / D);
+	return res * (-1.0f / glm::dot(glm::vec3(m_planes[(int)a]), crosses[ij2k<b, c>::k]));
 }

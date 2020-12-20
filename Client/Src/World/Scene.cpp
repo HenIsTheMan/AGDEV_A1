@@ -544,6 +544,7 @@ void Scene::GameUpdate(GLFWwindow* const& win){
 	static_cast<SpriteAni*>(Meshes::meshes[(int)MeshType::CoinSpriteAni])->Update();
 	static_cast<SpriteAni*>(Meshes::meshes[(int)MeshType::FireSpriteAni])->Update();
 
+	regionManager->UpdateFrustumCulling(cam.LookAt(), glm::perspective(glm::radians(angularFOV), cam.GetAspectRatio(), .1f, 99999.0f));
 	entityManager->Update();
 
 	static bool isPressedB = false;

@@ -4,6 +4,8 @@
 
 #include "Region.h"
 
+#include "../FrustumCulling/FrustumCulling.h"
+
 class RegionManager final: public Singleton<RegionManager>{
 	friend Singleton<RegionManager>;
 public:
@@ -12,6 +14,8 @@ public:
 	void Init(const size_t& inactiveSize, const size_t& activeSize);
 	void Update();
 	void Render(ShaderProg& SP, const Cam& cam);
+
+	void UpdateFrustumCulling(const glm::mat4& view, const glm::mat4& projection);
 
 	Region* ActivateRegion(); //Not used elsewhere
 	void DeactivateRegion(Region* const region); //Not used
@@ -31,4 +35,6 @@ private:
 	Region* rootRegion;
 
 	ObjPool<Region>* regionPool;
+
+	FrustumCulling* frustumCulling;
 };
