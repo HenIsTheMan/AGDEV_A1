@@ -69,12 +69,15 @@ void Region::GetEntitiesToRender(std::multimap<int, Entity*>& entitiesOpaque, st
 		for(int i = 0; i < stationaryNodes.size(); ++i){
 			Entity* const entity = stationaryNodes[i]->RetrieveEntity();
 			if(entity){
-				//const glm::vec3& entityPos = entity->GetPos();
-				//const glm::vec3& entityScale = entity->GetScale();
+				const glm::vec3& entityPos = entity->GetPos();
+				const glm::vec3& entityScale = entity->GetScale();
 
-				//frustumCulling->ShldBeVisible(
-				//	glm::vec3(entityPos.x - entityScale.x * 0.5f, entityPos.y - entityScale.y * 0.5f, entityPos.z - entityScale.z * 0.5f),
-				//	glm::vec3(entityPos.x + entityScale.x * 0.5f, entityPos.y + entityScale.y * 0.5f, entityPos.z + entityScale.z * 0.5f));
+				if(!frustumCulling->ShldBeVisible(
+					glm::vec3(entityPos.x - entityScale.x * 0.5f, entityPos.y - entityScale.y * 0.5f, entityPos.z - entityScale.z * 0.5f),
+					glm::vec3(entityPos.x + entityScale.x * 0.5f, entityPos.y + entityScale.y * 0.5f, entityPos.z + entityScale.z * 0.5f))
+				){
+					continue;
+				}
 
 				switch(entity->type){
 					case Entity::EntityType::Coin:
@@ -88,12 +91,15 @@ void Region::GetEntitiesToRender(std::multimap<int, Entity*>& entitiesOpaque, st
 		for(int i = 0; i < movableNodes.size(); ++i){
 			Entity* const entity = movableNodes[i]->RetrieveEntity();
 			if(entity){
-				//const glm::vec3& entityPos = entity->GetPos();
-				//const glm::vec3& entityScale = entity->GetScale();
+				const glm::vec3& entityPos = entity->GetPos();
+				const glm::vec3& entityScale = entity->GetScale();
 
-				//frustumCulling->ShldBeVisible(
-				//	glm::vec3(entityPos.x - entityScale.x * 0.5f, entityPos.y - entityScale.y * 0.5f, entityPos.z - entityScale.z * 0.5f),
-				//	glm::vec3(entityPos.x + entityScale.x * 0.5f, entityPos.y + entityScale.y * 0.5f, entityPos.z + entityScale.z * 0.5f));
+				if(!frustumCulling->ShldBeVisible(
+					glm::vec3(entityPos.x - entityScale.x * 0.5f, entityPos.y - entityScale.y * 0.5f, entityPos.z - entityScale.z * 0.5f),
+					glm::vec3(entityPos.x + entityScale.x * 0.5f, entityPos.y + entityScale.y * 0.5f, entityPos.z + entityScale.z * 0.5f))
+				){
+					continue;
+				}
 
 				switch(entity->type){
 					case Entity::EntityType::Bullet:
