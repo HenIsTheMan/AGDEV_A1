@@ -3,6 +3,7 @@
 
 #include <glm/gtx/color_space.hpp>
 #include <glm/gtx/norm.hpp>
+#include <glm/gtc/epsilon.hpp>
 
 float terrainXScale = 12000.f;
 float terrainYScale = 700.f;
@@ -99,6 +100,7 @@ Scene::Scene():
 	isCamDetached(true),
 	shldRenderViewingFrustum(false),
 	elapsedTime(0.f),
+	frustumColor(glm::vec3(1.0f)),
 	modelStack(),
 	polyModes(),
 	dLightFromTop(nullptr),
@@ -639,13 +641,30 @@ void Scene::GameUpdate(GLFWwindow* const& win){
 	}
 
 	const glm::vec3& playerFacingDir = myPlayer->GetFacingDir();
-	const glm::vec3& playerPos = myPlayer->GetPos();
-	Terrain* const myTerrain = static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain]);
+	const float camAspectRatio = cam.GetAspectRatio();
 
-	regionManager->UpdateFrustumCulling(glm::lookAt(camAttachedPos, camAttachedPos + playerFacingDir,
-		glm::normalize(glm::cross(glm::normalize(glm::cross(playerFacingDir, glm::vec3(0.0f, 1.0f, 0.0f))), playerFacingDir))),
-		glm::perspective(glm::radians(angularFOV), cam.GetAspectRatio(), .1f, 70000.0f),
-		camAttachedPos.y);
+	static glm::vec3 prevCamAttachedPos = glm::vec3();
+	static glm::vec3 prevPlayerFacingDir = glm::vec3();
+	static float prevAngularFOV = 0.0f;
+	static float prevCamAspectRatio = 0.0f;
+
+	if(glm::any(glm::epsilonNotEqual(camAttachedPos, prevCamAttachedPos, glm::epsilon<float>()))
+		|| glm::any(glm::epsilonNotEqual(playerFacingDir, prevPlayerFacingDir, glm::epsilon<float>()))
+		|| glm::epsilonNotEqual(angularFOV, prevAngularFOV, glm::epsilon<float>())
+		|| glm::epsilonNotEqual(camAspectRatio, prevCamAspectRatio, glm::epsilon<float>())
+	){
+		regionManager->UpdateFrustumCulling(glm::lookAt(camAttachedPos, camAttachedPos + playerFacingDir,
+			glm::normalize(glm::cross(glm::normalize(glm::cross(playerFacingDir, glm::vec3(0.0f, 1.0f, 0.0f))), playerFacingDir))),
+			glm::perspective(glm::radians(angularFOV), camAspectRatio, .1f, 70000.0f),
+			camAttachedPos.y);
+
+		frustumColor = glm::vec3(PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f));
+
+		prevCamAttachedPos = camAttachedPos;
+		prevPlayerFacingDir = playerFacingDir;
+		prevAngularFOV = angularFOV;
+		prevCamAspectRatio = camAspectRatio;
+	}
 
 	entityManager->Update();
 }
@@ -757,6 +776,7 @@ void Scene::GameRender(){
 		modelStack.PushModel({
 		});
 			viewingFrustumSP.SetMat4fv("MVP", &(projection * view * modelStack.GetTopModel())[0][0]);
+			viewingFrustumSP.Set3fv("frustumColor", frustumColor);
 			Meshes::meshes[(int)MeshType::ViewingFrustum]->Render(viewingFrustumSP);
 		modelStack.PopModel();
 

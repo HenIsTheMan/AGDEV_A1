@@ -113,6 +113,8 @@ private:
 	bool shldRenderViewingFrustum;
 	float elapsedTime;
 
+	glm::vec3 frustumColor;
+
 	Light* dLightFromTop;
 	Light* dLightFromBottom;
 

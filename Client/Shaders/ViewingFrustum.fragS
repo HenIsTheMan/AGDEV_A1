@@ -1,6 +1,8 @@
 #version 330 core
 out vec4 fragColour;
 
+uniform vec3 frustumColor;
+
 void main(){
-	fragColour = vec4(1.0f);
+	fragColour = vec4(frustumColor, 1.0f);
 }
