@@ -4,6 +4,7 @@
 
 #include "../Shared/RotateVecIn2D.hpp"
 
+extern float dt;
 extern float terrainXScale;
 extern float terrainYScale;
 extern float terrainZScale;
@@ -19,8 +20,10 @@ inline static void UpdatePlayerHoriz(Entity* const player, const bool isCamDetac
 	int frontBack;
 
 	if(isCamDetached){
-		leftRight = (int)Key(VK_LEFT) - (int)Key(VK_RIGHT);
-		frontBack = (int)Key(VK_UP) - (int)Key(VK_DOWN);
+		leftRight = (int)Key('J') - (int)Key('L');
+		frontBack = (int)Key('I') - (int)Key('K');
+
+		player->facingDir = RotateVecIn2D(player->facingDir, glm::radians(float((int)Key('U') - (int)Key('O')) * 50.0f * dt), Axis::y);
 	} else{
 		leftRight = (int)Key('A') - (int)Key('D');
 		frontBack = (int)Key('W') - (int)Key('S');
@@ -49,7 +52,7 @@ inline static void UpdatePlayerHoriz(Entity* const player, const bool isCamDetac
 	player->zMax = terrainZScale * 0.5f - player->scale.z * 2.0f;
 }
 
-inline static void UpdatePlayerVert(Entity* const player){
+inline static void UpdatePlayerVert(Entity* const player, const bool isCamDetached){
 	static bool isSpacePressed = false;
 
 	if(!isSpacePressed && Key(VK_SPACE)){
@@ -64,5 +67,8 @@ inline static void UpdatePlayerVert(Entity* const player){
 			player->vel.y = 0.0f;
 		}
 		isSpacePressed = false;
+	}
+
+	if(isCamDetached){
 	}
 }

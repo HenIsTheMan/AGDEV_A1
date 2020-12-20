@@ -384,6 +384,8 @@ void Scene::CreateDecorations(){
 }
 
 bool Scene::Init(){
+	entityManager->isCamDetached = isCamDetached;
+
 	glGetIntegerv(GL_POLYGON_MODE, polyModes);
 
 	soundEngine = createIrrKlangDevice(ESOD_AUTO_DETECT, ESEO_DEFAULT_OPTIONS & ~ESEO_PRINT_DEBUG_INFO_TO_DEBUGGER & ~ESEO_PRINT_DEBUG_INFO_TO_STDOUT);

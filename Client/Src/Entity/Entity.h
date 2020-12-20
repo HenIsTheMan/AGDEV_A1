@@ -17,7 +17,7 @@ class Entity final{
 	friend class Sniper;
 	friend class Gun;
 	friend void UpdatePlayerHoriz(Entity* const player, const bool isCamDetached);
-	friend void UpdatePlayerVert(Entity* const player);
+	friend void UpdatePlayerVert(Entity* const player, const bool isCamDetached);
 public:
 	///Getters
 	const glm::vec3& GetPos() const;

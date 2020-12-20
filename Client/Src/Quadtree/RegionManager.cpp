@@ -31,7 +31,7 @@ void RegionManager::Update(){
 	elapsedTime += dt;
 
 	static float BT = 0.0f;
-	if(Key(GLFW_KEY_L) && BT <= elapsedTime){
+	if(Key(GLFW_KEY_N) && BT <= elapsedTime){
 		shldRenderQuadtree = !shldRenderQuadtree;
 		BT = elapsedTime + .5f;
 	}
