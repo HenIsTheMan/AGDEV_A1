@@ -24,6 +24,7 @@
     <ClCompile Include="Src\Quadtree\NodeManager.cpp" />
     <ClCompile Include="Src\Entity\EntityFactory.cpp" />
     <ClCompile Include="Src\FrustumCulling\FrustumCulling.cpp" />
+    <ClCompile Include="Src\Collision\Collision.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Admin\App.h" />
@@ -52,6 +53,7 @@
     <ClInclude Include="Src\ObjPool\ObjPool.h" />
     <ClInclude Include="Src\Entity\EntityFactory.h" />
     <ClInclude Include="Src\FrustumCulling\FrustumCulling.h" />
+    <ClInclude Include="Src\Collision\Collision.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Blur.fragS" />

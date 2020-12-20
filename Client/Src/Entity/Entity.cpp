@@ -12,6 +12,10 @@ const glm::vec3& Entity::GetFacingDir() const{
 	return facingDir;
 }
 
+const glm::vec3& Entity::GetPrevPos() const{
+	return prevPos;
+}
+
 void Entity::SetFacingDir(const glm::vec3& facingDir){
 	this->facingDir = facingDir;
 }
@@ -39,6 +43,8 @@ Entity::Entity():
 	yMin(0.0f),
 	yMax(0.0f),
 	zMin(0.0f),
-	zMax(0.0f)
+	zMax(0.0f),
+
+	prevPos(glm::vec3())
 {
 }

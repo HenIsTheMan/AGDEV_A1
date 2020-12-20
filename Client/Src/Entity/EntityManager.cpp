@@ -65,6 +65,8 @@ void EntityManager::Update(){
 
 	for(Entity* const movableEntity: movableEntities){
 		if(movableEntity){
+			movableEntity->prevPos = movableEntity->pos;
+
 			switch(movableEntity->type){
 				case Entity::EntityType::Player: {
 					UpdatePlayerHoriz(movableEntity, isCamDetached);

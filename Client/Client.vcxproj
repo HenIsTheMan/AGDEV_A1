@@ -198,6 +198,7 @@
     <ClCompile Include="Src\Collider\ColliderManager.cpp" />
     <ClCompile Include="Src\Collider\Colliders\BoxCollider.cpp" />
     <ClCompile Include="Src\Collider\Colliders\SphereCollider.cpp" />
+    <ClCompile Include="Src\Collision\Collision.cpp" />
     <ClCompile Include="Src\Entity\Entities\Scar.cpp" />
     <ClCompile Include="Src\Entity\Entities\Shotgun.cpp" />
     <ClCompile Include="Src\Entity\Entities\Sniper.cpp" />
@@ -222,6 +223,7 @@
     <ClInclude Include="Src\Collider\ColliderManager.h" />
     <ClInclude Include="Src\Collider\Colliders\BoxCollider.h" />
     <ClInclude Include="Src\Collider\Colliders\SphereCollider.h" />
+    <ClInclude Include="Src\Collision\Collision.h" />
     <ClInclude Include="Src\Entity\Entities\Scar.h" />
     <ClInclude Include="Src\Entity\Entities\Shotgun.h" />
     <ClInclude Include="Src\Entity\Entities\Sniper.h" />
