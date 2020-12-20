@@ -562,23 +562,12 @@ void Scene::GameUpdate(GLFWwindow* const& win){
 		polyModeBT = elapsedTime + .5f;
 	}
 
+	const glm::vec3 camAttachedPos = myPlayer->GetPos() + glm::vec3(0.0f, myPlayer->GetScale().y * 0.5f, 0.0f);
 	if(isCamDetached){
 		cam.UpdateDetached(GLFW_KEY_E, GLFW_KEY_Q, GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_W, GLFW_KEY_S);
-		const glm::vec3& playerPos = myPlayer->GetPos();
-		const glm::vec3& playerFacingDir = myPlayer->GetFacingDir();
-		regionManager->UpdateFrustumCulling(glm::lookAt(playerPos, playerPos + playerFacingDir,
-			glm::normalize(glm::cross(glm::normalize(glm::cross(playerFacingDir, glm::vec3(0.0f, 1.0f, 0.0f))), playerFacingDir))),
-			glm::perspective(glm::radians(angularFOV), cam.GetAspectRatio(), .1f, 50000.0f));
 	} else{
-		cam.UpdateAttached(myPlayer->GetPos() + glm::vec3(0.0f, myPlayer->GetScale().y * 0.5f, 0.0f));
+		cam.UpdateAttached(camAttachedPos);
 		const_cast<Entity*>(myPlayer)->SetFacingDir(cam.CalcFront());
-
-		glm::vec3 camPos = cam.GetPos();
-		camPos.y = 0.0f;
-		const glm::vec3& playerFacingDir = myPlayer->GetFacingDir();
-		regionManager->UpdateFrustumCulling(glm::lookAt(camPos, camPos + playerFacingDir,
-			glm::normalize(glm::cross(glm::normalize(glm::cross(playerFacingDir, glm::vec3(0.0f, 1.0f, 0.0f))), playerFacingDir))),
-			glm::perspective(glm::radians(angularFOV), cam.GetAspectRatio(), .1f, 50000.0f));
 
 		if(RMB){ //Control angularFOV of perspective projection based on item selected in inv
 			switch(inv[currSlot]){
@@ -634,6 +623,11 @@ void Scene::GameUpdate(GLFWwindow* const& win){
 		}
 		//*/
 	}
+
+	const glm::vec3& playerFacingDir = myPlayer->GetFacingDir();
+	regionManager->UpdateFrustumCulling(glm::lookAt(camAttachedPos, camAttachedPos + playerFacingDir,
+		glm::normalize(glm::cross(glm::normalize(glm::cross(playerFacingDir, glm::vec3(0.0f, 1.0f, 0.0f))), playerFacingDir))),
+		glm::perspective(glm::radians(angularFOV), cam.GetAspectRatio(), .1f, 50000.0f));
 
 	entityManager->Update();
 }
