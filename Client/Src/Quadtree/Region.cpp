@@ -301,8 +301,8 @@ void Region::Partition(const bool movable){
 		const Entity* const entity = node->GetEntity();
 
 		if(entity
-			&& entity->pos.x + entity->scale.x * 0.5f <= origin[0] + size[0] * 0.5f && entity->pos.x - entity->scale.x * 0.5f >= origin[0] - size[0] * 0.5f
-			&& entity->pos.z + entity->scale.z * 0.5f <= origin[1] + size[1] * 0.5f && entity->pos.z - entity->scale.z * 0.5f >= origin[1] - size[1] * 0.5f
+			//&& entity->pos.x + entity->scale.x * 0.5f <= origin[0] + size[0] * 0.5f && entity->pos.x - entity->scale.x * 0.5f >= origin[0] - size[0] * 0.5f
+			//&& entity->pos.z + entity->scale.z * 0.5f <= origin[1] + size[1] * 0.5f && entity->pos.z - entity->scale.z * 0.5f >= origin[1] - size[1] * 0.5f
 		){
 			if(entity->pos.z - entity->scale.z * 0.5f <= origin[1]){
 				if(entity->pos.x - entity->scale.x * 0.5f <= origin[0]){
