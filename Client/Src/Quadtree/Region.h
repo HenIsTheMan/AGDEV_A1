@@ -20,7 +20,7 @@ public:
 	~Region();
 
 	void GetEntitiesToUpdate(std::vector<Entity*>& movableEntities, std::vector<Entity*>& stationaryEntities);
-	void GetEntitiesToRender(std::multimap<int, Entity*>& entitiesOpaque, std::multimap<int, Entity*>& entitiesNotOpaque, const Cam& cam);
+	void GetEntitiesToRender(std::multimap<int, Entity*>& entitiesOpaque, std::multimap<int, Entity*>& entitiesNotOpaque, const Cam& cam, const FrustumCulling* const frustumCulling);
 	void GetLeaves(std::vector<Region*>& leaves);
 
 	const Region* FindRegion(Node* const node, const bool movable) const;

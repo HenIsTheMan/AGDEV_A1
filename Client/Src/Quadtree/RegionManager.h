@@ -21,6 +21,9 @@ public:
 	Region* RetrieveRootRegion();
 
 	void SetUpRegionsForStationary();
+
+	///Getter
+	const FrustumCulling* GetFrustumCulling() const;
 private:
 	RegionManager();
 

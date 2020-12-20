@@ -52,23 +52,30 @@ void Region::GetEntitiesToUpdate(std::vector<Entity*>& movableEntities, std::vec
 	}
 }
 
-void Region::GetEntitiesToRender(std::multimap<int, Entity*>& entitiesOpaque, std::multimap<int, Entity*>& entitiesNotOpaque, const Cam& cam){
+void Region::GetEntitiesToRender(std::multimap<int, Entity*>& entitiesOpaque, std::multimap<int, Entity*>& entitiesNotOpaque, const Cam& cam, const FrustumCulling* const frustumCulling){
 	if(!visible){ //Optimization
 		return;
 	}
 
 	bool result = topLeft || topRight || bottomLeft || bottomRight;
 	if(result){
-		topLeft->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
-		topRight->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
-		bottomLeft->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
-		bottomRight->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
+		topLeft->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam, frustumCulling);
+		topRight->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam, frustumCulling);
+		bottomLeft->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam, frustumCulling);
+		bottomRight->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam, frustumCulling);
 	} else{
 		const glm::vec3& camPos = cam.GetPos();
 
 		for(int i = 0; i < stationaryNodes.size(); ++i){
 			Entity* const entity = stationaryNodes[i]->RetrieveEntity();
 			if(entity){
+				//const glm::vec3& entityPos = entity->GetPos();
+				//const glm::vec3& entityScale = entity->GetScale();
+
+				//frustumCulling->ShldBeVisible(
+				//	glm::vec3(entityPos.x - entityScale.x * 0.5f, entityPos.y - entityScale.y * 0.5f, entityPos.z - entityScale.z * 0.5f),
+				//	glm::vec3(entityPos.x + entityScale.x * 0.5f, entityPos.y + entityScale.y * 0.5f, entityPos.z + entityScale.z * 0.5f));
+
 				switch(entity->type){
 					case Entity::EntityType::Coin:
 					case Entity::EntityType::Fire:
@@ -81,6 +88,13 @@ void Region::GetEntitiesToRender(std::multimap<int, Entity*>& entitiesOpaque, st
 		for(int i = 0; i < movableNodes.size(); ++i){
 			Entity* const entity = movableNodes[i]->RetrieveEntity();
 			if(entity){
+				//const glm::vec3& entityPos = entity->GetPos();
+				//const glm::vec3& entityScale = entity->GetScale();
+
+				//frustumCulling->ShldBeVisible(
+				//	glm::vec3(entityPos.x - entityScale.x * 0.5f, entityPos.y - entityScale.y * 0.5f, entityPos.z - entityScale.z * 0.5f),
+				//	glm::vec3(entityPos.x + entityScale.x * 0.5f, entityPos.y + entityScale.y * 0.5f, entityPos.z + entityScale.z * 0.5f));
+
 				switch(entity->type){
 					case Entity::EntityType::Bullet:
 					case Entity::EntityType::Enemy:

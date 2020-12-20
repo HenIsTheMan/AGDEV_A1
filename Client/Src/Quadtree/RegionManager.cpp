@@ -72,6 +72,10 @@ void RegionManager::SetUpRegionsForStationary(){
 	rootRegion->Partition(false);
 }
 
+const FrustumCulling* RegionManager::GetFrustumCulling() const{
+	return frustumCulling;
+}
+
 RegionManager::RegionManager():
 	isCalledUpdateFrustumCulling(false),
 	shldRenderQuadtree(false),

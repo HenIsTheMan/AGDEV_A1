@@ -127,7 +127,7 @@ void EntityManager::Render(ShaderProg& SP, const Cam& cam){
 	///std::multimap instead of std::map to allow for duplicate keys
 	std::multimap<int, Entity*> entitiesOpaque;
 	std::multimap<int, Entity*> entitiesNotOpaque;
-	regionManager->RetrieveRootRegion()->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
+	regionManager->RetrieveRootRegion()->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam, regionManager->GetFrustumCulling());
 
 	///Render opaque entities 1st
 	for(std::multimap<int, Entity*>::reverse_iterator iter = entitiesOpaque.rbegin(); iter != entitiesOpaque.rend(); ++iter){
