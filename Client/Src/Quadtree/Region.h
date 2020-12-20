@@ -31,6 +31,7 @@ public:
 	void ClearMovableAndDeactivateChildren();
 	void Partition(const bool movable);
 	void VisibilityCheck(const FrustumCulling* const frustumCulling);
+	void MakeSelfAndChildrenInvisible();
 private:
 	bool visible;
 

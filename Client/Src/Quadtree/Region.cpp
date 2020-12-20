@@ -65,7 +65,7 @@ void Region::GetEntitiesToUpdate(std::vector<Entity*>& movableEntities, std::vec
 }
 
 void Region::GetEntitiesToRender(std::multimap<int, Entity*>& entitiesOpaque, std::multimap<int, Entity*>& entitiesNotOpaque, const Cam& cam){
-	if(!visible){
+	if(!visible){ //Optimization
 		return;
 	}
 
@@ -269,8 +269,8 @@ void Region::ClearMovableAndDeactivateChildren(){
 }
 
 void Region::Partition(const bool movable){
-	const std::vector<Node*>& nodes = movable ? movableNodes : stationaryNodes;
-	if(movableNodes.size() + stationaryNodes.size() <= (size_t)1){
+	const std::vector<Node*>& nodes = movable ? movableNodes : stationaryNodes; //Optimization
+	if(movableNodes.size() + stationaryNodes.size() <= (size_t)1){ //Optimization
 		return;
 	}
 
@@ -336,6 +336,15 @@ void Region::Partition(const bool movable){
 }
 
 void Region::VisibilityCheck(const FrustumCulling* const frustumCulling){
+	if(!frustumCulling->ShldBeVisible(
+		glm::vec3(origin[0] - size[0] * 0.5f, 0.0f, origin[1] - size[1] * 0.5f),
+		glm::vec3(origin[0] + size[0] * 0.5f, 0.0f, origin[1] + size[1] * 0.5f))
+	){ //Optimization
+		return MakeSelfAndChildrenInvisible();
+	}
+
+	visible = true;
+
 	if(topLeft != nullptr){
 		topLeft->VisibilityCheck(frustumCulling);
 	}
@@ -348,8 +357,21 @@ void Region::VisibilityCheck(const FrustumCulling* const frustumCulling){
 	if(bottomRight != nullptr){
 		bottomRight->VisibilityCheck(frustumCulling);
 	}
+}
 
-	visible = frustumCulling->ShldBeVisible(
-		glm::vec3(origin[0] - size[0] * 0.5f, 0.0f, origin[1] - size[1] * 0.5f),
-		glm::vec3(origin[0] + size[0] * 0.5f, 0.0f, origin[1] + size[1] * 0.5f));
+void Region::MakeSelfAndChildrenInvisible(){
+	visible = false;
+
+	if(topLeft != nullptr){
+		topLeft->MakeSelfAndChildrenInvisible();
+	}
+	if(topRight != nullptr){
+		topRight->MakeSelfAndChildrenInvisible();
+	}
+	if(bottomLeft != nullptr){
+		bottomLeft->MakeSelfAndChildrenInvisible();
+	}
+	if(bottomRight != nullptr){
+		bottomRight->MakeSelfAndChildrenInvisible();
+	}
 }
