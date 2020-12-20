@@ -22,6 +22,7 @@ public:
 	///Getters
 	const glm::vec3& GetPos() const;
 	const glm::vec3& GetScale() const;
+	const glm::vec3& GetFacingDir() const;
 
 	///Setter
 	void SetFacingDir(const glm::vec3& facingDir);

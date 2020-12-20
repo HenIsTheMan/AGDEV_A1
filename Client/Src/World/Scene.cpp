@@ -544,9 +544,6 @@ void Scene::GameUpdate(GLFWwindow* const& win){
 	static_cast<SpriteAni*>(Meshes::meshes[(int)MeshType::CoinSpriteAni])->Update();
 	static_cast<SpriteAni*>(Meshes::meshes[(int)MeshType::FireSpriteAni])->Update();
 
-	regionManager->UpdateFrustumCulling(cam.LookAt(), glm::perspective(glm::radians(angularFOV), cam.GetAspectRatio(), .1f, 99999.0f));
-	entityManager->Update();
-
 	static bool isPressedB = false;
 	if(!isPressedB && Key(GLFW_KEY_B)){
 		isCamDetached = !isCamDetached;
@@ -566,9 +563,14 @@ void Scene::GameUpdate(GLFWwindow* const& win){
 
 	if(isCamDetached){
 		cam.UpdateDetached(GLFW_KEY_E, GLFW_KEY_Q, GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_W, GLFW_KEY_S);
+		const glm::vec3& playerPos = myPlayer->GetPos();
+		const glm::vec3& playerFacingDir = myPlayer->GetFacingDir();
+		regionManager->UpdateFrustumCulling(glm::lookAt(playerPos, playerPos + playerFacingDir, RotateVecIn2D(playerFacingDir, glm::radians(-90.0f), Axis::x)),
+			glm::perspective(glm::radians(angularFOV), cam.GetAspectRatio(), .1f, 99999.0f));
 	} else{
 		cam.UpdateAttached(myPlayer->GetPos() + glm::vec3(0.0f, myPlayer->GetScale().y * 0.5f, 0.0f));
 		const_cast<Entity*>(myPlayer)->SetFacingDir(cam.CalcFront());
+		regionManager->UpdateFrustumCulling(cam.LookAt(), glm::perspective(glm::radians(angularFOV), cam.GetAspectRatio(), .1f, 99999.0f));
 
 		if(RMB){ //Control angularFOV of perspective projection based on item selected in inv
 			switch(inv[currSlot]){
@@ -624,6 +626,8 @@ void Scene::GameUpdate(GLFWwindow* const& win){
 		}
 		//*/
 	}
+
+	entityManager->Update();
 }
 
 void Scene::MainMenuRender(){
