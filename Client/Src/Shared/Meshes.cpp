@@ -38,6 +38,5 @@ Mesh* Meshes::meshes[(int)MeshType::Amt] = {
 	}),
 	new Mesh(Mesh::MeshType::Sphere, GL_LINES, {
 	}),
-	new Mesh(Mesh::MeshType::Frustum, GL_LINE_LOOP, {
-	}),
+	new SquareFrustum()
 };

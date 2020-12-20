@@ -176,7 +176,7 @@
     <ClInclude Include="Src\Algs\Sorting.h" />
     <ClInclude Include="Src\Algs\Swapping.h" />
     <ClInclude Include="Src\DS\BinTree.h" />
-    <ClInclude Include="Src\Geo\Frustum.h" />
+    <ClInclude Include="Src\Geo\SquareFrustum.h" />
     <ClInclude Include="Src\Geo\Model.h" />
     <ClInclude Include="Src\Geo\SpriteAni.h" />
     <ClInclude Include="Src\Geo\Terrain.h" />
@@ -194,7 +194,7 @@
     <ClInclude Include="Src\Vendor\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Src\Geo\Frustum.cpp" />
+    <ClCompile Include="Src\Geo\SquareFrustum.cpp" />
     <ClCompile Include="Src\Geo\Model.cpp" />
     <ClCompile Include="Src\Geo\SpriteAni.cpp" />
     <ClCompile Include="Src\Geo\Terrain.cpp" />

@@ -5,6 +5,7 @@
 #include "Algs/Sorting.h"
 #include "Algs/Swapping.h"
 #include "DS/BinTree.h"
+#include "Geo/SquareFrustum.h"
 #include "Geo/Mesh.h"
 #include "Geo/Model.h"
 #include "Geo/SpriteAni.h"

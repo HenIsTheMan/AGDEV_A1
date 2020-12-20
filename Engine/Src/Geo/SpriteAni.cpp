@@ -8,6 +8,7 @@ extern float dt;
 SpriteAni::SpriteAni(): SpriteAni(0, 0){}
 
 SpriteAni::SpriteAni(const int& rows, const int& cols):
+	Mesh(),
 	currTime(0.f),
 	currFrame(0),
 	rows(rows),
