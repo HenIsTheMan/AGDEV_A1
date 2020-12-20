@@ -17,7 +17,6 @@ public:
 
 	FrustumCulling();
 
-	void Init(const glm::vec3& topRight, const glm::vec3& bottomLeft);
 	void Update(const glm::mat4& view, const glm::mat4& projection);
 	void Render(ShaderProg& SP);
 

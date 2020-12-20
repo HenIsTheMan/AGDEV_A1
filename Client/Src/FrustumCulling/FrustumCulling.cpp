@@ -8,17 +8,6 @@ FrustumCulling::FrustumCulling():
 {
 }
 
-void FrustumCulling::Init(const glm::vec3& topRight, const glm::vec3& bottomLeft){
-	//float vertices[] = {
-	//	bottomLeft.x, bottomLeft.y, bottomLeft.z,
-	//	topRight.x, bottomLeft.y, bottomLeft.z,
-	//	topRight.x, bottomLeft.y, topRight.z,
-	//	topRight.x, bottomLeft.y, topRight.z,
-	//	bottomLeft.x, bottomLeft.y, topRight.z,
-	//	bottomLeft.x, bottomLeft.y, bottomLeft.z,
-	//};
-}
-
 void FrustumCulling::Update(const glm::mat4& view, const glm::mat4& projection){
 	this->view = view;
 	this->projection = projection;
