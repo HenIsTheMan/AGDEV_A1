@@ -239,6 +239,7 @@
     <ClInclude Include="Src\Quadtree\NodeManager.h" />
     <ClInclude Include="Src\Quadtree\Region.h" />
     <ClInclude Include="Src\Quadtree\RegionManager.h" />
+    <ClInclude Include="Src\Shared\Axis.hpp" />
     <ClInclude Include="Src\Shared\Easing.hpp" />
     <ClInclude Include="Src\Shared\Meshes.h" />
     <ClInclude Include="Src\Shared\RotateVecIn2D.hpp" />

@@ -54,6 +54,7 @@
     <ClInclude Include="Src\Entity\EntityFactory.h" />
     <ClInclude Include="Src\FrustumCulling\FrustumCulling.h" />
     <ClInclude Include="Src\Collision\Collision.h" />
+    <ClInclude Include="Src\Shared\Axis.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Blur.fragS" />

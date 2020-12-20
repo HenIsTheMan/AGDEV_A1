@@ -58,16 +58,22 @@ bool Collision::DetectCollision(const Entity* const actor, const Entity* const a
 }
 
 bool Collision::DetectRayBoxIntersection(const glm::vec3& rayStart, const glm::vec3& rayEnd, const glm::vec3& minAABB, const glm::vec3& maxAABB, glm::vec3& collisionPt){
-	return (GetIntersection(line_start.x - minAABB.x, line_end.x - minAABB.x, line_start, line_end, Hit) &&
-		InBox(Hit, minAABB, maxAABB, 1))
-		|| (GetIntersection(line_start.y - minAABB.y, line_end.y - minAABB.y, line_start, line_end, Hit) &&
-		InBox(Hit, minAABB, maxAABB, 2))
-		|| (GetIntersection(line_start.z - minAABB.z, line_end.z - minAABB.z, line_start, line_end, Hit) &&
-		InBox(Hit, minAABB, maxAABB, 3))
-		|| (GetIntersection(line_start.x - maxAABB.x, line_end.x - maxAABB.x, line_start, line_end, Hit) &&
-		InBox(Hit, minAABB, maxAABB, 1))
-		|| (GetIntersection(line_start.y - maxAABB.y, line_end.y - maxAABB.y, line_start, line_end, Hit) &&
-		InBox(Hit, minAABB, maxAABB, 2))
-		|| (GetIntersection(line_start.z - maxAABB.z, line_end.z - maxAABB.z, line_start, line_end, Hit) &&
-		InBox(Hit, minAABB, maxAABB, 3));
+	return (CalcIntersection(rayStart.x - minAABB.x, rayEnd.x - minAABB.x, rayStart, rayEnd, collisionPt)
+		&& WithinBox(Axis::x, minAABB, maxAABB, collisionPt))
+		|| (CalcIntersection(rayStart.y - minAABB.y, rayEnd.y - minAABB.y, rayStart, rayEnd, collisionPt)
+		&& WithinBox(Axis::y, minAABB, maxAABB, collisionPt))
+		|| (CalcIntersection(rayStart.z - minAABB.z, rayEnd.z - minAABB.z, rayStart, rayEnd, collisionPt)
+		&& WithinBox(Axis::z, minAABB, maxAABB, collisionPt))
+		|| (CalcIntersection(rayStart.x - maxAABB.x, rayEnd.x - maxAABB.x, rayStart, rayEnd, collisionPt)
+		&& WithinBox(Axis::x, minAABB, maxAABB, collisionPt))
+		|| (CalcIntersection(rayStart.y - maxAABB.y, rayEnd.y - maxAABB.y, rayStart, rayEnd, collisionPt)
+		&& WithinBox(Axis::y, minAABB, maxAABB, collisionPt))
+		|| (CalcIntersection(rayStart.z - maxAABB.z, rayEnd.z - maxAABB.z, rayStart, rayEnd, collisionPt)
+		&& WithinBox(Axis::z, minAABB, maxAABB, collisionPt));
+}
+
+bool Collision::CalcIntersection(const float dist0, const float dist1, const glm::vec3& rayStart, const glm::vec3& rayEnd, glm::vec3& collisionPt){
+}
+
+bool Collision::WithinBox(const Axis axis, const glm::vec3& minAABB, const glm::vec3& maxAABB, glm::vec3& collisionPt){
 }

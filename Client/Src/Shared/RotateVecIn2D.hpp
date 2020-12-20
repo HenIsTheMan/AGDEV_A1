@@ -2,12 +2,7 @@
 
 #include <Core.h>
 
-enum struct Axis{
-	x = 0,
-	y,
-	z,
-	Amt
-};
+#include "Axis.hpp"
 
 inline static glm::vec3 RotateVecIn2D(const glm::vec3& vec, const float& angleInRad, const Axis& axis){
 	switch(axis){
