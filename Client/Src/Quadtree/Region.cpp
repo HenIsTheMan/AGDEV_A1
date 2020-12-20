@@ -41,25 +41,11 @@ void Region::GetEntitiesToUpdate(std::vector<Entity*>& movableEntities, std::vec
 		topRight->GetEntitiesToUpdate(movableEntities, stationaryEntities);
 		bottomLeft->GetEntitiesToUpdate(movableEntities, stationaryEntities);
 		bottomRight->GetEntitiesToUpdate(movableEntities, stationaryEntities);
-	}
-
-	if(!result || (result
-		&& (topLeft && topLeft->stationaryNodes.empty())
-		&& (topRight && topRight->stationaryNodes.empty())
-		&& (bottomLeft && bottomLeft->stationaryNodes.empty())
-		&& (bottomRight && bottomRight->stationaryNodes.empty())
-	)){
+	} else{
 		for(int i = 0; i < stationaryNodes.size(); ++i){
 			stationaryEntities.emplace_back(stationaryNodes[i]->RetrieveEntity());
 		}
-	}
 
-	if(!result || (result
-		&& (topLeft && topLeft->movableNodes.empty())
-		&& (topRight && topRight->movableNodes.empty())
-		&& (bottomLeft && bottomLeft->movableNodes.empty())
-		&& (bottomRight && bottomRight->movableNodes.empty())
-	)){
 		for(int i = 0; i < movableNodes.size(); ++i){
 			movableEntities.emplace_back(movableNodes[i]->RetrieveEntity());
 		}
@@ -77,16 +63,9 @@ void Region::GetEntitiesToRender(std::multimap<int, Entity*>& entitiesOpaque, st
 		topRight->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
 		bottomLeft->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
 		bottomRight->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
-	}
+	} else{
+		const glm::vec3& camPos = cam.GetPos();
 
-	const glm::vec3& camPos = cam.GetPos();
-
-	if(!result || (result
-		&& (topLeft && topLeft->stationaryNodes.empty())
-		&& (topRight && topRight->stationaryNodes.empty())
-		&& (bottomLeft && bottomLeft->stationaryNodes.empty())
-		&& (bottomRight && bottomRight->stationaryNodes.empty())
-	)){
 		for(int i = 0; i < stationaryNodes.size(); ++i){
 			Entity* const entity = stationaryNodes[i]->RetrieveEntity();
 			if(entity){
@@ -98,14 +77,7 @@ void Region::GetEntitiesToRender(std::multimap<int, Entity*>& entitiesOpaque, st
 				}
 			}
 		}
-	}
 
-	if(!result || (result
-		&& (topLeft && topLeft->movableNodes.empty())
-		&& (topRight && topRight->movableNodes.empty())
-		&& (bottomLeft && bottomLeft->movableNodes.empty())
-		&& (bottomRight && bottomRight->movableNodes.empty())
-	)){
 		for(int i = 0; i < movableNodes.size(); ++i){
 			Entity* const entity = movableNodes[i]->RetrieveEntity();
 			if(entity){
@@ -300,10 +272,7 @@ void Region::Partition(const bool movable){
 	for(Node* const node: nodes){
 		const Entity* const entity = node->GetEntity();
 
-		if(entity
-			//&& entity->pos.x + entity->scale.x * 0.5f <= origin[0] + size[0] * 0.5f && entity->pos.x - entity->scale.x * 0.5f >= origin[0] - size[0] * 0.5f
-			//&& entity->pos.z + entity->scale.z * 0.5f <= origin[1] + size[1] * 0.5f && entity->pos.z - entity->scale.z * 0.5f >= origin[1] - size[1] * 0.5f
-		){
+		if(entity){
 			if(entity->pos.z - entity->scale.z * 0.5f <= origin[1]){
 				if(entity->pos.x - entity->scale.x * 0.5f <= origin[0]){
 					topLeft->AddNode(node, entity->movable);
