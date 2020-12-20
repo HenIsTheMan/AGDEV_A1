@@ -21,7 +21,7 @@ public:
 
 	void GetEntitiesToUpdate(std::vector<Entity*>& movableEntities, std::vector<Entity*>& stationaryEntities);
 	void GetEntitiesToRender(std::multimap<int, Entity*>& entitiesOpaque, std::multimap<int, Entity*>& entitiesNotOpaque, const Cam& cam);
-	void GetLeaves(ShaderProg& SP, std::vector<Region*>& leaves);
+	void GetLeaves(std::vector<Region*>& leaves);
 
 	const Region* FindRegion(Node* const node, const bool movable) const;
 
@@ -51,4 +51,7 @@ private:
 	ObjPool<Region>* regionPool;
 
 	void IGetEntitiesToRender(std::multimap<int, Entity*>& entitiesOpaque, std::multimap<int, Entity*>& entitiesNotOpaque, const Cam& cam, const bool movable);
+
+
+	void GetVisibleLeaves(std::vector<Region*>& visibleLeaves);
 };

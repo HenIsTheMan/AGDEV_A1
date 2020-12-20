@@ -79,7 +79,7 @@ RegionManager::RegionManager():
 
 void RegionManager::RenderQuadtree(ShaderProg& SP){
 	std::vector<Region*> leaves;
-	rootRegion->GetLeaves(SP, leaves);
+	rootRegion->GetLeaves(leaves);
 	const size_t size = leaves.size();
 
 	if(!size){

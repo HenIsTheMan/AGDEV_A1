@@ -67,72 +67,100 @@ void Region::GetEntitiesToUpdate(std::vector<Entity*>& movableEntities, std::vec
 }
 
 void Region::GetEntitiesToRender(std::multimap<int, Entity*>& entitiesOpaque, std::multimap<int, Entity*>& entitiesNotOpaque, const Cam& cam){
-	if(!visible){ //Optimization
-		return;
+	std::vector<Region*> visibleLeaves;
+	GetVisibleLeaves(visibleLeaves);
+	const glm::vec3& camPos = cam.GetPos();
+
+	for(Region* const region: visibleLeaves){
+		for(int i = 0; i < region->movableNodes.size(); ++i){
+			Entity* const entity = region->movableNodes[i]->RetrieveEntity();
+			if(entity){
+				switch(entity->type){
+					case Entity::EntityType::Bullet:
+					case Entity::EntityType::Enemy:
+					case Entity::EntityType::Player:
+					case Entity::EntityType::ThinObj:
+						entitiesOpaque.insert(std::make_pair((int)glm::length2(entity->pos - camPos), entity));
+						break;
+				}
+			}
+		}
+
+		for(int i = 0; i < region->stationaryNodes.size(); ++i){
+			Entity* const entity = region->stationaryNodes[i]->RetrieveEntity();
+			if(entity){
+				switch(entity->type){
+					case Entity::EntityType::Coin:
+					case Entity::EntityType::Fire:
+						entitiesNotOpaque.insert(std::make_pair((int)glm::length2(entity->pos - camPos), entity));
+						break;
+				}
+			}
+		}
 	}
 
-	bool result = topLeft || topRight || bottomLeft || bottomRight;
-	if(result){
-		topLeft->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
-		topRight->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
-		bottomLeft->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
-		bottomRight->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
+	//bool result = topLeft || topRight || bottomLeft || bottomRight;
+	//if(result){
+	//	topLeft->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
+	//	topRight->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
+	//	bottomLeft->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
+	//	bottomRight->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam);
 
-		if(topLeft != nullptr){
-			if(topLeft->stationaryNodes.empty()){
-				topLeft->IGetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam, false);
-			}
-			if(topLeft->movableNodes.empty()){
-				topLeft->IGetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam, true);
-			}
-		}
-		if(topRight != nullptr){
-			if(topRight->stationaryNodes.empty()){
-				topRight->IGetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam, false);
-			}
-			if(topRight->movableNodes.empty()){
-				topRight->IGetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam, true);
-			}
-		}
-		if(bottomLeft != nullptr){
-			if(bottomLeft->stationaryNodes.empty()){
-				bottomLeft->IGetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam, false);
-			}
-			if(bottomLeft->movableNodes.empty()){
-				bottomLeft->IGetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam, true);
-			}
-		}
-		if(bottomRight != nullptr){
-			if(bottomRight->stationaryNodes.empty()){
-				bottomRight->IGetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam, false);
-			}
-			if(bottomRight->movableNodes.empty()){
-				bottomRight->IGetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam, true);
-			}
-		}
-	} else{
-		IGetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam, true);
-		IGetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam, false);
-	}
+	//	if(topLeft != nullptr){
+	//		if(topLeft->stationaryNodes.empty()){
+	//			topLeft->IGetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam, false);
+	//		}
+	//		if(topLeft->movableNodes.empty()){
+	//			topLeft->IGetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam, true);
+	//		}
+	//	}
+	//	if(topRight != nullptr){
+	//		if(topRight->stationaryNodes.empty()){
+	//			topRight->IGetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam, false);
+	//		}
+	//		if(topRight->movableNodes.empty()){
+	//			topRight->IGetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam, true);
+	//		}
+	//	}
+	//	if(bottomLeft != nullptr){
+	//		if(bottomLeft->stationaryNodes.empty()){
+	//			bottomLeft->IGetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam, false);
+	//		}
+	//		if(bottomLeft->movableNodes.empty()){
+	//			bottomLeft->IGetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam, true);
+	//		}
+	//	}
+	//	if(bottomRight != nullptr){
+	//		if(bottomRight->stationaryNodes.empty()){
+	//			bottomRight->IGetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam, false);
+	//		}
+	//		if(bottomRight->movableNodes.empty()){
+	//			bottomRight->IGetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam, true);
+	//		}
+	//	}
+	//} else{
+	//	IGetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam, true);
+	//	IGetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam, false);
+	//}
 }
 
-void Region::GetLeaves(ShaderProg& SP, std::vector<Region*>& leaves){
+void Region::GetLeaves(std::vector<Region*>& leaves){
 	bool isParent = false;
 
 	if(topLeft){
-		topLeft->GetLeaves(SP, leaves);
+		topLeft->GetLeaves(leaves);
 		isParent = true;
 	}
 	if(topRight){
-		topRight->GetLeaves(SP, leaves);
+		topRight->GetLeaves(leaves);
 		isParent = true;
 	}
 	if(bottomLeft){
-		bottomLeft->GetLeaves(SP, leaves);
+		bottomLeft->GetLeaves(leaves);
 		isParent = true;
 	}
 	if(bottomRight){
-		bottomRight->GetLeaves(SP, leaves);
+		bottomRight->GetLeaves(leaves);
 		isParent = true;
 	}
 
@@ -395,4 +423,34 @@ void Region::IGetEntitiesToRender(std::multimap<int, Entity*>& entitiesOpaque, s
 			}
 		}
 	}
+}
+
+void Region::GetVisibleLeaves(std::vector<Region*>& visibleLeaves){
+	if(!visible){ //Optimization
+		return;
+	}
+
+	bool isParent = false;
+
+	if(topLeft){
+		topLeft->GetVisibleLeaves(visibleLeaves);
+		isParent = true;
+	}
+	if(topRight){
+		topRight->GetVisibleLeaves(visibleLeaves);
+		isParent = true;
+	}
+	if(bottomLeft){
+		bottomLeft->GetVisibleLeaves(visibleLeaves);
+		isParent = true;
+	}
+	if(bottomRight){
+		bottomRight->GetVisibleLeaves(visibleLeaves);
+		isParent = true;
+	}
+
+	if(isParent){
+		return;
+	}
+	visibleLeaves.emplace_back(this);
 }
