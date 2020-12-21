@@ -72,11 +72,10 @@ void EntityManager::Update(){
 			movableEntity->prevPos = movableEntity->pos;
 
 			switch(movableEntity->type){
-				case Entity::EntityType::Player: {
+				case Entity::EntityType::Player:
 					UpdatePlayerHoriz(movableEntity, isCamDetached);
 					UpdatePlayerVert(movableEntity);
 
-					const glm::vec3 prevPos = movableEntity->pos;
 					movableEntity->vel += movableEntity->force / movableEntity->mass * dt;
 					movableEntity->pos += movableEntity->vel * dt;
 
@@ -99,7 +98,6 @@ void EntityManager::Update(){
 					}
 
 					break;
-				}
 				case Entity::EntityType::ThinObj:
 					movableEntity->pos.x += sinf(elapsedTime * 2.0f) * 2.0f;
 
@@ -108,12 +106,20 @@ void EntityManager::Update(){
 					}
 
 					break;
-				case Entity::EntityType::Bullet:
+				case Entity::EntityType::Bullet: {
 					movableEntity->life -= dt;
 
 					if(movableEntity->life <= 0.0f){
 						DeactivateEntity(movableEntity);
+						continue;
 					}
+
+					const glm::vec3 prevPos = movableEntity->pos;
+					movableEntity->vel += movableEntity->force / movableEntity->mass * dt;
+					movableEntity->pos += movableEntity->vel * dt;
+
+					break;
+				}
 			}
 		}
 	}
