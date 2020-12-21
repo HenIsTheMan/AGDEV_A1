@@ -716,13 +716,13 @@ void Scene::GameUpdate(GLFWwindow* const& win){
 	}
 
 	#if defined DEBUGGING
-	static bool isPressed5 = false;
-	if(!isPressed5 && Key(GLFW_KEY_5)){
+	static bool isPressed6 = false;
+	if(!isPressed6 && Key(GLFW_KEY_6)){
 		shldUpdateEntityManager = !shldUpdateEntityManager;
 
-		isPressed5 = true;
-	} else if(isPressed5 && !Key(GLFW_KEY_5)){
-		isPressed5 = false;
+		isPressed6 = true;
+	} else if(isPressed6 && !Key(GLFW_KEY_6)){
+		isPressed6 = false;
 	}
 	#endif
 
@@ -835,13 +835,13 @@ void Scene::GameRender(){
 	models[(int)ModelType::Rock]->InstancedRender(forwardSP);
 
 	#if defined DEBUGGING
-	static bool isPressed6 = false;
-	if(!isPressed6 && Key(GLFW_KEY_6)){
+	static bool isPressed7 = false;
+	if(!isPressed7 && Key(GLFW_KEY_7)){
 		shldRenderEntityManager = !shldRenderEntityManager;
 
-		isPressed6 = true;
-	} else if(isPressed6 && !Key(GLFW_KEY_6)){
-		isPressed6 = false;
+		isPressed7 = true;
+	} else if(isPressed7 && !Key(GLFW_KEY_7)){
+		isPressed7 = false;
 	}
 	#endif
 
