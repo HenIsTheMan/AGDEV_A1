@@ -653,10 +653,16 @@ void Scene::GameUpdate(GLFWwindow* const& win){
 		|| glm::epsilonNotEqual(angularFOV, prevAngularFOV, glm::epsilon<float>())
 		|| glm::epsilonNotEqual(camAspectRatio, prevCamAspectRatio, glm::epsilon<float>())
 	){
+		const glm::vec3& playerPos = myPlayer->GetPos();
+		const float yMin = terrainYScale;
+		const float yMax = terrainYScale * 4.0f;
+
 		regionManager->UpdateFrustumCulling(glm::lookAt(camAttachedPos, camAttachedPos + playerFacingDir,
 			glm::normalize(glm::cross(glm::normalize(glm::cross(playerFacingDir, glm::vec3(0.0f, 1.0f, 0.0f))), playerFacingDir))),
 			glm::perspective(glm::radians(angularFOV), camAspectRatio, .1f, 70000.0f),
-			camAttachedPos.y);
+			yMin,
+			yMax
+		);
 
 		frustumColor = glm::vec3(PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f));
 

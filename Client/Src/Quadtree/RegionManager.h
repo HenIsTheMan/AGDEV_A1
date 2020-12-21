@@ -13,7 +13,7 @@ public:
 	void Update(std::vector<Entity*>& entitiesToRemove);
 	void Render(ShaderProg& SP);
 
-	void UpdateFrustumCulling(const glm::mat4& view, const glm::mat4& projection, const float yOffset);
+	void UpdateFrustumCulling(const glm::mat4& view, const glm::mat4& projection, const float yMin, const float yMax);
 
 	Region* ActivateRegion(); //Not used elsewhere
 	void DeactivateRegion(Region* const region); //Not used

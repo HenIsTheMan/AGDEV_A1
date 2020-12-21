@@ -7,14 +7,16 @@ FrustumCulling::FrustumCulling():
 	projection(glm::mat4(1.0f)),
 	m_planes(),
 	m_points(),
-	yOffset(0.0f)
+	yMin(0.0f),
+	yMax(0.0f)
 {
 }
 
-void FrustumCulling::Update(const glm::mat4& view, const glm::mat4& projection, const float yOffset){
+void FrustumCulling::Update(const glm::mat4& view, const glm::mat4& projection, const float yMin, const float yMax){
 	this->view = view;
 	this->projection = projection;
-	this->yOffset = yOffset;
+	this->yMin = yMin;
+	this->yMax = yMax;
 
 	UpdateFrustum();
 
