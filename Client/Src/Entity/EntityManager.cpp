@@ -267,7 +267,7 @@ void EntityManager::DeactivateEntity(Entity* const& entity){
 }
 
 void EntityManager::DeactivateEntityProcedure(Entity* const entity){
-	static std::unordered_set<Entity*> removedEntities; //For debugging
+	static std::unordered_set<Entity*> removedEntities;
 
 	if(std::find(removedEntities.begin(), removedEntities.end(), entity) == removedEntities.end()){
 		Node* const node = nodeManager->RetrieveRootNode()->DetachChild(entity);

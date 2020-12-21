@@ -37,6 +37,7 @@ void RegionManager::Update(){
 	}
 
 	rootRegion->ClearMovableAndDeactivateChildren();
+	rootRegion->CheckOutOfBounds(true);
 	rootRegion->Partition(true);
 
 	rootRegion->VisibilityCheck(frustumCulling);
@@ -65,6 +66,7 @@ Region* RegionManager::RetrieveRootRegion(){
 }
 
 void RegionManager::SetUpRegionsForStationary(){
+	rootRegion->CheckOutOfBounds(false);
 	rootRegion->Partition(false);
 }
 

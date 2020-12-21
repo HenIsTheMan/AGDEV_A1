@@ -205,6 +205,23 @@ void Region::ClearMovableAndDeactivateChildren(){
 	}
 }
 
+void Region::CheckOutOfBounds(const bool movable){
+	const std::vector<Node*>& nodes = movable ? movableNodes : stationaryNodes; //Optimization
+
+	for(const Node* const node: nodes){
+		const Entity* const nodeEntity = node->GetEntity();
+		const glm::vec2 halfSize = glm::vec2(size[0] * 0.5f, size[1] * 0.5f);
+
+		if(!(nodeEntity->pos.x - nodeEntity->scale.x >= origin[0] - halfSize[0]
+			&& nodeEntity->pos.x + nodeEntity->scale.x <= origin[0] + halfSize[0]
+			&& nodeEntity->pos.z - nodeEntity->scale.z >= origin[1] - halfSize[1]
+			&& nodeEntity->pos.z + nodeEntity->scale.z <= origin[1] + halfSize[1]
+		)){ //If entity is not within region...
+			entityManager->DeactivateEntity(nodeEntity);
+		}
+	}
+}
+
 void Region::Partition(const bool movable){
 	const std::vector<Node*>& nodes = movable ? movableNodes : stationaryNodes; //Optimization
 	if(movableNodes.size() + stationaryNodes.size() <= (size_t)1){ //Optimization
