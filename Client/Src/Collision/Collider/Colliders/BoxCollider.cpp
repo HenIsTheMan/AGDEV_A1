@@ -16,6 +16,12 @@ float BoxCollider::CalcDiagLen(){
 	return sqrt(scale.x * scale.x + scale.y * scale.y + scale.z * scale.z);
 }
 
+void BoxCollider::Reset(){
+	type = ColliderType::Box;
+	pos = glm::vec3();
+	scale = glm::vec3(1.0f);
+}
+
 const glm::vec3& BoxCollider::GetPos() const{
 	return pos;
 }

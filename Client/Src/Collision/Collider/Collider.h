@@ -11,6 +11,8 @@ class Collider{ //Abstract class
 public:
 	virtual ~Collider() = default;
 
+	virtual void Reset() = 0;
+
 	///Getter
 	ColliderType GetType() const;
 protected:

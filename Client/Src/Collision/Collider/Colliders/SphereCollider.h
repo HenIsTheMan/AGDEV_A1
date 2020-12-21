@@ -11,6 +11,8 @@ public:
 	SphereCollider(const glm::vec3& pos);
 	SphereCollider(const float radius, const glm::vec3& pos);
 
+	void Reset() override;
+
 	///Getters
 	float GetRadius() const;
 	const glm::vec3& GetPos() const;

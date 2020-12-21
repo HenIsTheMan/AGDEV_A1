@@ -10,6 +10,7 @@ public:
 	BoxCollider(const glm::vec3& pos, const glm::vec3& scale);
 
 	float CalcDiagLen();
+	void Reset() override;
 
 	///Getters
 	const glm::vec3& GetPos() const;

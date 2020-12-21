@@ -22,9 +22,13 @@ void ColliderManager::InitSphereColliderPool(const size_t& inactiveSize, const s
 
 Collider* ColliderManager::ActivateCollider(const ColliderType type){
 	if(type == ColliderType::Box){
-		return boxColliderPool->ActivateObj();
+		BoxCollider* const boxCollider = boxColliderPool->ActivateObj();
+		boxCollider->Reset();
+		return boxCollider;
 	} else{
-		return sphereColliderPool->ActivateObj();
+		SphereCollider* const sphereCollider = sphereColliderPool->ActivateObj();
+		sphereCollider->Reset();
+		return sphereCollider;
 	}
 }
 

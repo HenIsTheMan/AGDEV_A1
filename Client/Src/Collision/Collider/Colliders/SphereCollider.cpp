@@ -22,6 +22,12 @@ SphereCollider::SphereCollider(const float radius, const glm::vec3& pos):
 {
 }
 
+void SphereCollider::Reset(){
+	type = ColliderType::Sphere;
+	radius = 0.0f;
+	pos = glm::vec3();
+}
+
 float SphereCollider::GetRadius() const{
 	return radius;
 }
