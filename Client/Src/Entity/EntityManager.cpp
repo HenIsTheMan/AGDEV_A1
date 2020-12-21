@@ -267,20 +267,20 @@ void EntityManager::DeactivateEntity(Entity* const& entity){
 }
 
 void EntityManager::DeactivateEntityProcedure(Entity* const entity){
-	static std::vector<Entity*> removedEntities; //For debugging
+	static std::unordered_set<Entity*> removedEntities; //For debugging
 
-	Node* const node = nodeManager->RetrieveRootNode()->DetachChild(entity);
-	if(node == nullptr){
-		if(std::find(removedEntities.begin(), removedEntities.end(), entity) == removedEntities.end()){
+	if(std::find(removedEntities.begin(), removedEntities.end(), entity) == removedEntities.end()){
+		Node* const node = nodeManager->RetrieveRootNode()->DetachChild(entity);
+
+		if(node == nullptr){
 			return (void)printf("Var 'node' is nullptr!");
 		}
-		return;
+
+		node->SetEntity(nullptr);
+		regionManager->RetrieveRootRegion()->RemoveNode(node, entity->movable);
+
+		removedEntities.insert(entity);
 	}
-
-	node->SetEntity(nullptr);
-	regionManager->RetrieveRootRegion()->RemoveNode(node, entity->movable);
-
-	removedEntities.emplace_back(entity);
 }
 
 EntityManager::EntityManager():
