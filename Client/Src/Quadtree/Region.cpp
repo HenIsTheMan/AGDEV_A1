@@ -59,65 +59,9 @@ void Region::GetEntitiesToUpdate(std::vector<Entity*>& movableEntities, std::vec
 }
 
 void Region::GetEntitiesToRender(std::multimap<int, Entity*>& entitiesOpaque, std::multimap<int, Entity*>& entitiesNotOpaque, const Cam& cam, const FrustumCulling* const frustumCulling){
-	if(!visible){ //Optimization
-		return;
-	}
-
-	bool result = topLeft || topRight || bottomLeft || bottomRight;
-	if(result){
-		topLeft->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam, frustumCulling);
-		topRight->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam, frustumCulling);
-		bottomLeft->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam, frustumCulling);
-		bottomRight->GetEntitiesToRender(entitiesOpaque, entitiesNotOpaque, cam, frustumCulling);
-	} else{
-		const glm::vec3& camPos = cam.GetPos();
-
-		for(int i = 0; i < stationaryNodes.size(); ++i){
-			Entity* const entity = stationaryNodes[i]->RetrieveEntity();
-			if(entity){
-				const glm::vec3& entityPos = entity->GetPos();
-				const glm::vec3& entityScale = entity->GetScale();
-
-				if(!frustumCulling->ShldBeVisible(
-					glm::vec3(entityPos.x - entityScale.x * 0.5f, entityPos.y - entityScale.y * 0.5f, entityPos.z - entityScale.z * 0.5f),
-					glm::vec3(entityPos.x + entityScale.x * 0.5f, entityPos.y + entityScale.y * 0.5f, entityPos.z + entityScale.z * 0.5f))
-				){
-					continue;
-				}
-
-				switch(entity->type){
-					case Entity::EntityType::Coin:
-					case Entity::EntityType::Fire:
-						entitiesNotOpaque.insert(std::make_pair((int)glm::length2(entity->pos - camPos), entity));
-						break;
-				}
-			}
-		}
-
-		for(int i = 0; i < movableNodes.size(); ++i){
-			Entity* const entity = movableNodes[i]->RetrieveEntity();
-			if(entity){
-				const glm::vec3& entityPos = entity->GetPos();
-				const glm::vec3& entityScale = entity->GetScale();
-
-				if(!frustumCulling->ShldBeVisible(
-					glm::vec3(entityPos.x - entityScale.x * 0.5f, entityPos.y - entityScale.y * 0.5f, entityPos.z - entityScale.z * 0.5f),
-					glm::vec3(entityPos.x + entityScale.x * 0.5f, entityPos.y + entityScale.y * 0.5f, entityPos.z + entityScale.z * 0.5f))
-				){
-					continue;
-				}
-
-				switch(entity->type){
-					case Entity::EntityType::Bullet:
-					case Entity::EntityType::Enemy:
-					case Entity::EntityType::Player:
-					case Entity::EntityType::ThinObj:
-						entitiesOpaque.insert(std::make_pair((int)glm::length2(entity->pos - camPos), entity));
-						break;
-				}
-			}
-		}
-	}
+	std::unordered_set<Entity*> entitySetOpaque;
+	std::unordered_set<Entity*> entitySetNotOpaque;
+	IGetEntitiesToRender(entitySetOpaque, entitySetNotOpaque, entitiesOpaque, entitiesNotOpaque, cam, frustumCulling);
 }
 
 void Region::GetLeaves(std::vector<Region*>& leaves){
@@ -366,5 +310,77 @@ void Region::MakeSelfAndChildrenInvisible(){
 	}
 	if(bottomRight != nullptr){
 		bottomRight->MakeSelfAndChildrenInvisible();
+	}
+}
+
+void Region::IGetEntitiesToRender(
+	std::unordered_set<Entity*>& entitySetOpaque, std::unordered_set<Entity*>& entitySetNotOpaque,
+	std::multimap<int, Entity*>& entitiesOpaque, std::multimap<int, Entity*>& entitiesNotOpaque,
+	const Cam& cam, const FrustumCulling* const frustumCulling
+){
+	if(!visible){ //Optimization
+		return;
+	}
+
+	bool result = topLeft || topRight || bottomLeft || bottomRight;
+	if(result){
+		topLeft->IGetEntitiesToRender(entitySetOpaque, entitySetNotOpaque, entitiesOpaque, entitiesNotOpaque, cam, frustumCulling);
+		topRight->IGetEntitiesToRender(entitySetOpaque, entitySetNotOpaque, entitiesOpaque, entitiesNotOpaque, cam, frustumCulling);
+		bottomLeft->IGetEntitiesToRender(entitySetOpaque, entitySetNotOpaque, entitiesOpaque, entitiesNotOpaque, cam, frustumCulling);
+		bottomRight->IGetEntitiesToRender(entitySetOpaque, entitySetNotOpaque, entitiesOpaque, entitiesNotOpaque, cam, frustumCulling);
+	} else{
+		const glm::vec3& camPos = cam.GetPos();
+
+		for(int i = 0; i < stationaryNodes.size(); ++i){
+			Entity* const entity = stationaryNodes[i]->RetrieveEntity();
+			if(entity){
+				const glm::vec3& entityPos = entity->GetPos();
+				const glm::vec3& entityScale = entity->GetScale();
+
+				if(!frustumCulling->ShldBeVisible(
+					glm::vec3(entityPos.x - entityScale.x * 0.5f, entityPos.y - entityScale.y * 0.5f, entityPos.z - entityScale.z * 0.5f),
+					glm::vec3(entityPos.x + entityScale.x * 0.5f, entityPos.y + entityScale.y * 0.5f, entityPos.z + entityScale.z * 0.5f))
+				){
+					continue;
+				}
+
+				switch(entity->type){
+					case Entity::EntityType::Coin:
+					case Entity::EntityType::Fire:
+						if(entitySetNotOpaque.find(entity) == entitySetNotOpaque.end()){
+							entitySetNotOpaque.insert(entity);
+							entitiesNotOpaque.insert(std::make_pair((int)glm::length2(entity->pos - camPos), entity));
+						}
+						break;
+				}
+			}
+		}
+
+		for(int i = 0; i < movableNodes.size(); ++i){
+			Entity* const entity = movableNodes[i]->RetrieveEntity();
+			if(entity){
+				const glm::vec3& entityPos = entity->GetPos();
+				const glm::vec3& entityScale = entity->GetScale();
+
+				if(!frustumCulling->ShldBeVisible(
+					glm::vec3(entityPos.x - entityScale.x * 0.5f, entityPos.y - entityScale.y * 0.5f, entityPos.z - entityScale.z * 0.5f),
+					glm::vec3(entityPos.x + entityScale.x * 0.5f, entityPos.y + entityScale.y * 0.5f, entityPos.z + entityScale.z * 0.5f))
+				){
+					continue;
+				}
+
+				switch(entity->type){
+					case Entity::EntityType::Bullet:
+					case Entity::EntityType::Enemy:
+					case Entity::EntityType::Player:
+					case Entity::EntityType::ThinObj:
+						if(entitySetOpaque.find(entity) == entitySetOpaque.end()){
+							entitySetOpaque.insert(entity);
+							entitiesOpaque.insert(std::make_pair((int)glm::length2(entity->pos - camPos), entity));
+						}
+						break;
+				}
+			}
+		}
 	}
 }

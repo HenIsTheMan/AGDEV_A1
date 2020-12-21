@@ -2,6 +2,8 @@
 
 #include <Core.h>
 
+#include <unordered_set>
+
 #include "Node.h"
 
 #include "../Shared/Meshes.h"
@@ -49,4 +51,10 @@ private:
 	std::vector<Node*> movableNodes;
 
 	ObjPool<Region>* regionPool;
+
+	void IGetEntitiesToRender(
+		std::unordered_set<Entity*>& entitySetOpaque, std::unordered_set<Entity*>& entitySetNotOpaque,
+		std::multimap<int, Entity*>& entitiesOpaque, std::multimap<int, Entity*>& entitiesNotOpaque,
+		const Cam& cam, const FrustumCulling* const frustumCulling
+	);
 };
