@@ -27,7 +27,7 @@ void RegionManager::Init(const size_t& inactiveSize, const size_t& activeSize){
 	rootRegion->size = glm::vec2(terrainXScale, terrainZScale);
 }
 
-void RegionManager::Update(std::vector<Entity*>& entitiesToRemove){
+void RegionManager::Update(std::vector<Entity*>& entitiesToRemove, const Entity* const myPlayer){
 	elapsedTime += dt;
 
 	static float BT = 0.0f;
@@ -40,7 +40,7 @@ void RegionManager::Update(std::vector<Entity*>& entitiesToRemove){
 	rootRegion->CheckOutOfBounds(true, entitiesToRemove);
 	rootRegion->Partition(true);
 
-	rootRegion->VisibilityCheck(frustumCulling);
+	rootRegion->VisibilityCheck(frustumCulling, myPlayer);
 }
 
 void RegionManager::Render(ShaderProg& SP){

@@ -48,7 +48,7 @@ void EntityManager::Init(){
 	entityPool->Init(entityPoolSize, entityPoolSize);
 }
 
-void EntityManager::Update(){
+void EntityManager::Update(const Entity* const myPlayer){
 	elapsedTime += dt;
 
 	static bool isPressedC = false;
@@ -60,7 +60,8 @@ void EntityManager::Update(){
 	}
 
 	std::vector<Entity*> entitiesToRemove;
-	regionManager->Update(entitiesToRemove);
+	regionManager->Update(entitiesToRemove, myPlayer);
+
 	for(Entity* const entity: entitiesToRemove){
 		DeactivateEntity(entity);
 	}

@@ -289,7 +289,9 @@ void Region::Partition(const bool movable){
 	bottomRight->Partition(movable);
 }
 
-void Region::VisibilityCheck(const FrustumCulling* const frustumCulling){
+void Region::VisibilityCheck(const FrustumCulling* const frustumCulling, const Entity* const myPlayer){
+	//
+
 	if(!frustumCulling->ShldBeVisible(
 		glm::vec3(origin[0] - size[0] * 0.5f, frustumCulling->yMin, origin[1] - size[1] * 0.5f),
 		glm::vec3(origin[0] + size[0] * 0.5f, frustumCulling->yMax, origin[1] + size[1] * 0.5f))
@@ -300,16 +302,16 @@ void Region::VisibilityCheck(const FrustumCulling* const frustumCulling){
 	visible = true;
 
 	if(topLeft != nullptr){
-		topLeft->VisibilityCheck(frustumCulling);
+		topLeft->VisibilityCheck(frustumCulling, myPlayer);
 	}
 	if(topRight != nullptr){
-		topRight->VisibilityCheck(frustumCulling);
+		topRight->VisibilityCheck(frustumCulling, myPlayer);
 	}
 	if(bottomLeft != nullptr){
-		bottomLeft->VisibilityCheck(frustumCulling);
+		bottomLeft->VisibilityCheck(frustumCulling, myPlayer);
 	}
 	if(bottomRight != nullptr){
-		bottomRight->VisibilityCheck(frustumCulling);
+		bottomRight->VisibilityCheck(frustumCulling, myPlayer);
 	}
 }
 
