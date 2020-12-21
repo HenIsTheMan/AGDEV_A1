@@ -20,6 +20,8 @@ class Entity final{
 	friend void UpdatePlayerHoriz(Entity* const player, const bool isCamDetached);
 	friend void UpdatePlayerVert(Entity* const player);
 public:
+	void Reset();
+
 	///Getters
 	const glm::vec3& GetPos() const;
 	const glm::vec3& GetScale() const;

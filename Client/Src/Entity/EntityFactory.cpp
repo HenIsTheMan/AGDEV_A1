@@ -186,7 +186,10 @@ EntityFactory::EntityFactory():
 
 Entity* EntityFactory::ActivateEntity(const bool movable){
 	Entity* const entity = entityPool->ActivateObj();
+
+	entity->Reset();
 	entity->movable = movable;
+
 	ActivateEntityProcedure(entity);
 	return entity;
 }
