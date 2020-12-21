@@ -48,7 +48,6 @@ bool RayBoxIntersectionTest(glm::vec3 line_start, glm::vec3 line_end,
 		|| (GetIntersection(line_start.z - maxAABB.z, line_end.z - maxAABB.z, line_start, line_end, Hit) &&
 		InBox(Hit, minAABB, maxAABB, 3)))
 	{
-		std::cout << "Here Success\n";
 		return true;
 	}
 	return false;
@@ -93,13 +92,12 @@ bool Collision::DetectCollision(const Entity* const actor, const Entity* const a
 
 		if(actee->collider->GetType() == ColliderType::Box){
 			const glm::vec3& colliderScale = static_cast<BoxCollider*>(actee->collider)->GetScale();
-			minAABB = actee->pos - colliderScale * 1.0f; //??
-			maxAABB = actee->pos + colliderScale * 1.0f; //??
+			minAABB = actee->pos - colliderScale;
+			maxAABB = actee->pos + colliderScale;
 		} else{ //??
-			std::cout << "Wrong Lah\n";
 			const float colliderRadius = static_cast<SphereCollider*>(actee->collider)->GetRadius();
-			minAABB = actee->pos + colliderRadius * glm::vec3(-1.0f); //??
-			maxAABB = actee->pos + colliderRadius * glm::vec3(1.0f); //??
+			minAABB = actee->pos + colliderRadius;
+			maxAABB = actee->pos + colliderRadius;
 		}
 
 		glm::vec3 collisionPt;
