@@ -241,7 +241,7 @@ void Region::Partition(const bool movable){
 	if(movableNodes.size() + stationaryNodes.size() <= (size_t)1){ //Optimization
 		return;
 	}
-	if(size.x <= terrainXScale * 0.0625f){
+	if(size.x <= terrainXScale / 64.0f){
 		return;
 	}
 
