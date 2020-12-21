@@ -20,26 +20,22 @@ public:
 	Entity* RetrieveEntity();
 
 	///Getters
-	bool GetUseLocalTransformUpdates() const;
 	bool GetVisible() const;
-	const Node* GetParent() const;
 	const Entity* GetEntity() const;
+	const Node* GetParent() const;
+
+	const glm::vec3& GetLocalTranslate() const;
+	const glm::vec4& GetLocalRotate() const;
+	const glm::vec3& GetLocalScale() const;
 
 	///Setters
-	void SetUseLocalTransformUpdates(const bool useLocalTransformUpdates);
 	void SetVisible(const bool visible);
-	void SetParent(Node* const parent);
 	void SetEntity(Entity* const entity);
 
 	void SetLocalTranslate(const glm::vec3& localTranslate);
 	void SetLocalRotate(const glm::vec4& localRotate);
 	void SetLocalScale(const glm::vec3& localScale);
-
-	void SetLocalTranslationUpdate(const glm::vec3& localTranslationUpdate);
-	void SetLocalRotationUpdate(const glm::vec4& localRotationUpdate);
-	void SetLocalScalingUpdate(const glm::vec3& localScalingUpdate);
 private:
-	bool useLocalTransformUpdates;
 	bool visible;
 
 	std::vector<Node*> children;
@@ -52,8 +48,4 @@ private:
 	glm::vec3 localTranslate;
 	glm::vec4 localRotate;
 	glm::vec3 localScale;
-
-	glm::vec3 localTranslationUpdate;
-	glm::vec4 localRotationUpdate;
-	glm::vec3 localScalingUpdate;
 };

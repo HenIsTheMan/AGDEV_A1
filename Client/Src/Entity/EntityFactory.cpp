@@ -193,7 +193,11 @@ Entity* EntityFactory::ActivateEntity(const bool movable){
 
 void EntityFactory::ActivateEntityProcedure(Entity* const entity){
 	Node* const node = nodeManager->ActivateNode();
+
 	node->SetEntity(entity);
+	node->SetLocalTranslate(entity->GetPos());
+	node->SetLocalScale(entity->GetScale());
+
 	nodeManager->RetrieveRootNode()->AddChild(node);
 	regionManager->RetrieveRootRegion()->AddNode(node, entity->movable);
 }

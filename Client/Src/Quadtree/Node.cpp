@@ -1,19 +1,15 @@
 #include "Node.h"
 
 Node::Node():
-	useLocalTransformUpdates(false),
 	visible(false),
 	children(),
 	parent(nullptr),
 	entity(nullptr),
-	worldTransform(glm::mat4()),
-	worldTransformNoScale(glm::mat4()),
+	worldTransform(glm::mat4(1.0f)),
+	worldTransformNoScale(glm::mat4(1.0f)),
 	localTranslate(glm::vec3(0.0f)),
-	localRotate(glm::vec4(0.0f)),
-	localScale(glm::vec3(0.0f)),
-	localTranslationUpdate(glm::vec3(0.0f)),
-	localRotationUpdate(glm::vec4(0.0f)),
-	localScalingUpdate(glm::vec3(0.0f))
+	localRotate(glm::vec4(0.0f, 1.0f, 0.0f, 0.0f)),
+	localScale(glm::vec3(1.0f))
 {
 }
 
@@ -23,29 +19,23 @@ Node::~Node(){
 }
 
 void Node::Update(){
-	//if(useLocalTransformUpdates){
-	//	localTranslate = localTranslationUpdate * localTranslate;
-	//	localRotate = localRotationUpdate * localRotate;
-	//	localScale = localScalingUpdate * localScale;
-	//}
+	const glm::mat4 localTransformNoScale = glm::translate(glm::mat4(1.0f), localTranslate) * glm::rotate(glm::mat4(1.0f), localRotate.w, glm::vec3(localRotate)); //??
 
-	//const glm::mat4 localTransformNoScale = glm::translate(glm::mat4(1.0f), localTranslate) * glm::rotate(glm::mat4(1.0f), localRotate.w, glm::vec3(localRotate)); //??
+	if(parent){
+		worldTransformNoScale = parent->worldTransformNoScale * localTransformNoScale;
+		worldTransform = parent->worldTransformNoScale * localTransformNoScale * glm::scale(glm::mat4(1.0f), localScale);
+	} else{
+		worldTransformNoScale = localTransformNoScale;
+		worldTransform = localTransformNoScale * glm::scale(glm::mat4(1.0f), localScale);
+	}
 
-	//if(parent){
-	//	worldTransformNoScale = parent->worldTransformNoScale * localTransformNoScale;
-	//	worldTransform = parent->worldTransformNoScale * localTransformNoScale * glm::scale(glm::mat4(1.0f), localScale);
-	//} else{
-	//	worldTransformNoScale = localTransformNoScale;
-	//	worldTransform = localTransformNoScale * glm::scale(glm::mat4(1.0f), localScale);
-	//}
+	if(entity){
+		entity->SetPos(glm::vec3(worldTransform[3]));
+	}
 
-	//if(entity){
-	//	entity->SetPos(glm::vec3(worldTransform[3]));
-	//}
-
-	//for(Node* const child: children){
-	//	child->Update();
-	//}
+	for(Node* const child: children){
+		child->Update();
+	}
 }
 
 void Node::AddChild(Node* const child){
@@ -121,32 +111,32 @@ Entity* Node::RetrieveEntity(){
 	return entity;
 }
 
-bool Node::GetUseLocalTransformUpdates() const{
-	return useLocalTransformUpdates;
-}
-
 bool Node::GetVisible() const{
 	return visible;
-}
-
-const Node* Node::GetParent() const{
-	return parent;
 }
 
 const Entity* Node::GetEntity() const{
 	return entity;
 }
 
-void Node::SetUseLocalTransformUpdates(const bool useLocalTransformUpdates){
-	this->useLocalTransformUpdates = useLocalTransformUpdates;
+const Node* Node::GetParent() const{
+	return parent;
+}
+
+const glm::vec3& Node::GetLocalTranslate() const{
+	return localTranslate;
+}
+
+const glm::vec4& Node::GetLocalRotate() const{
+	return localRotate;
+}
+
+const glm::vec3& Node::GetLocalScale() const{
+	return localScale;
 }
 
 void Node::SetVisible(const bool visible){
 	this->visible = visible;
-}
-
-void Node::SetParent(Node* const parent){
-	this->parent = parent;
 }
 
 void Node::SetEntity(Entity* const entity){
@@ -163,16 +153,4 @@ void Node::SetLocalRotate(const glm::vec4& localRotate){
 
 void Node::SetLocalScale(const glm::vec3& localScale){
 	this->localScale = localScale;
-}
-
-void Node::SetLocalTranslationUpdate(const glm::vec3& localTranslationUpdate){
-	this->localTranslationUpdate = localTranslationUpdate;
-}
-
-void Node::SetLocalRotationUpdate(const glm::vec4& localRotationUpdate){
-	this->localRotationUpdate = localRotationUpdate;
-}
-
-void Node::SetLocalScalingUpdate(const glm::vec3& localScalingUpdate){
-	this->localScalingUpdate = localScalingUpdate;
 }
