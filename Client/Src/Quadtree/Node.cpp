@@ -18,8 +18,8 @@ Node::Node():
 }
 
 Node::~Node(){
-	entity = nullptr;
-	parent = nullptr;
+	entity = nullptr; //Deleted elsewhere
+	parent = nullptr; //Deleted elsewhere
 }
 
 void Node::AddChild(Node* const child){
@@ -42,11 +42,11 @@ Node* Node::DetachChild(const Node* const child){
 			node->parent = nullptr;
 			children.erase(iter);
 			return node;
-		} else{
-			Node* childNode = node->DetachChild(child);
-			if(childNode != nullptr){
-				return childNode;
-			}
+		}
+
+		Node* const childNode = node->DetachChild(child);
+		if(childNode != nullptr){
+			return childNode;
 		}
 	}
 	return nullptr;
@@ -63,11 +63,29 @@ Node* Node::DetachChild(const Entity* const entity){
 			node->parent = nullptr;
 			children.erase(iter);
 			return node;
-		} else{
-			Node* childNode = node->DetachChild(entity);
-			if(childNode != nullptr){
-				return childNode;
-			}
+		}
+
+		Node* const childNode = node->DetachChild(entity);
+		if(childNode != nullptr){
+			return childNode;
+		}
+	}
+	return nullptr;
+}
+
+Node* Node::FindChild(const Entity* const entity){
+	if(!children.size()){ //Optimization
+		return nullptr;
+	}
+
+	for(Node* const child: children){
+		if(child->GetEntity() == entity){
+			return child;
+		}
+
+		Node* const childNode = child->FindChild(entity);
+		if(childNode != nullptr){
+			return childNode;
 		}
 	}
 	return nullptr;
