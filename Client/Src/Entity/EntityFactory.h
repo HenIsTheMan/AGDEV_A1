@@ -34,7 +34,7 @@ public:
 	void CreateCoin(const EntityCreationAttribs& attribs);
 	void CreateFire(const EntityCreationAttribs& attribs);
 
-	void CreateThinObj(const EntityCreationAttribs& attribs);
+	const Entity* CreateThinObj(const EntityCreationAttribs& attribs);
 
 	void CreateTree(const EntityCreationAttribs& attribs);
 private:

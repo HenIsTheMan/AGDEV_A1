@@ -388,7 +388,6 @@ void Region::IGetEntitiesToRender(
 
 				switch(entity->type){
 					case Entity::EntityType::Bullet:
-					case Entity::EntityType::Enemy:
 					case Entity::EntityType::Player:
 					case Entity::EntityType::ThinObj:
 						if(entitySetOpaque.find(entity) == entitySetOpaque.end()){

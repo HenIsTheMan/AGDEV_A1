@@ -140,7 +140,7 @@ void EntityFactory::CreateFire(const EntityCreationAttribs& attribs){
 	entity->collider = colliderManager->ActivateCollider(ColliderType::Box);
 }
 
-void EntityFactory::CreateThinObj(const EntityCreationAttribs& attribs){
+const Entity* EntityFactory::CreateThinObj(const EntityCreationAttribs& attribs){
 	Entity* const& entity = ActivateEntity(true);
 
 	entity->type = Entity::EntityType::ThinObj;
@@ -155,6 +155,8 @@ void EntityFactory::CreateThinObj(const EntityCreationAttribs& attribs){
 	BoxCollider* const boxCollider = static_cast<BoxCollider*>(entity->collider);
 	boxCollider->SetPos(entity->pos);
 	boxCollider->SetScale(entity->scale);
+
+	return entity;
 }
 
 void EntityFactory::CreateTree(const EntityCreationAttribs& attribs){

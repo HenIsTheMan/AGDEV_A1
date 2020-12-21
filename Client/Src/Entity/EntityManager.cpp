@@ -205,7 +205,6 @@ void EntityManager::Render(ShaderProg& SP, const Cam& cam){
 
 		switch(entity->type){
 			case Entity::EntityType::Bullet:
-			case Entity::EntityType::Enemy:
 				modelStack.PushModel({
 					modelStack.Translate(entity->pos),
 					modelStack.Scale(entity->scale),

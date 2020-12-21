@@ -190,13 +190,29 @@ void Scene::CreateEntities(){
 	//*/
 
 	//* Create thin obj
-	const float xyScale = 200.0f;
+	const float xyScaleThinObj = 200.0f;
 	entityFactory->CreateThinObj({
-		glm::vec3(0.0f,
-			terrainYScale * myTerrain->GetHeightAtPt(0.0f, terrainZScale * 0.25f / terrainZScale, false) + xyScale,
-			terrainZScale * 0.25f),
-		glm::vec3(xyScale, xyScale, 0.001f),
+		glm::vec3(
+			0.0f,
+			terrainYScale * myTerrain->GetHeightAtPt(0.0f, 0.25f, false) + xyScaleThinObj,
+			terrainZScale * 0.25f
+		),
+		glm::vec3(xyScaleThinObj, xyScaleThinObj, 0.001f),
 		glm::vec4(1.0f),
+		-1,
+	});
+	//*/
+
+	//* Create enemy
+	const float xyScaleEnemyBody = 500.0f;
+	const Entity* const enemyBody = entityFactory->CreateThinObj({
+		glm::vec3(
+			0.0f,
+			terrainYScale * myTerrain->GetHeightAtPt(0.0f, 0.4f, false) + xyScaleEnemyBody,
+			terrainZScale * 0.4f
+		),
+		glm::vec3(xyScaleEnemyBody, xyScaleEnemyBody, 0.001f),
+		glm::vec4(0.8f, 0.0f, 0.0f, 0.6f),
 		-1,
 	});
 	//*/
