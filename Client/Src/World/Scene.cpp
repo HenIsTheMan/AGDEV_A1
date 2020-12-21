@@ -276,7 +276,7 @@ void Scene::CreateTreesAndCubes(){
 			modelStack.Scale(glm::vec3(scaleFactor))
 		});
 			const glm::mat4& modelMat = modelStack.GetTopModel();
-			const glm::vec3& color = glm::vec3(PseudorandMinMax(0.1f, 1.0f), 0.0f, 0.0f);
+			const glm::vec3& color = glm::vec3(PseudorandMinMax(0.25f, 1.0f), 0.0f, 0.0f);
 			const int diffuseTexIndex = 0;
 
 			treeHigh->AddModelMatForAll(modelMat);
@@ -350,7 +350,7 @@ void Scene::CreateDecorations(){
 			zPos2
 		);
 
-		const glm::vec3 brightColor = glm::rgbColor(glm::vec3(PseudorandMinMax(0.1f, 1.0f), PseudorandMinMax(0.1f, 1.0f), 1.0f));
+		const glm::vec3 color = glm::vec3(PseudorandMinMax(0.1f, 1.0f), PseudorandMinMax(0.1f, 1.0f), PseudorandMinMax(0.1f, 1.0f));
 
 		modelStack.PushModel({
 			modelStack.Translate(pos0),
@@ -358,11 +358,9 @@ void Scene::CreateDecorations(){
 			modelStack.Scale(glm::vec3(140.0f))
 		});
 			flower->AddModelMatForAll(modelStack.GetTopModel());
-			flower->AddColorForAll(brightColor);
+			flower->AddColorForAll(color);
 			flower->AddDiffuseTexIndexForAll(-1);
 		modelStack.PopModel();
-
-		const glm::vec3 normalColor = glm::vec3(PseudorandMinMax(0.1f, 1.0f), PseudorandMinMax(0.1f, 1.0f), PseudorandMinMax(0.1f, 1.0f));
 
 		modelStack.PushModel({
 			modelStack.Translate(pos1),
@@ -370,7 +368,7 @@ void Scene::CreateDecorations(){
 			modelStack.Scale(glm::vec3(140.0f))
 		});
 			grass->AddModelMatForAll(modelStack.GetTopModel());
-			grass->AddColorForAll(normalColor);
+			grass->AddColorForAll(color);
 			grass->AddDiffuseTexIndexForAll(-1);
 		modelStack.PopModel();
 
@@ -380,7 +378,7 @@ void Scene::CreateDecorations(){
 			modelStack.Scale(glm::vec3((float)PseudorandMinMax(60, 90)))
 		});
 			rock->AddModelMatForAll(modelStack.GetTopModel());
-			rock->AddColorForAll(normalColor);
+			rock->AddColorForAll(color);
 			rock->AddDiffuseTexIndexForAll(-1);
 		modelStack.PopModel();
 	}

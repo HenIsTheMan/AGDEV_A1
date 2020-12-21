@@ -150,7 +150,7 @@ void EntityManager::Update(){
 			if(entity0->type != entity1->type){
 				if(entity0->type == Entity::EntityType::Bullet){
 					if(Collision::DetectCollision(entity0, entity1)){
-						std::cout << "Collided0\n";
+						entity1->colour = glm::vec4(PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), 1.0f);
 
 						std::vector<Entity*>::iterator iter = std::find(entitiesToRemove.begin(), entitiesToRemove.end(), entity0);
 						if(iter == entitiesToRemove.end()){
@@ -162,7 +162,7 @@ void EntityManager::Update(){
 					}
 				} else if(entity1->type == Entity::EntityType::Bullet){
 					if(Collision::DetectCollision(entity1, entity0)){
-						std::cout << "Collided1\n";
+						entity0->colour = glm::vec4(PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), 1.0f);
 
 						std::vector<Entity*>::iterator iter = std::find(entitiesToRemove.begin(), entitiesToRemove.end(), entity1);
 						if(iter == entitiesToRemove.end()){
