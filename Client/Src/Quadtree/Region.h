@@ -33,7 +33,7 @@ public:
 	void ClearMovableAndDeactivateChildren();
 	void CheckOutOfBounds(const bool movable, std::vector<Entity*>& entitiesToRemove);
 	void Partition(const bool movable);
-	void VisibilityCheck(const FrustumCulling* const frustumCulling, const Entity* const myPlayer);
+	void VisibilityCheck(const FrustumCulling* const frustumCulling);
 	void MakeSelfAndChildrenInvisible();
 private:
 	bool visible;

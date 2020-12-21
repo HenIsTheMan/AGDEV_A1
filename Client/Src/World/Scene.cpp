@@ -672,7 +672,7 @@ void Scene::GameUpdate(GLFWwindow* const& win){
 		prevCamAspectRatio = camAspectRatio;
 	}
 
-	entityManager->Update(myPlayer);
+	entityManager->Update();
 }
 
 void Scene::MainMenuRender(){
