@@ -21,6 +21,8 @@ public:
 	Region();
 	~Region();
 
+	void Reset();
+
 	void GetEntitiesToUpdate(std::vector<Entity*>& movableEntities, std::vector<Entity*>& stationaryEntities);
 	void GetEntitiesToRender(std::multimap<int, Entity*>& entitiesOpaque, std::multimap<int, Entity*>& entitiesNotOpaque, const Cam& cam, const FrustumCulling* const frustumCulling);
 	void GetLeaves(std::vector<Region*>& leaves);

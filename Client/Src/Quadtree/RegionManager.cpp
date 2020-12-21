@@ -54,7 +54,9 @@ void RegionManager::UpdateFrustumCulling(const glm::mat4& view, const glm::mat4&
 }
 
 Region* RegionManager::ActivateRegion(){
-	return regionPool->ActivateObj();
+	Region* const region = regionPool->ActivateObj();
+	region->Reset();
+	return region;
 }
 
 void RegionManager::DeactivateRegion(Region* const region){

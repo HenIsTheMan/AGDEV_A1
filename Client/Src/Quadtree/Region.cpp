@@ -34,6 +34,18 @@ Region::~Region(){
 	regionPool = nullptr; //Deleted in RegionManager
 }
 
+void Region::Reset(){
+	visible = false;
+	parent = nullptr;
+	origin = glm::vec2();
+	size = glm::vec2();
+	color = glm::vec4(PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), 1.0f);;
+	topLeft = nullptr;
+	topRight = nullptr;
+	bottomLeft = nullptr;
+	bottomRight = nullptr;
+}
+
 void Region::GetEntitiesToUpdate(std::vector<Entity*>& movableEntities, std::vector<Entity*>& stationaryEntities){
 	bool result = topLeft || topRight || bottomLeft || bottomRight;
 	if(result){
