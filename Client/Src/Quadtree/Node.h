@@ -10,6 +10,8 @@ public:
 	Node();
 	~Node();
 
+	void Update();
+
 	void AddChild(Node* const child);
 	Node* DetachChild(const Node* const child);
 	Node* DetachChild(const Entity* const entity);

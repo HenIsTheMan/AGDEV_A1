@@ -16,6 +16,10 @@ void Entity::SetFacingDir(const glm::vec3& facingDir){
 	this->facingDir = facingDir;
 }
 
+void Entity::SetPos(const glm::vec3& pos){
+	this->pos = pos;
+}
+
 Entity::Entity():
 	type(EntityType::Amt),
 	movable(false),

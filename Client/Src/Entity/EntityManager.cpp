@@ -59,6 +59,8 @@ void EntityManager::Update(){
 		isPressedC = false;
 	}
 
+	nodeManager->Update();
+
 	std::vector<Entity*> entitiesToRemove;
 	regionManager->Update(entitiesToRemove);
 	for(Entity* const entity: entitiesToRemove){

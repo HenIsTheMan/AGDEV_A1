@@ -13,6 +13,10 @@ void NodeManager::Init(const size_t& inactiveSize, const size_t& activeSize){
 	rootNode = ActivateNode();
 }
 
+void NodeManager::Update(){
+	rootNode->Update();
+}
+
 Node* NodeManager::ActivateNode(){
 	return nodePool->ActivateObj();
 }

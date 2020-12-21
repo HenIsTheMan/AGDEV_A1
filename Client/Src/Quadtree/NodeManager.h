@@ -12,6 +12,7 @@ public:
 	~NodeManager();
 
 	void Init(const size_t& inactiveSize, const size_t& activeSize);
+	void Update();
 
 	Node* ActivateNode();
 	void DeactivateNode(Node* const node);

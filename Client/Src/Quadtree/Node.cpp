@@ -22,6 +22,32 @@ Node::~Node(){
 	parent = nullptr; //Deleted elsewhere
 }
 
+void Node::Update(){
+	//if(useLocalTransformUpdates){
+	//	localTranslate = localTranslationUpdate * localTranslate;
+	//	localRotate = localRotationUpdate * localRotate;
+	//	localScale = localScalingUpdate * localScale;
+	//}
+
+	//const glm::mat4 localTransformNoScale = glm::translate(glm::mat4(1.0f), localTranslate) * glm::rotate(glm::mat4(1.0f), localRotate.w, glm::vec3(localRotate)); //??
+
+	//if(parent){
+	//	worldTransformNoScale = parent->worldTransformNoScale * localTransformNoScale;
+	//	worldTransform = parent->worldTransformNoScale * localTransformNoScale * glm::scale(glm::mat4(1.0f), localScale);
+	//} else{
+	//	worldTransformNoScale = localTransformNoScale;
+	//	worldTransform = localTransformNoScale * glm::scale(glm::mat4(1.0f), localScale);
+	//}
+
+	//if(entity){
+	//	entity->SetPos(glm::vec3(worldTransform[3]));
+	//}
+
+	//for(Node* const child: children){
+	//	child->Update();
+	//}
+}
+
 void Node::AddChild(Node* const child){
 	if(child == nullptr){
 		return (void)printf("Var 'child' is a nullptr");
