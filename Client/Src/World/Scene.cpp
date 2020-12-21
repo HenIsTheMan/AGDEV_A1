@@ -687,8 +687,8 @@ void Scene::GameUpdate(GLFWwindow* const& win){
 		|| glm::epsilonNotEqual(camAspectRatio, prevCamAspectRatio, glm::epsilon<float>())
 	){
 		const glm::vec3& playerPos = myPlayer->GetPos();
-		const float yMin = terrainYScale;
-		const float yMax = terrainYScale * 4.0f;
+		const float yMin = FLT_MIN;
+		const float yMax = FLT_MAX;
 
 		regionManager->UpdateFrustumCulling(glm::lookAt(camAttachedPos, camAttachedPos + playerFacingDir,
 			glm::normalize(glm::cross(glm::normalize(glm::cross(playerFacingDir, glm::vec3(0.0f, 1.0f, 0.0f))), playerFacingDir))),
