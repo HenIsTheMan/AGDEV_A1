@@ -3,8 +3,8 @@
 Scar::Scar(){
 	reloadTime = 1.f;
 	shotCooldownTime = .1f;
-	loadedBullets = 40;
-	maxLoadedBullets = 40;
+	loadedBullets = 400;
+	maxLoadedBullets = 400;
 	unloadedBullets = 400000;
 	maxUnloadedBullets = 400000;
 }

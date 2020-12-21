@@ -2,9 +2,9 @@
 
 Sniper::Sniper(){
 	reloadTime = 3.f;
-	shotCooldownTime = 0.f;
-	loadedBullets = 1;
-	maxLoadedBullets = 1;
+	shotCooldownTime = 1.0f;
+	loadedBullets = 3;
+	maxLoadedBullets = 3;
 	unloadedBullets = 400;
 	maxUnloadedBullets = 400;
 }

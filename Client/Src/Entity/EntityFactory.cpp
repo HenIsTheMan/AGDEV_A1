@@ -45,7 +45,7 @@ void EntityFactory::CreateShotgunBullet(const glm::vec3& camPos, const glm::vec3
 	entity->scale = glm::vec3(10.0f);
 
 	entity->pos = camPos + 500.0f * camFront;
-	entity->moveSpd = 200.f;
+	entity->moveSpd = 4000.f;
 	entity->facingDir = glm::vec3(glm::rotate(glm::mat4(1.f), glm::radians(PseudorandMinMax(-1.f, 1.f)), {0.f, 1.f, 0.f}) * glm::vec4(camFront, 0.f)); //Bullet bloom
 	entity->vel = entity->moveSpd * entity->facingDir;
 	entity->mass = 5.f;
@@ -68,7 +68,7 @@ void EntityFactory::CreateScarBullet(const glm::vec3& camPos, const glm::vec3& c
 	entity->scale = glm::vec3(10.0f);
 
 	entity->pos = camPos + 500.0f * camFront;
-	entity->moveSpd = 180.f;
+	entity->moveSpd = 2400.f;
 	entity->facingDir = glm::vec3(glm::rotate(glm::mat4(1.f), glm::radians(PseudorandMinMax(-2.f, 2.f)), {0.f, 1.f, 0.f}) * glm::vec4(camFront, 0.f)); //Bullet bloom
 	entity->vel = entity->moveSpd * entity->facingDir;
 	entity->mass = 5.f;
@@ -91,7 +91,7 @@ void EntityFactory::CreateSniperBullet(const glm::vec3& camPos, const glm::vec3&
 	entity->scale = glm::vec3(10.0f);
 
 	entity->pos = camPos + 500.0f * camFront;
-	entity->moveSpd = 500.0f;
+	entity->moveSpd = 8400.0f;
 	entity->facingDir = camFront;
 	entity->vel = entity->moveSpd * entity->facingDir;
 	entity->mass = 5.f;

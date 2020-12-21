@@ -3,8 +3,8 @@
 Shotgun::Shotgun(){
 	reloadTime = 2.f;
 	shotCooldownTime = .7f;
-	loadedBullets = 12;
-	maxLoadedBullets = 12;
+	loadedBullets = 24;
+	maxLoadedBullets = 24;
 	unloadedBullets = 4000;
 	maxUnloadedBullets = 4000;
 }
