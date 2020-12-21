@@ -140,23 +140,6 @@ void EntityFactory::CreateFire(const EntityCreationAttribs& attribs){
 	entity->collider = colliderManager->ActivateCollider(ColliderType::Box);
 }
 
-void EntityFactory::CreateEnemy(const EntityCreationAttribs& attribs){
-	Entity* const& entity = ActivateEntity(true);
-
-	entity->type = Entity::EntityType::Enemy;
-	entity->life = 100.f;
-	entity->maxLife = 100.f;
-	entity->colour = attribs.colour;
-	entity->diffuseTexIndex = attribs.diffuseTexIndex;
-	entity->scale = attribs.scale;
-
-	entity->pos = attribs.pos;
-	entity->mass = 5.f;
-	entity->force = glm::vec3(0.f);
-
-	entity->collider = colliderManager->ActivateCollider(ColliderType::Box); //??
-}
-
 void EntityFactory::CreateThinObj(const EntityCreationAttribs& attribs){
 	Entity* const& entity = ActivateEntity(true);
 

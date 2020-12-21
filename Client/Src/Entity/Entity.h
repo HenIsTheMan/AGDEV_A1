@@ -28,11 +28,10 @@ public:
 	///Setter
 	void SetFacingDir(const glm::vec3& facingDir);
 private:
-	enum class EntityType{
-		Bullet = 0,
+	enum struct EntityType: int{
+		Bullet,
 		Coin,
 		Fire,
-		Enemy,
 		Player,
 		ThinObj,
 		Tree,
