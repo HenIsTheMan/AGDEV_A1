@@ -22,13 +22,11 @@ bool Collision::DetectCollision(const Entity* const actor, const Entity* const a
 	const glm::vec3 spherePos = actee->pos;
 	float sphereRadius;
 
-	if(actor->collider->GetType() == ColliderType::Box){
-		sphereRadius = static_cast<BoxCollider*>(actor->collider)->CalcDiagLen() * 0.5f; //??
+	if(actee->collider->GetType() == ColliderType::Box){
+		sphereRadius = static_cast<BoxCollider*>(actee->collider)->CalcDiagLen(); //??
 	} else{
-		sphereRadius = static_cast<SphereCollider*>(actor->collider)->GetRadius();
+		sphereRadius = static_cast<SphereCollider*>(actee->collider)->GetRadius();
 	}
-
-	sphereRadius *= actee->scale.x;
 
 	glm::vec3 intersectionPt0;
 	glm::vec3 intersectionPt1;
@@ -36,9 +34,6 @@ bool Collision::DetectCollision(const Entity* const actor, const Entity* const a
 	glm::vec3 intersectionNormal1;
 
 	if(glm::intersectLineSphere(rayStart, rayEnd, spherePos, sphereRadius, intersectionPt0, intersectionNormal0, intersectionPt1, intersectionNormal1)){
-		(void)printf("Here\n");
-		return true;
-
 		if(!(glm::length(intersectionPt0 - rayEnd) <= glm::length(rayStart - rayEnd))){
 			return false;
 		}
@@ -46,12 +41,12 @@ bool Collision::DetectCollision(const Entity* const actor, const Entity* const a
 		glm::vec3 minAABB;
 		glm::vec3 maxAABB;
 
-		if(actor->collider->GetType() == ColliderType::Box){
-			const float colliderScaleFactor = static_cast<BoxCollider*>(actor->collider)->GetScale().x;
-			minAABB = actee->pos + colliderScaleFactor * glm::vec3(-1.0f); //??
-			maxAABB = actee->pos + colliderScaleFactor * glm::vec3(1.0f); //??
+		if(actee->collider->GetType() == ColliderType::Box){
+			const glm::vec3& colliderScale = static_cast<BoxCollider*>(actee->collider)->GetScale();
+			minAABB = actee->pos - colliderScale * 0.5f; //??
+			maxAABB = actee->pos + colliderScale * 0.5f; //??
 		} else{ //??
-			const float colliderRadius = static_cast<SphereCollider*>(actor->collider)->GetRadius();
+			const float colliderRadius = static_cast<SphereCollider*>(actee->collider)->GetRadius();
 			minAABB = actee->pos + colliderRadius * glm::vec3(-1.0f); //??
 			maxAABB = actee->pos + colliderRadius * glm::vec3(1.0f); //??
 		}
@@ -64,6 +59,7 @@ bool Collision::DetectCollision(const Entity* const actor, const Entity* const a
 }
 
 bool Collision::DetectRayBoxIntersection(const glm::vec3& rayStart, const glm::vec3& rayEnd, const glm::vec3& minAABB, const glm::vec3& maxAABB, glm::vec3& collisionPt){
+	std::cout << "Here\n";
 	return (CalcIntersection(rayStart.x - minAABB.x, rayEnd.x - minAABB.x, rayStart, rayEnd, collisionPt)
 		&& WithinBox(Axis::x, minAABB, maxAABB, collisionPt))
 		|| (CalcIntersection(rayStart.y - minAABB.y, rayEnd.y - minAABB.y, rayStart, rayEnd, collisionPt)

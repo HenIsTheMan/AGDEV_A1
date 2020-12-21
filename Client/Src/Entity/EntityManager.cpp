@@ -146,6 +146,8 @@ void EntityManager::Update(){
 			if(entity0->type != entity1->type){
 				if(entity0->type == Entity::EntityType::Bullet){
 					if(Collision::DetectCollision(entity0, entity1)){
+						std::cout << "Collided0\n";
+
 						std::vector<Entity*>::iterator iter = std::find(entitiesToRemove.begin(), entitiesToRemove.end(), entity0);
 						if(iter == entitiesToRemove.end()){
 							Entity* const entityCopy = entity0;
@@ -156,6 +158,8 @@ void EntityManager::Update(){
 					}
 				} else if(entity1->type == Entity::EntityType::Bullet){
 					if(Collision::DetectCollision(entity1, entity0)){
+						std::cout << "Collided1\n";
+
 						std::vector<Entity*>::iterator iter = std::find(entitiesToRemove.begin(), entitiesToRemove.end(), entity1);
 						if(iter == entitiesToRemove.end()){
 							Entity* const entityCopy = entity1;
