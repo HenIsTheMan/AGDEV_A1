@@ -205,25 +205,29 @@ void Scene::CreateEntities(){
 	//*/
 
 	//* Create enemy
-	//const float xyScaleEnemyBody = 500.0f;
-	//const Entity* const enemyBody = entityFactory->CreateThinObj({
-	//	glm::vec3(
-	//		0.0f,
-	//		terrainYScale * myTerrain->GetHeightAtPt(0.0f, 0.4f, false) + xyScaleEnemyBody,
-	//		terrainZScale * 0.4f
-	//	),
-	//	glm::vec3(xyScaleEnemyBody, xyScaleEnemyBody, 0.001f),
-	//	glm::vec4(0.8f, 0.0f, 0.0f, 0.6f),
-	//	-1,
-	//});
+	const float xyScaleEnemyBody = 500.0f;
+	const Entity* const enemyBody = entityFactory->CreateThinObj({
+		glm::vec3(
+			0.0f,
+			terrainYScale * myTerrain->GetHeightAtPt(0.0f, 0.4f, false) + xyScaleEnemyBody,
+			terrainZScale * 0.4f
+		),
+		glm::vec3(xyScaleEnemyBody, xyScaleEnemyBody, 0.001f),
+		glm::vec4(0.8f, 0.0f, 0.0f, 0.6f),
+		-1,
+	});
 
-	//const float xyScaleEnemyPart = 44.0f;
-	//const Entity* const enemyPart = entityFactory->CreateThinObj({
-	//	glm::vec3(),
-	//	glm::vec3(xyScaleEnemyPart, xyScaleEnemyPart, 0.001f),
-	//	glm::vec4(1.0f, 0.0f, 0.0f, 0.4f),
-	//	-1,
-	//});
+	const float xyScaleEnemyPart = 44.0f;
+	const Entity* const enemyPart = entityFactory->CreateThinObj({
+		glm::vec3(
+			50.0f,
+			terrainYScale * myTerrain->GetHeightAtPt(50.0f / terrainXScale, 0.4f, false) + xyScaleEnemyPart,
+			terrainZScale * 0.4f
+		),
+		glm::vec3(xyScaleEnemyPart, xyScaleEnemyPart, 0.001f),
+		glm::vec4(1.0f, 0.0f, 0.0f, 0.4f),
+		-1,
+	});
 
 	//Node* const rootNode = nodeManager->RetrieveRootNode();
 	//Node* const enemyPartNode = rootNode->DetachChild(enemyPart);

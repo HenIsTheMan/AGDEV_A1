@@ -2,6 +2,8 @@
 
 #include <glm/gtx/norm.hpp>
 
+extern float terrainXScale;
+
 Region::Region():
 	visible(false),
 	parent(nullptr),
@@ -239,7 +241,7 @@ void Region::Partition(const bool movable){
 	if(movableNodes.size() + stationaryNodes.size() <= (size_t)1){ //Optimization
 		return;
 	}
-	if(size.x <= 1.0f){
+	if(size.x <= terrainXScale * 0.0625f){
 		return;
 	}
 
