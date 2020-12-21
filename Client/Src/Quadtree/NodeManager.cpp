@@ -18,7 +18,9 @@ void NodeManager::Update(){
 }
 
 Node* NodeManager::ActivateNode(){
-	return nodePool->ActivateObj();
+	Node* const node = nodePool->ActivateObj();
+	node->Reset();
+	return node;
 }
 
 void NodeManager::DeactivateNode(Node* const node){

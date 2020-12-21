@@ -12,6 +12,8 @@ public:
 
 	void Update();
 
+	void Reset();
+
 	void AddChild(Node* const child);
 	Node* DetachChild(const Node* const child);
 	Node* DetachChild(const Entity* const entity);

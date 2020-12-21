@@ -38,6 +38,10 @@ void Node::Update(){
 	//}
 }
 
+void Node::Reset(){
+	//??
+}
+
 void Node::AddChild(Node* const child){
 	if(child == nullptr){
 		return (void)printf("Var 'child' is a nullptr");
