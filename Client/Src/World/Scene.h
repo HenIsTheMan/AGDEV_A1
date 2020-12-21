@@ -17,8 +17,6 @@
 
 #include "../Shared/RotateVecIn2D.hpp"
 
-#include "../Quadtree/RegionManager.h"
-
 #define BIT(x) 1 << x
 
 class Scene final{
@@ -107,6 +105,7 @@ private:
 
 	EntityManager* entityManager;
 
+	NodeManager* nodeManager;
 	RegionManager* regionManager;
 
 	bool isCamDetached;

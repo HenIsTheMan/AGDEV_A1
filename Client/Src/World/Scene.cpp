@@ -106,6 +106,7 @@ Scene::Scene():
 	dLightFromTop(nullptr),
 	dLightFromBottom(nullptr),
 	entityManager(EntityManager::GetObjPtr()),
+	nodeManager(NodeManager::GetObjPtr()),
 	regionManager(RegionManager::GetObjPtr()),
 	myPlayer(nullptr)
 {
@@ -215,6 +216,22 @@ void Scene::CreateEntities(){
 		glm::vec4(0.8f, 0.0f, 0.0f, 0.6f),
 		-1,
 	});
+
+	const float xyScaleEnemyPart = 44.0f;
+	const Entity* const enemyPart = entityFactory->CreateThinObj({
+		glm::vec3(),
+		glm::vec3(xyScaleEnemyPart, xyScaleEnemyPart, 0.001f),
+		glm::vec4(1.0f, 0.0f, 0.0f, 0.4f),
+		-1,
+	});
+
+	Node* const rootNode = nodeManager->RetrieveRootNode();
+	Node* const enemyPartNode = rootNode->DetachChild(enemyPart);
+	assert(enemyPartNode != nullptr && "Var 'enemyPartNode' is nullptr");
+
+	Node* const enemyBodyNode = rootNode->FindChild(enemyBody);
+	assert(enemyBodyNode != nullptr && "Var 'enemyBodyNode' is nullptr");
+	enemyBodyNode->AddChild(enemyPartNode);
 	//*/
 
 	//* Create coins
