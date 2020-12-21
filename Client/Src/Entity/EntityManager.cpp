@@ -125,6 +125,10 @@ void EntityManager::Update(){
 					movableEntity->vel += movableEntity->force / movableEntity->mass * dt;
 					movableEntity->pos += movableEntity->vel * dt;
 
+					if(movableEntity->collider != nullptr){
+						static_cast<SphereCollider*>(movableEntity->collider)->SetPos(movableEntity->pos);
+					}
+
 					break;
 				}
 			}

@@ -195,7 +195,7 @@ void Scene::CreateEntities(){
 		glm::vec3(0.0f,
 			terrainYScale * myTerrain->GetHeightAtPt(0.0f, terrainZScale * 0.25f / terrainZScale, false) + xyScale,
 			terrainZScale * 0.25f),
-		glm::vec3(xyScale, xyScale, 0.001f),
+		glm::vec3(xyScale, xyScale, 10.0f),
 		glm::vec4(1.0f),
 		-1,
 	});
