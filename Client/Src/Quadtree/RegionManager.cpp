@@ -27,7 +27,7 @@ void RegionManager::Init(const size_t& inactiveSize, const size_t& activeSize){
 	rootRegion->size = glm::vec2(terrainXScale, terrainZScale);
 }
 
-void RegionManager::Update(){
+void RegionManager::Update(std::vector<Entity*>& entitiesToRemove){
 	elapsedTime += dt;
 
 	static float BT = 0.0f;
@@ -37,7 +37,7 @@ void RegionManager::Update(){
 	}
 
 	rootRegion->ClearMovableAndDeactivateChildren();
-	rootRegion->CheckOutOfBounds(true);
+	rootRegion->CheckOutOfBounds(true, entitiesToRemove);
 	rootRegion->Partition(true);
 
 	rootRegion->VisibilityCheck(frustumCulling);
@@ -65,8 +65,8 @@ Region* RegionManager::RetrieveRootRegion(){
 	return rootRegion;
 }
 
-void RegionManager::SetUpRegionsForStationary(){
-	rootRegion->CheckOutOfBounds(false);
+void RegionManager::SetUpRegionsForStationary(std::vector<Entity*>& entitiesToRemove){
+	rootRegion->CheckOutOfBounds(false, entitiesToRemove);
 	rootRegion->Partition(false);
 }
 

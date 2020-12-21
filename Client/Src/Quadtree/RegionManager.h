@@ -10,7 +10,7 @@ public:
 	~RegionManager();
 
 	void Init(const size_t& inactiveSize, const size_t& activeSize);
-	void Update();
+	void Update(std::vector<Entity*>& entitiesToRemove);
 	void Render(ShaderProg& SP);
 
 	void UpdateFrustumCulling(const glm::mat4& view, const glm::mat4& projection, const float yOffset);
@@ -20,7 +20,7 @@ public:
 
 	Region* RetrieveRootRegion();
 
-	void SetUpRegionsForStationary();
+	void SetUpRegionsForStationary(std::vector<Entity*>& entitiesToRemove);
 
 	///Getter
 	const FrustumCulling* GetFrustumCulling() const;

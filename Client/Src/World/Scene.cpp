@@ -163,7 +163,7 @@ Scene::~Scene(){
 void Scene::InitEntities(){
 	entityManager->Init();
 	CreateEntities();
-	regionManager->SetUpRegionsForStationary();
+	entityManager->SetUpRegionsForStationary();
 
 	CreateTreesAndCubes();
 	CreateDecorations();

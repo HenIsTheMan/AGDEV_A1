@@ -205,11 +205,11 @@ void Region::ClearMovableAndDeactivateChildren(){
 	}
 }
 
-void Region::CheckOutOfBounds(const bool movable){
+void Region::CheckOutOfBounds(const bool movable, std::vector<Entity*>& entitiesToRemove){
 	const std::vector<Node*>& nodes = movable ? movableNodes : stationaryNodes; //Optimization
 
-	for(const Node* const node: nodes){
-		const Entity* const nodeEntity = node->GetEntity();
+	for(Node* const node: nodes){
+		Entity* const nodeEntity = node->RetrieveEntity();
 		const glm::vec2 halfSize = glm::vec2(size[0] * 0.5f, size[1] * 0.5f);
 
 		if(!(nodeEntity->pos.x - nodeEntity->scale.x >= origin[0] - halfSize[0]
@@ -217,7 +217,7 @@ void Region::CheckOutOfBounds(const bool movable){
 			&& nodeEntity->pos.z - nodeEntity->scale.z >= origin[1] - halfSize[1]
 			&& nodeEntity->pos.z + nodeEntity->scale.z <= origin[1] + halfSize[1]
 		)){ //If entity is not within region...
-			entityManager->DeactivateEntity(nodeEntity);
+			entitiesToRemove.emplace_back(nodeEntity);
 		}
 	}
 }

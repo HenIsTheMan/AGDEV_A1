@@ -57,7 +57,11 @@ void EntityManager::Update(){
 		isPressedC = false;
 	}
 
-	regionManager->Update();
+	std::vector<Entity*> entitiesToRemove;
+	regionManager->Update(entitiesToRemove);
+	for(Entity* const entity: entitiesToRemove){
+		DeactivateEntity(entity);
+	}
 
 	std::vector<Entity*> movableEntities;
 	std::vector<Entity*> stationaryEntities;
@@ -254,6 +258,14 @@ void EntityManager::Render(ShaderProg& SP, const Cam& cam){
 
 EntityFactory* EntityManager::RetrieveEntityFactory(){
 	return entityFactory;
+}
+
+void EntityManager::SetUpRegionsForStationary(){
+	std::vector<Entity*> entitiesToRemove;
+	regionManager->SetUpRegionsForStationary(entitiesToRemove);
+	for(Entity* const entity: entitiesToRemove){
+		DeactivateEntity(entity);
+	}
 }
 
 void EntityManager::DeactivateEntity(Entity* const& entity){

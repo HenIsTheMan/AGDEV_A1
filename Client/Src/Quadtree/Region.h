@@ -31,7 +31,7 @@ public:
 	void RemoveNode(Node* const node, const bool movable);
 
 	void ClearMovableAndDeactivateChildren();
-	void CheckOutOfBounds(const bool movable);
+	void CheckOutOfBounds(const bool movable, std::vector<Entity*>& entitiesToRemove);
 	void Partition(const bool movable);
 	void VisibilityCheck(const FrustumCulling* const frustumCulling);
 	void MakeSelfAndChildrenInvisible();

@@ -19,6 +19,8 @@ public:
 
 	EntityFactory* RetrieveEntityFactory();
 
+	void SetUpRegionsForStationary();
+
 	bool isCamDetached;
 private:
 	EntityManager();
