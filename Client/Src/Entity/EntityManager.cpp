@@ -118,8 +118,8 @@ void EntityManager::Update(){
 						static_cast<BoxCollider*>(movableEntity->collider)->SetPos(movableEntity->pos);
 					}
 
-					Node* const node = nodeManager->RetrieveRootNode()->FindChild(movableEntity);
-					node->SetLocalTranslate(movableEntity->pos);
+					//Node* const node = nodeManager->RetrieveRootNode()->FindChild(movableEntity);
+					//node->SetLocalTranslate(movableEntity->pos);
 
 					break;
 				}
@@ -143,8 +143,8 @@ void EntityManager::Update(){
 						static_cast<SphereCollider*>(movableEntity->collider)->SetPos(movableEntity->pos);
 					}
 
-					Node* const node = nodeManager->RetrieveRootNode()->FindChild(movableEntity);
-					node->SetLocalTranslate(movableEntity->pos);
+					//Node* const node = nodeManager->RetrieveRootNode()->FindChild(movableEntity);
+					//node->SetLocalTranslate(movableEntity->pos);
 
 					break;
 				}

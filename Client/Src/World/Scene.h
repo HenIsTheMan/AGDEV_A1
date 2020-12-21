@@ -108,6 +108,9 @@ private:
 	NodeManager* nodeManager;
 	RegionManager* regionManager;
 
+	bool shldUpdateEntityManager;
+	bool shldRenderEntityManager;
+
 	bool isCamDetached;
 	bool shldRenderViewingFrustum;
 	float elapsedTime;

@@ -5,6 +5,10 @@
 #include <glm/gtx/norm.hpp>
 #include <glm/gtc/epsilon.hpp>
 
+#ifndef DEBUGGING
+	#define DEBUGGING
+#endif
+
 float terrainXScale = 12000.f;
 float terrainYScale = 700.f;
 float terrainZScale = 12000.f;
@@ -97,6 +101,8 @@ Scene::Scene():
 	reticleColour(glm::vec4(1.f)),
 	view(glm::mat4(1.f)),
 	projection(glm::mat4(1.f)),
+	shldUpdateEntityManager(true),
+	shldRenderEntityManager(true),
 	isCamDetached(true),
 	shldRenderViewingFrustum(false),
 	elapsedTime(0.f),
@@ -229,15 +235,15 @@ void Scene::CreateEntities(){
 		-1,
 	});
 
-	Node* const rootNode = nodeManager->RetrieveRootNode();
-	Node* const enemyPartNode = rootNode->DetachChild(enemyPart);
-	assert(enemyPartNode != nullptr && "Var 'enemyPartNode' is nullptr");
+	//Node* const rootNode = nodeManager->RetrieveRootNode();
+	//Node* const enemyPartNode = rootNode->DetachChild(enemyPart);
+	//assert(enemyPartNode != nullptr && "Var 'enemyPartNode' is nullptr");
 
-	Node* const enemyBodyNode = rootNode->FindChild(enemyBody);
-	assert(enemyBodyNode != nullptr && "Var 'enemyBodyNode' is nullptr");
-	enemyBodyNode->AddChild(enemyPartNode);
-	
-	enemyPartNode->SetLocalTranslate(glm::vec3(2.0f, 2.0f, 0.0f));
+	//Node* const enemyBodyNode = rootNode->FindChild(enemyBody);
+	//assert(enemyBodyNode != nullptr && "Var 'enemyBodyNode' is nullptr");
+	//enemyBodyNode->AddChild(enemyPartNode);
+	//
+	//enemyPartNode->SetLocalTranslate(glm::vec3(2.0f, 2.0f, 0.0f));
 	//*/
 
 	//* Create coins
@@ -709,7 +715,20 @@ void Scene::GameUpdate(GLFWwindow* const& win){
 		prevCamAspectRatio = camAspectRatio;
 	}
 
-	entityManager->Update();
+	#if defined DEBUGGING
+	static bool isPressed5 = false;
+	if(!isPressed5 && Key(GLFW_KEY_5)){
+		shldUpdateEntityManager = !shldUpdateEntityManager;
+
+		isPressed5 = true;
+	} else if(isPressed5 && !Key(GLFW_KEY_5)){
+		isPressed5 = false;
+	}
+	#endif
+
+	if(shldUpdateEntityManager){
+		entityManager->Update();
+	}
 }
 
 void Scene::MainMenuRender(){
@@ -815,7 +834,20 @@ void Scene::GameRender(){
 	models[(int)ModelType::Grass]->InstancedRender(forwardSP);
 	models[(int)ModelType::Rock]->InstancedRender(forwardSP);
 
-	entityManager->Render(forwardSP, cam);
+	#if defined DEBUGGING
+	static bool isPressed6 = false;
+	if(!isPressed6 && Key(GLFW_KEY_6)){
+		shldRenderEntityManager = !shldRenderEntityManager;
+
+		isPressed6 = true;
+	} else if(isPressed6 && !Key(GLFW_KEY_6)){
+		isPressed6 = false;
+	}
+	#endif
+
+	if(shldRenderEntityManager){
+		entityManager->Render(forwardSP, cam);
+	}
 
 	if(shldRenderViewingFrustum){
 		viewingFrustumSP.Use();

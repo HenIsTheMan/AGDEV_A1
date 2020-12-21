@@ -19,23 +19,23 @@ Node::~Node(){
 }
 
 void Node::Update(){
-	//const glm::mat4 localTransformNoScale = glm::translate(glm::mat4(1.0f), localTranslate) * glm::rotate(glm::mat4(1.0f), glm::radians(localRotate.w), glm::vec3(localRotate)); //??
+	const glm::mat4 localTransformNoScale = glm::translate(glm::mat4(1.0f), localTranslate) * glm::rotate(glm::mat4(1.0f), glm::radians(localRotate.w), glm::vec3(localRotate));
 
-	//if(parent){
-	//	worldTransformNoScale = parent->worldTransformNoScale * localTransformNoScale;
-	//	worldTransform = parent->worldTransformNoScale * localTransformNoScale * glm::scale(glm::mat4(1.0f), localScale);
-	//} else{
-	//	worldTransformNoScale = localTransformNoScale;
-	//	worldTransform = localTransformNoScale * glm::scale(glm::mat4(1.0f), localScale);
-	//}
+	if(parent){
+		worldTransformNoScale = parent->worldTransformNoScale * localTransformNoScale;
+		worldTransform = parent->worldTransformNoScale * localTransformNoScale * glm::scale(glm::mat4(1.0f), localScale);
+	} else{
+		worldTransformNoScale = localTransformNoScale;
+		worldTransform = localTransformNoScale * glm::scale(glm::mat4(1.0f), localScale);
+	}
 
-	//if(entity){
-	//	entity->SetPos(glm::vec3(worldTransform[3]));
-	//}
+	if(entity){
+		entity->SetPos(glm::vec3(worldTransform[3]));
+	}
 
-	//for(Node* const child: children){
-	//	child->Update();
-	//}
+	for(Node* const child: children){
+		child->Update();
+	}
 }
 
 void Node::Reset(){
