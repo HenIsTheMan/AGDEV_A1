@@ -32,6 +32,10 @@ void Node::AddChild(Node* const child){
 }
 
 Node* Node::DetachChild(const Node* const child){
+	if(!children.size()){ //Optimization
+		return nullptr;
+	}
+
 	for(std::vector<Node*>::iterator iter = children.begin(); iter != children.end(); ++iter){
 		Node* const node = *iter;
 		if(node == child){
@@ -49,6 +53,10 @@ Node* Node::DetachChild(const Node* const child){
 }
 
 Node* Node::DetachChild(const Entity* const entity){
+	if(!children.size()){ //Optimization
+		return nullptr;
+	}
+
 	for(std::vector<Node*>::iterator iter = children.begin(); iter != children.end(); ++iter){
 		Node* const node = *iter;
 		if(node->GetEntity() == entity){
@@ -63,37 +71,6 @@ Node* Node::DetachChild(const Entity* const entity){
 		}
 	}
 	return nullptr;
-}
-
-bool Node::DestroyChild(const Node* const child){
-	if(!children.size()){
-		return false;
-	}
-
-	for(std::vector<Node*>::iterator iter = children.begin(); iter != children.end(); ++iter){
-		Node* node = *iter;
-		if(node && node == child){
-			delete node;
-			node = nullptr;
-			children.erase(iter);
-			return true;
-		} else if(node->DestroyChild(child)){
-			return true;
-		}
-	}
-
-	return false;
-}
-
-void Node::DestroyAllChildren(){
-	for(std::vector<Node*>::iterator iter = children.begin(); iter != children.end(); ++iter){
-		Node* node = *iter;
-		if(node){
-			node->DestroyAllChildren();
-			delete node;
-			node = nullptr;
-		}
-	}
 }
 
 Entity* Node::RetrieveEntity(){
