@@ -290,12 +290,7 @@ void Region::Partition(const bool movable){
 }
 
 void Region::VisibilityCheck(const FrustumCulling* const frustumCulling, const Entity* const myPlayer){
-	///Optimization
-	glm::vec3 displacementVec = glm::vec3(origin[0], 0.0f, origin[1]) - glm::vec3(myPlayer->pos.x, 0.0f, myPlayer->pos.z);
-	if(glm::dot(displacementVec, glm::vec3(myPlayer->facingDir.x, 0.0f, myPlayer->facingDir.z)) <= 0.f){
-		std::cout << "Here\n";
-		return MakeSelfAndChildrenInvisible();
-	}
+	//
 
 	if(!frustumCulling->ShldBeVisible(
 		glm::vec3(origin[0] - size[0] * 0.5f, frustumCulling->yMin, origin[1] - size[1] * 0.5f),
