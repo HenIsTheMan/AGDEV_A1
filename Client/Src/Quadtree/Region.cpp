@@ -43,11 +43,17 @@ void Region::GetEntitiesToUpdate(std::vector<Entity*>& movableEntities, std::vec
 		bottomRight->GetEntitiesToUpdate(movableEntities, stationaryEntities);
 	} else{
 		for(int i = 0; i < stationaryNodes.size(); ++i){
-			stationaryEntities.emplace_back(stationaryNodes[i]->RetrieveEntity());
+			Entity* const entity = stationaryNodes[i]->RetrieveEntity();
+			if(std::find(stationaryEntities.begin(), stationaryEntities.end(), entity) == stationaryEntities.end()){
+				stationaryEntities.emplace_back(entity);
+			}
 		}
 
 		for(int i = 0; i < movableNodes.size(); ++i){
-			movableEntities.emplace_back(movableNodes[i]->RetrieveEntity());
+			Entity* const entity = movableNodes[i]->RetrieveEntity();
+			if(std::find(movableEntities.begin(), movableEntities.end(), entity) == movableEntities.end()){
+				movableEntities.emplace_back(entity);
+			}
 		}
 	}
 }
