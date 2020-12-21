@@ -28,15 +28,21 @@ bool Collision::DetectCollision(const Entity* const actor, const Entity* const a
 		sphereRadius = static_cast<SphereCollider*>(actor->collider)->GetRadius();
 	}
 
+	sphereRadius *= actee->scale.x;
+
 	glm::vec3 intersectionPt0;
 	glm::vec3 intersectionPt1;
 	glm::vec3 intersectionNormal0;
 	glm::vec3 intersectionNormal1;
 
-	if(glm::intersectLineSphere(rayStart, rayEnd, spherePos, sphereRadius,
-		intersectionPt0, intersectionNormal0, intersectionPt1, intersectionNormal1)
-		&& glm::length(intersectionPt0 - rayEnd) <= glm::length(rayStart - rayEnd)
-	){
+	if(glm::intersectLineSphere(rayStart, rayEnd, spherePos, sphereRadius, intersectionPt0, intersectionNormal0, intersectionPt1, intersectionNormal1)){
+		(void)printf("Here\n");
+		return true;
+
+		if(!(glm::length(intersectionPt0 - rayEnd) <= glm::length(rayStart - rayEnd))){
+			return false;
+		}
+
 		glm::vec3 minAABB;
 		glm::vec3 maxAABB;
 

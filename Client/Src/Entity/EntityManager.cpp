@@ -4,6 +4,8 @@
 
 #include "../Shared/Easing.hpp"
 
+#include "../Collision/Collision.h"
+
 extern float dt;
 
 EntityManager::~EntityManager(){
@@ -62,12 +64,13 @@ void EntityManager::Update(){
 	for(Entity* const entity: entitiesToRemove){
 		DeactivateEntity(entity);
 	}
+	entitiesToRemove.clear();
 
 	std::vector<Entity*> movableEntities;
 	std::vector<Entity*> stationaryEntities;
 	regionManager->RetrieveRootRegion()->GetEntitiesToUpdate(movableEntities, stationaryEntities);
 
-	for(Entity* const movableEntity: movableEntities){
+	for(Entity*& movableEntity: movableEntities){
 		if(movableEntity){
 			movableEntity->prevPos = movableEntity->pos;
 
@@ -110,11 +113,15 @@ void EntityManager::Update(){
 					movableEntity->life -= dt;
 
 					if(movableEntity->life <= 0.0f){
-						DeactivateEntity(movableEntity);
+						std::vector<Entity*>::iterator iter = std::find(entitiesToRemove.begin(), entitiesToRemove.end(), movableEntity);
+						if(iter == entitiesToRemove.end()){
+							Entity* const entityCopy = movableEntity;
+							entitiesToRemove.emplace_back(entityCopy);
+							movableEntity = nullptr;
+						}
 						continue;
 					}
 
-					const glm::vec3 prevPos = movableEntity->pos;
 					movableEntity->vel += movableEntity->force / movableEntity->mass * dt;
 					movableEntity->pos += movableEntity->vel * dt;
 
@@ -122,6 +129,48 @@ void EntityManager::Update(){
 				}
 			}
 		}
+	}
+
+	for(size_t i = 0; i < movableEntities.size(); ++i){
+		Entity*& entity0 = movableEntities[i];
+		if(entity0 == nullptr){
+			continue;
+		}
+
+		for(size_t j = i + 1; j < movableEntities.size(); ++j){
+			Entity*& entity1 = movableEntities[j];
+			if(entity1 == nullptr){
+				continue;
+			}
+
+			if(entity0->type != entity1->type){
+				if(entity0->type == Entity::EntityType::Bullet){
+					if(Collision::DetectCollision(entity0, entity1)){
+						std::vector<Entity*>::iterator iter = std::find(entitiesToRemove.begin(), entitiesToRemove.end(), entity0);
+						if(iter == entitiesToRemove.end()){
+							Entity* const entityCopy = entity0;
+							entitiesToRemove.emplace_back(entityCopy);
+							entity0 = nullptr;
+							break;
+						}
+					}
+				} else if(entity1->type == Entity::EntityType::Bullet){
+					if(Collision::DetectCollision(entity1, entity0)){
+						std::vector<Entity*>::iterator iter = std::find(entitiesToRemove.begin(), entitiesToRemove.end(), entity1);
+						if(iter == entitiesToRemove.end()){
+							Entity* const entityCopy = entity1;
+							entitiesToRemove.emplace_back(entityCopy);
+							entity1 = nullptr;
+						}
+					}
+				}
+			}
+		}
+
+		for(Entity* const entity: entitiesToRemove){
+			DeactivateEntity(entity);
+		}
+		entitiesToRemove.clear();
 	}
 }
 
@@ -275,11 +324,11 @@ void EntityManager::SetUpRegionsForStationary(){
 }
 
 void EntityManager::DeactivateEntity(Entity* const& entity){
-	DeactivateEntityProcedure(entity);
-
 	if(entity->collider != nullptr){
 		colliderManager->DeactivateCollider(entity->collider);
 	}
+
+	DeactivateEntityProcedure(entity);
 
 	entityPool->DeactivateObj(entity);
 }
