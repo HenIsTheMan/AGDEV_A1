@@ -229,15 +229,15 @@ void Scene::CreateEntities(){
 		-1,
 	});
 
-	//Node* const rootNode = nodeManager->RetrieveRootNode();
-	//Node* const enemyPartNode = rootNode->DetachChild(enemyPart);
-	//assert(enemyPartNode != nullptr && "Var 'enemyPartNode' is nullptr");
+	Node* const rootNode = nodeManager->RetrieveRootNode();
+	Node* const enemyPartNode = rootNode->DetachChild(enemyPart);
+	assert(enemyPartNode != nullptr && "Var 'enemyPartNode' is nullptr");
 
-	//Node* const enemyBodyNode = rootNode->FindChild(enemyBody);
-	//assert(enemyBodyNode != nullptr && "Var 'enemyBodyNode' is nullptr");
-	//enemyBodyNode->AddChild(enemyPartNode);
-	//
-	//enemyPartNode->SetLocalTranslate(glm::vec3(2.0f, 2.0f, 0.0f));
+	Node* const enemyBodyNode = rootNode->FindChild(enemyBody);
+	assert(enemyBodyNode != nullptr && "Var 'enemyBodyNode' is nullptr");
+	enemyBodyNode->AddChild(enemyPartNode);
+	
+	enemyPartNode->SetLocalTranslate(glm::vec3(2.0f, 2.0f, 0.0f));
 	//*/
 
 	//* Create coins
