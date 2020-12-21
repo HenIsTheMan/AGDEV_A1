@@ -77,7 +77,7 @@ void EntityManager::Update(){
 			movableEntity->prevPos = movableEntity->pos;
 
 			switch(movableEntity->type){
-				case Entity::EntityType::Player:
+				case Entity::EntityType::Player: {
 					UpdatePlayerHoriz(movableEntity, isCamDetached);
 					UpdatePlayerVert(movableEntity);
 
@@ -102,7 +102,11 @@ void EntityManager::Update(){
 						static_cast<BoxCollider*>(movableEntity->collider)->SetPos(movableEntity->pos);
 					}
 
+					Node* const node = nodeManager->RetrieveRootNode()->FindChild(movableEntity);
+					node->SetLocalTranslate(movableEntity->pos);
+
 					break;
+				}
 				case Entity::EntityType::ThinObj: {
 					const float startX = 500.0f;
 					const float endX = -500.0f;
@@ -113,6 +117,9 @@ void EntityManager::Update(){
 					if(movableEntity->collider != nullptr){
 						static_cast<BoxCollider*>(movableEntity->collider)->SetPos(movableEntity->pos);
 					}
+
+					Node* const node = nodeManager->RetrieveRootNode()->FindChild(movableEntity);
+					node->SetLocalTranslate(movableEntity->pos);
 
 					break;
 				}
@@ -135,6 +142,9 @@ void EntityManager::Update(){
 					if(movableEntity->collider != nullptr){
 						static_cast<SphereCollider*>(movableEntity->collider)->SetPos(movableEntity->pos);
 					}
+
+					Node* const node = nodeManager->RetrieveRootNode()->FindChild(movableEntity);
+					node->SetLocalTranslate(movableEntity->pos);
 
 					break;
 				}

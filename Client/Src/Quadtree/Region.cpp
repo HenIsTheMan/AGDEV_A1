@@ -312,6 +312,12 @@ void Region::VisibilityCheck(const FrustumCulling* const frustumCulling){
 	}
 
 	visible = true;
+	for(Node* const node: stationaryNodes){
+		node->SetVisible(visible);
+	}
+	for(Node* const node: movableNodes){
+		node->SetVisible(visible);
+	}
 
 	if(topLeft != nullptr){
 		topLeft->VisibilityCheck(frustumCulling);
@@ -329,6 +335,12 @@ void Region::VisibilityCheck(const FrustumCulling* const frustumCulling){
 
 void Region::MakeSelfAndChildrenInvisible(){
 	visible = false;
+	for(Node* const node: stationaryNodes){
+		node->SetVisible(visible);
+	}
+	for(Node* const node: movableNodes){
+		node->SetVisible(visible);
+	}
 
 	if(topLeft != nullptr){
 		topLeft->MakeSelfAndChildrenInvisible();
