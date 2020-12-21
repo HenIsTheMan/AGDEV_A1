@@ -103,14 +103,19 @@ void EntityManager::Update(){
 					}
 
 					break;
-				case Entity::EntityType::ThinObj:
-					movableEntity->pos.x += sinf(elapsedTime * 2.0f) * 2.0f;
+				case Entity::EntityType::ThinObj: {
+					const float startX = 500.0f;
+					const float endX = -500.0f;
+					float t = EaseInOutCubic(sin(elapsedTime) * 0.5f + 0.5f);
+					t *= t;
+					movableEntity->pos.x = (1 - t) * startX + t * endX;
 
 					if(movableEntity->collider != nullptr){
 						static_cast<BoxCollider*>(movableEntity->collider)->SetPos(movableEntity->pos);
 					}
 
 					break;
+				}
 				case Entity::EntityType::Bullet: {
 					movableEntity->life -= dt;
 
