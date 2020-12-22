@@ -59,8 +59,6 @@ void EntityManager::Update(){
 		isPressedC = false;
 	}
 
-	nodeManager->Update();
-
 	std::vector<Entity*> entitiesToRemove;
 	regionManager->Update(entitiesToRemove);
 	for(Entity* const entity: entitiesToRemove){
@@ -164,7 +162,11 @@ void EntityManager::Update(){
 			if(entity0->type != entity1->type){
 				if(entity0->type == Entity::EntityType::Bullet){
 					if(Collision::DetectCollision(entity0, entity1)){
-						entity1->colour = glm::vec4(PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), 1.0f);
+						switch(entity1->type){
+							case Entity::EntityType::ThinObj:
+								entity1->colour = glm::vec4(PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), 1.0f);
+								break;
+						}
 
 						if(std::find(entitiesToRemove.begin(), entitiesToRemove.end(), entity0) == entitiesToRemove.end()){
 							entitiesToRemove.emplace_back(entity0);
@@ -174,7 +176,11 @@ void EntityManager::Update(){
 					}
 				} else if(entity1->type == Entity::EntityType::Bullet){
 					if(Collision::DetectCollision(entity1, entity0)){
-						entity0->colour = glm::vec4(PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), 1.0f);
+						switch(entity0->type){
+							case Entity::EntityType::ThinObj:
+								entity0->colour = glm::vec4(PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), 1.0f);
+								break;
+						}
 
 						if(std::find(entitiesToRemove.begin(), entitiesToRemove.end(), entity1) == entitiesToRemove.end()){
 							entitiesToRemove.emplace_back(entity1);
@@ -191,6 +197,8 @@ void EntityManager::Update(){
 		DeactivateEntity(entity);
 	}
 	entitiesToRemove.clear();
+
+	nodeManager->Update();
 }
 
 void EntityManager::Render(ShaderProg& SP, const Cam& cam){

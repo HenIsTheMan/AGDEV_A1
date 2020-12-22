@@ -242,7 +242,7 @@ void Scene::CreateEntities(){
 	Node* const enemyBodyNode = rootNode->FindChild(enemyBody);
 	assert(enemyBodyNode != nullptr && "Var 'enemyBodyNode' is nullptr");
 
-	enemyPartNode->SetLocalTranslation(glm::vec3(0.0f, 20.0f, 0.0f));
+	enemyPartNode->SetLocalTranslation(glm::vec3(0.0f, 700.0f, 0.0f));
 	enemyPartNode->SetLocalDilation(glm::vec3(0.5f));
 	enemyBodyNode->AddChild(enemyPartNode);
 	//*/
