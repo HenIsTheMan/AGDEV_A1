@@ -94,10 +94,6 @@ void EntityManager::Update(const Cam& cam){
 					movableEntity->pos.y = std::min(movableEntity->yMax, std::max(movableEntity->yMin, movableEntity->pos.y));
 					movableEntity->pos.z = std::min(movableEntity->zMax, std::max(movableEntity->zMin, movableEntity->pos.z));
 
-					if(movableEntity->collider != nullptr){
-						static_cast<BoxCollider*>(movableEntity->collider)->SetPos(movableEntity->pos);
-					}
-
 					movableNode->SetLocalTranslation(movableEntity->pos);
 
 					break;
@@ -108,10 +104,6 @@ void EntityManager::Update(const Cam& cam){
 					float t = EaseInOutCubic(sin(elapsedTime) * 0.5f + 0.5f);
 					t *= t;
 					movableEntity->pos.x = (1 - t) * startX + t * endX;
-
-					if(movableEntity->collider != nullptr){
-						static_cast<BoxCollider*>(movableEntity->collider)->SetPos(movableEntity->pos);
-					}
 
 					movableNode->SetLocalTranslation(movableEntity->pos);
 
@@ -130,10 +122,6 @@ void EntityManager::Update(const Cam& cam){
 
 					movableEntity->vel += movableEntity->force / movableEntity->mass * dt;
 					movableEntity->pos += movableEntity->vel * dt;
-
-					if(movableEntity->collider != nullptr){
-						static_cast<SphereCollider*>(movableEntity->collider)->SetPos(movableEntity->pos);
-					}
 
 					movableNode->SetLocalTranslation(movableEntity->pos);
 

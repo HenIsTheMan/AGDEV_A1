@@ -18,12 +18,12 @@ void Entity::Reset(){
 	facingDir = glm::vec3();
 	moveSpd = 0.0f;
 
-	xMin = 0.0f;
-	xMax = 0.0f;
-	yMin = 0.0f;
-	yMax = 0.0f;
-	zMin = 0.0f;
-	zMax = 0.0f;
+	xMin = -FLT_MAX;
+	xMax = FLT_MAX;
+	yMin = -FLT_MAX;
+	yMax = FLT_MAX;
+	zMin = -FLT_MAX;
+	zMax = FLT_MAX;
 
 	prevPos = glm::vec3();
 }
