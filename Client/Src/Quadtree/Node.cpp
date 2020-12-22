@@ -51,27 +51,6 @@ void Node::AddChild(Node* const child){
 	children.emplace_back(child);
 }
 
-Node* Node::DetachChild(const Node* const child){
-	if(!children.size()){ //Optimization
-		return nullptr;
-	}
-
-	for(std::vector<Node*>::iterator iter = children.begin(); iter != children.end(); ++iter){
-		Node* const node = *iter;
-		if(node == child){
-			node->parent = nullptr;
-			children.erase(iter);
-			return node;
-		}
-
-		Node* const childNode = node->DetachChild(child);
-		if(childNode != nullptr){
-			return childNode;
-		}
-	}
-	return nullptr;
-}
-
 Node* Node::DetachChild(const Entity* const entity){
 	if(!children.size()){ //Optimization
 		return nullptr;
@@ -133,22 +112,6 @@ bool Node::GetVisible() const{
 
 const Entity* Node::GetEntity() const{
 	return entity;
-}
-
-const Node* Node::GetParent() const{
-	return parent;
-}
-
-const glm::mat4& Node::GetLocalTranslation() const{
-	return localTranslation;
-}
-
-const glm::mat4& Node::GetLocalRotation() const{
-	return localRotation;
-}
-
-const glm::mat4& Node::GetLocalScaling() const{
-	return localScaling;
 }
 
 void Node::SetVisible(const bool visible){

@@ -14,7 +14,6 @@ public:
 	void Reset();
 
 	void AddChild(Node* const child);
-	Node* DetachChild(const Node* const child);
 	Node* DetachChild(const Entity* const entity);
 	Node* FindChild(const Entity* const entity);
 	Entity* RetrieveEntity();
@@ -26,21 +25,16 @@ public:
 	///Getters
 	bool GetVisible() const;
 	const Entity* GetEntity() const;
-	const Node* GetParent() const;
-
-	const glm::mat4& GetLocalTranslation() const;
-	const glm::mat4& GetLocalRotation() const;
-	const glm::mat4& GetLocalScaling() const;
 
 	///Setters
 	void SetVisible(const bool visible);
 	void SetEntity(Entity* const entity);
 private:
 	bool visible;
-
-	std::vector<Node*> children;
-	Node* parent;
 	Entity* entity;
+
+	Node* parent;
+	std::vector<Node*> children;
 
 	glm::mat4 localTranslation;
 	glm::mat4 localRotation;
