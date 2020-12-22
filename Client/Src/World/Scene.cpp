@@ -211,7 +211,7 @@ void Scene::CreateEntities(){
 	//*/
 
 	//* Create enemy
-	const float xyScaleEnemyBody = 500.0f;
+	const float xyScaleEnemyBody = 400.0f;
 	const Entity* const enemyBody = entityFactory->CreateEnemyBody({
 		glm::vec3(
 			0.0f,
@@ -223,7 +223,7 @@ void Scene::CreateEntities(){
 		-1,
 	});
 
-	const float xyScaleEnemyPart = 44.0f;
+	const float xyScaleEnemyPart = 40.0f;
 	const Entity* const enemyPart = entityFactory->CreateEnemyPart({
 		glm::vec3(
 			50.0f,
@@ -243,7 +243,7 @@ void Scene::CreateEntities(){
 	assert(enemyBodyNode != nullptr && "Var 'enemyBodyNode' is nullptr");
 	enemyBodyNode->AddChild(enemyPartNode);
 
-	enemyPartNode->SetLocalTranslation(glm::vec3(0.0f, 700.0f, 0.0f));
+	enemyPartNode->SetLocalTranslation(glm::vec3(0.0f, 800.0f, 0.0f));
 	enemyPartNode->SetLocalDilation(glm::vec3(0.5f));
 	//*/
 

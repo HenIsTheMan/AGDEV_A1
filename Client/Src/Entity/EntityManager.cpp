@@ -121,15 +121,19 @@ void EntityManager::Update(const Cam& cam){
 				}
 				case Entity::EntityType::EnemyBody: {
 					movableNode->LocalTranslate(glm::vec3(40.0f, 0.0f, 0.0f) * dt);
-					movableNode->LocalScale(glm::vec3(20.0f, 20.0f, 0.0f) * dt);
+					//movableNode->LocalScale(glm::vec3(20.0f, 20.0f, 0.0f) * dt);
 					break;
 				}
 				case Entity::EntityType::EnemyPart: {
-					const float startX = 2.0f;
-					const float endX = -2.0f;
+					movableNode->LocalTranslate(glm::vec3(0.0f, cos(elapsedTime) * 0.5f, 0.0f));
+
+					const float startScaleX = 0.1f;
+					const float endScaleX = 0.5f;
 					float t = EaseInOutCubic(sin(elapsedTime) * 0.5f + 0.5f);
-					t *= t;
-					movableNode->SetLocalTranslation(movableNode->GetLocalTranslation() + glm::vec3((1 - t) * startX + t * endX, 0.0f, 0.0f));
+					movableNode->SetLocalDilation(glm::vec3((1 - t) * startScaleX + t * endScaleX, (1 - t) * startScaleX + t * endScaleX, 0.0f));
+					//movableNode->localTranslation.x += ((1 - t) * startX + t * endX) * dt;
+					//movableNode->localTranslation.x += 40.0f * dt;
+					//movableNode->localTranslation.x += sin(elapsedTime) * 200.0f * dt;
 				}
 			}
 		}
