@@ -171,6 +171,46 @@ const Entity* EntityFactory::CreateThinObj(const EntityCreationAttribs& attribs)
 	return entity;
 }
 
+const Entity* EntityFactory::CreateEnemyBody(const EntityCreationAttribs& attribs){
+	Entity* const& entity = ActivateEntity(true);
+
+	entity->type = Entity::EntityType::EnemyBody;
+	entity->colour = attribs.colour;
+	entity->diffuseTexIndex = attribs.diffuseTexIndex;
+	entity->scale = attribs.scale;
+
+	entity->pos = attribs.pos;
+	entity->mass = 1.0f;
+
+	entity->collider = colliderManager->ActivateCollider(ColliderType::Box);
+	BoxCollider* const boxCollider = static_cast<BoxCollider*>(entity->collider);
+	boxCollider->SetPos(entity->pos);
+	boxCollider->SetScale(entity->scale);
+
+	ActivateEntityProcedure(entity);
+	return entity;
+}
+
+const Entity* EntityFactory::CreateEnemyPart(const EntityCreationAttribs& attribs){
+	Entity* const& entity = ActivateEntity(true);
+
+	entity->type = Entity::EntityType::EnemyPart;
+	entity->colour = attribs.colour;
+	entity->diffuseTexIndex = attribs.diffuseTexIndex;
+	entity->scale = attribs.scale;
+
+	entity->pos = attribs.pos;
+	entity->mass = 1.0f;
+
+	entity->collider = colliderManager->ActivateCollider(ColliderType::Box);
+	BoxCollider* const boxCollider = static_cast<BoxCollider*>(entity->collider);
+	boxCollider->SetPos(entity->pos);
+	boxCollider->SetScale(entity->scale);
+
+	ActivateEntityProcedure(entity);
+	return entity;
+}
+
 void EntityFactory::CreateTree(const EntityCreationAttribs& attribs){
 	Entity* const& entity = ActivateEntity(false);
 

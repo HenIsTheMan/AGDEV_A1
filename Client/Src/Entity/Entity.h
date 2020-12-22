@@ -38,6 +38,8 @@ private:
 		Fire,
 		Player,
 		ThinObj,
+		EnemyBody,
+		EnemyPart,
 		Tree,
 		Amt
 	};

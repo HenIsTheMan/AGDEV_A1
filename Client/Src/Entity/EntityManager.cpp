@@ -100,8 +100,6 @@ void EntityManager::Update(){
 						static_cast<BoxCollider*>(movableEntity->collider)->SetPos(movableEntity->pos);
 					}
 
-					movableNode->SetLocalTranslation(movableEntity->pos);
-
 					break;
 				}
 				case Entity::EntityType::ThinObj: {
@@ -114,8 +112,6 @@ void EntityManager::Update(){
 					if(movableEntity->collider != nullptr){
 						static_cast<BoxCollider*>(movableEntity->collider)->SetPos(movableEntity->pos);
 					}
-
-					movableNode->SetLocalTranslation(movableEntity->pos);
 
 					break;
 				}
@@ -137,11 +133,11 @@ void EntityManager::Update(){
 						static_cast<SphereCollider*>(movableEntity->collider)->SetPos(movableEntity->pos);
 					}
 
-					movableNode->SetLocalTranslation(movableEntity->pos);
-
 					break;
 				}
 			}
+
+			movableNode->SetLocalTranslation(movableEntity->pos);
 		}
 	}
 
@@ -225,6 +221,8 @@ void EntityManager::Render(ShaderProg& SP, const Cam& cam){
 				break;
 			case Entity::EntityType::Player:
 			case Entity::EntityType::ThinObj:
+			case Entity::EntityType::EnemyBody:
+			case Entity::EntityType::EnemyPart:
 				modelStack.PushModel({
 					modelStack.Translate(entity->pos),
 					modelStack.Scale(entity->scale),

@@ -35,6 +35,8 @@ public:
 	void CreateFire(const EntityCreationAttribs& attribs);
 
 	const Entity* CreateThinObj(const EntityCreationAttribs& attribs);
+	const Entity* CreateEnemyBody(const EntityCreationAttribs& attribs);
+	const Entity* CreateEnemyPart(const EntityCreationAttribs& attribs);
 
 	void CreateTree(const EntityCreationAttribs& attribs);
 private:

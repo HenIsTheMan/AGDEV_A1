@@ -212,7 +212,7 @@ void Scene::CreateEntities(){
 
 	//* Create enemy
 	const float xyScaleEnemyBody = 500.0f;
-	const Entity* const enemyBody = entityFactory->CreateThinObj({
+	const Entity* const enemyBody = entityFactory->CreateEnemyBody({
 		glm::vec3(
 			0.0f,
 			terrainYScale * myTerrain->GetHeightAtPt(0.0f, 0.4f, false) + xyScaleEnemyBody,
@@ -224,7 +224,7 @@ void Scene::CreateEntities(){
 	});
 
 	const float xyScaleEnemyPart = 44.0f;
-	const Entity* const enemyPart = entityFactory->CreateThinObj({
+	const Entity* const enemyPart = entityFactory->CreateEnemyPart({
 		glm::vec3(
 			50.0f,
 			terrainYScale * myTerrain->GetHeightAtPt(50.0f / terrainXScale, 0.4f, false) + xyScaleEnemyPart,

@@ -400,6 +400,8 @@ void Region::IGetEntitiesToRender(
 					case Entity::EntityType::Bullet:
 					case Entity::EntityType::Player:
 					case Entity::EntityType::ThinObj:
+					case Entity::EntityType::EnemyBody:
+					case Entity::EntityType::EnemyPart:
 						if(entitySetOpaque.find(entity) == entitySetOpaque.end()){
 							entitySetOpaque.insert(entity);
 							entitiesOpaque.insert(std::make_pair((int)glm::length2(entity->pos - camPos), entity));
