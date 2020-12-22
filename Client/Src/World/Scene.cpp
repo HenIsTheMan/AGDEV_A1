@@ -225,10 +225,9 @@ void Scene::CreateEntities(){
 		-1,
 	});
 
-	const float xyScaleEnemyPart = 44.0f;
 	const Entity* const enemyPart = entityFactory->CreateEnemyPart({
 		glm::vec3(),
-		glm::vec3(xyScaleEnemyPart, xyScaleEnemyPart, 0.001f),
+		glm::vec3(),
 		glm::vec4(1.0f, 0.5f, 0.0f, 0.4f),
 		-1,
 	});
@@ -243,6 +242,7 @@ void Scene::CreateEntities(){
 
 	enemyPartNode->SetLocalTranslation(glm::vec3(0.0f, 800.0f, 0.0f));
 	enemyPartNode->SetLocalDilation(glm::vec3(0.5f));
+
 	//*/
 
 	//* Create coins
