@@ -1,6 +1,8 @@
 #include "Scene.h"
 #include "Vendor/stb_image.h"
 
+#include "../Shared/Easing.hpp"
+
 #include <glm/gtx/color_space.hpp>
 #include <glm/gtx/norm.hpp>
 #include <glm/gtc/epsilon.hpp>
@@ -819,8 +821,13 @@ void Scene::GameRender(){
 		Meshes::meshes[(int)MeshType::Terrain]->Render(forwardSP);
 	modelStack.PopModel();
 
-	modelStack.PushModel({
+	static float yStart = 50.0f;
+	static float yEnd = -50.0f;
+	const float factor = EaseOutBounce((cos(elapsedTime) + 1.0f) * 0.5f);
 
+	modelStack.PushModel({
+		modelStack.Translate(glm::vec3(0.0f, glm::mix(yStart, yEnd, factor), 0.0f)),
+		modelStack.Rotate(glm::vec4(0.0f, 1.0f, 0.0f, 45.0f))
 	});
 		cubeMesh->SetModel(modelStack.GetTopModel());
 		cubeMesh->InstancedRender(forwardSP);

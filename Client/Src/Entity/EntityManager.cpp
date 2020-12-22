@@ -101,7 +101,7 @@ void EntityManager::Update(const Cam& cam){
 					const float endX = -500.0f;
 					float t = EaseInOutBounce(sin(elapsedTime) * 0.5f + 0.5f);
 					t *= t;
-					movableNode->SetLocalTranslation(glm::vec3((1 - t) * startX + t * endX, movableEntity->pos.y, movableEntity->pos.z));
+					movableNode->SetLocalTranslation(glm::vec3((1.0f - t) * startX + t * endX, movableEntity->pos.y, movableEntity->pos.z));
 
 					break;
 				}
@@ -134,10 +134,11 @@ void EntityManager::Update(const Cam& cam){
 				case Entity::EntityType::EnemyPart: {
 					movableNode->LocalTranslate(glm::vec3(0.0f, cos(elapsedTime) * 0.5f, 0.0f));
 
-					const float startScaleX = 0.1f;
-					const float endScaleX = 0.5f;
-					float t = EaseInOutCubic(sin(elapsedTime) * 0.5f + 0.5f);
-					movableNode->SetLocalDilation(glm::vec3((1 - t) * startScaleX + t * endScaleX, (1 - t) * startScaleX + t * endScaleX, 0.0f));
+					const float startScale = 0.1f;
+					const float endScale = 0.5f;
+					const float lerpFactor = EaseInOutCubic(sin(elapsedTime) * 0.5f + 0.5f);
+					const float component = (1.0f - lerpFactor) * startScale + lerpFactor * endScale;
+					movableNode->SetLocalDilation(glm::vec3(component, component, 0.0f));
 				}
 			}
 		}
