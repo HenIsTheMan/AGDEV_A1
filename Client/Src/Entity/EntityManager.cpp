@@ -100,6 +100,8 @@ void EntityManager::Update(){
 						static_cast<BoxCollider*>(movableEntity->collider)->SetPos(movableEntity->pos);
 					}
 
+					movableNode->SetLocalTranslation(movableEntity->pos);
+
 					break;
 				}
 				case Entity::EntityType::ThinObj: {
@@ -112,6 +114,8 @@ void EntityManager::Update(){
 					if(movableEntity->collider != nullptr){
 						static_cast<BoxCollider*>(movableEntity->collider)->SetPos(movableEntity->pos);
 					}
+
+					movableNode->SetLocalTranslation(movableEntity->pos);
 
 					break;
 				}
@@ -133,11 +137,11 @@ void EntityManager::Update(){
 						static_cast<SphereCollider*>(movableEntity->collider)->SetPos(movableEntity->pos);
 					}
 
+					movableNode->SetLocalTranslation(movableEntity->pos);
+
 					break;
 				}
 			}
-
-			movableNode->SetLocalTranslation(movableEntity->pos);
 		}
 	}
 
