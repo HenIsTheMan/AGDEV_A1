@@ -124,18 +124,13 @@ void EntityManager::Update(const Cam& cam){
 					movableNode->LocalScale(glm::vec3(20.0f, 20.0f, 0.0f) * dt);
 					break;
 				}
-				//case Entity::EntityType::EnemyPart: {
-				//	const float startX = 200.0f;
-				//	const float endX = -200.0f;
-				//	float t = EaseInOutCubic(sin(elapsedTime) * 0.5f + 0.5f);
-				//	t *= t;
-
-				//	movableNode->LocalTranslate(glm::vec3((1 - t) * startX + t * endX, 0.0f, 0.0f));
-
-				//	if(movableEntity->collider != nullptr){
-				//		static_cast<BoxCollider*>(movableEntity->collider)->SetPos(movableEntity->pos);
-				//	}
-				//}
+				case Entity::EntityType::EnemyPart: {
+					const float startX = 2.0f;
+					const float endX = -2.0f;
+					float t = EaseInOutCubic(sin(elapsedTime) * 0.5f + 0.5f);
+					t *= t;
+					movableNode->SetLocalTranslation(movableNode->GetLocalTranslation() + glm::vec3((1 - t) * startX + t * endX, 0.0f, 0.0f));
+				}
 			}
 		}
 	}
