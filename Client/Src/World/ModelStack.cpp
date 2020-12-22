@@ -1,5 +1,7 @@
 #include "ModelStack.h"
 
+#include <glm/gtx/quaternion.hpp>
+
 ModelStack::ModelStack():
 	modelStack()
 {
@@ -15,6 +17,10 @@ glm::mat4 ModelStack::Rotate(const glm::vec4& rotate){
 
 glm::mat4 ModelStack::Scale(const glm::vec3& scale){
 	return glm::scale(glm::mat4(1.f), scale);
+}
+
+glm::mat4 ModelStack::QuatRotate(const glm::quat& rotate){
+	return glm::toMat4(rotate);
 }
 
 glm::mat4 ModelStack::GetTopModel() const{

@@ -9,6 +9,9 @@ public:
 	glm::mat4 Translate(const glm::vec3& translate);
 	glm::mat4 Rotate(const glm::vec4& rotate);
 	glm::mat4 Scale(const glm::vec3& scale);
+
+	glm::mat4 QuatRotate(const glm::quat& rotate);
+
 	glm::mat4 GetTopModel() const;
 	void PushModel(const std::vector<glm::mat4>& vec) const;
 	void PopModel() const;

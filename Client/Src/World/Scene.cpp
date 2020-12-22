@@ -339,7 +339,7 @@ void Scene::CreateTreesAndCubes(){
 
 		modelStack.PushModel({
 			modelStack.Translate(pos + glm::vec3(0.0f, (float)PseudorandMinMax(1600, 2000), 0.0f)),
-			modelStack.Rotate(glm::vec4(0.f, 1.f, 0.f, PseudorandMinMax(0.0f, 360.0f))),
+			modelStack.QuatRotate(glm::quat(glm::vec3((float)PseudorandMinMax(0, 360), (float)PseudorandMinMax(0, 360), (float)PseudorandMinMax(0, 360)))),
 			modelStack.Scale(glm::vec3((float)PseudorandMinMax(35, 55))),
 		});
 			cubeMesh->AddModelMat(modelStack.GetTopModel());
