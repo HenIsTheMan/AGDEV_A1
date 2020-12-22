@@ -6,6 +6,8 @@
 
 #include "../Collision/Collision.h"
 
+#include <glm/gtx/norm.hpp>
+
 extern float dt;
 
 EntityManager::~EntityManager(){
@@ -120,7 +122,12 @@ void EntityManager::Update(const Cam& cam){
 					break;
 				}
 				case Entity::EntityType::EnemyBody: {
-					movableNode->LocalTranslate(glm::vec3(40.0f, 0.0f, 0.0f) * dt);
+					glm::vec3 displacementVec = cam.GetPos() - movableEntity->pos;
+					displacementVec.y = 0.0f;
+
+					if(glm::length2(displacementVec) > 25.0f){
+						movableNode->LocalTranslate(glm::normalize(displacementVec) * 200.0f * dt);
+					}
 					//movableNode->LocalScale(glm::vec3(20.0f, 20.0f, 0.0f) * dt);
 					break;
 				}
@@ -131,9 +138,6 @@ void EntityManager::Update(const Cam& cam){
 					const float endScaleX = 0.5f;
 					float t = EaseInOutCubic(sin(elapsedTime) * 0.5f + 0.5f);
 					movableNode->SetLocalDilation(glm::vec3((1 - t) * startScaleX + t * endScaleX, (1 - t) * startScaleX + t * endScaleX, 0.0f));
-					//movableNode->localTranslation.x += ((1 - t) * startX + t * endX) * dt;
-					//movableNode->localTranslation.x += 40.0f * dt;
-					//movableNode->localTranslation.x += sin(elapsedTime) * 200.0f * dt;
 				}
 			}
 		}
