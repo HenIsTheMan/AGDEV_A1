@@ -31,7 +31,7 @@ public:
 	void SetEntity(Entity* const entity);
 	void SetLocalTranslation(const glm::vec3& localTranslation);
 	void SetLocalRotation(const glm::quat& localRotation);
-	void SetLocalScaling(const glm::vec3& localScaling);
+	void SetLocalDilation(const glm::vec3& localDilation);
 private:
 	bool visible;
 	Entity* entity;
@@ -41,11 +41,11 @@ private:
 
 	glm::vec3 localTranslation;
 	glm::quat localRotation;
-	glm::vec3 localScaling;
+	glm::vec3 localDilation;
 
 	glm::vec3 worldTranslation;
 	glm::quat worldRotation;
-	glm::vec3 worldScaling;
+	glm::vec3 worldDilation;
 };
 
 //transformUpdates
