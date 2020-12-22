@@ -31,6 +31,7 @@ const Entity* EntityFactory::CreatePlayer(const EntityCreationAttribs& attribs){
 	entity->facingDir = glm::vec3(0.0f, 0.0f, -1.0f);
 	entity->yMax = FLT_MAX;
 
+	ActivateEntityProcedure(entity);
 	return entity;
 }
 
@@ -55,6 +56,8 @@ void EntityFactory::CreateShotgunBullet(const glm::vec3& camPos, const glm::vec3
 	SphereCollider* const sphereCollider = static_cast<SphereCollider*>(entity->collider);
 	sphereCollider->SetPos(entity->pos);
 	sphereCollider->SetRadius(entity->scale[0]);
+
+	ActivateEntityProcedure(entity);
 }
 
 void EntityFactory::CreateScarBullet(const glm::vec3& camPos, const glm::vec3& camFront){
@@ -78,6 +81,8 @@ void EntityFactory::CreateScarBullet(const glm::vec3& camPos, const glm::vec3& c
 	SphereCollider* const sphereCollider = static_cast<SphereCollider*>(entity->collider);
 	sphereCollider->SetPos(entity->pos);
 	sphereCollider->SetRadius(entity->scale[0]);
+
+	ActivateEntityProcedure(entity);
 }
 
 void EntityFactory::CreateSniperBullet(const glm::vec3& camPos, const glm::vec3& camFront){
@@ -101,6 +106,8 @@ void EntityFactory::CreateSniperBullet(const glm::vec3& camPos, const glm::vec3&
 	SphereCollider* const sphereCollider = static_cast<SphereCollider*>(entity->collider);
 	sphereCollider->SetPos(entity->pos);
 	sphereCollider->SetRadius(entity->scale[0]);
+
+	ActivateEntityProcedure(entity);
 }
 
 void EntityFactory::CreateCoin(const EntityCreationAttribs& attribs){
@@ -121,6 +128,8 @@ void EntityFactory::CreateCoin(const EntityCreationAttribs& attribs){
 	BoxCollider* const boxCollider = static_cast<BoxCollider*>(entity->collider);
 	boxCollider->SetPos(entity->pos);
 	boxCollider->SetScale(entity->scale);
+
+	ActivateEntityProcedure(entity);
 }
 
 void EntityFactory::CreateFire(const EntityCreationAttribs& attribs){
@@ -138,6 +147,8 @@ void EntityFactory::CreateFire(const EntityCreationAttribs& attribs){
 	entity->force = glm::vec3(0.f);
 
 	entity->collider = colliderManager->ActivateCollider(ColliderType::Box);
+
+	ActivateEntityProcedure(entity);
 }
 
 const Entity* EntityFactory::CreateThinObj(const EntityCreationAttribs& attribs){
@@ -156,6 +167,7 @@ const Entity* EntityFactory::CreateThinObj(const EntityCreationAttribs& attribs)
 	boxCollider->SetPos(entity->pos);
 	boxCollider->SetScale(entity->scale);
 
+	ActivateEntityProcedure(entity);
 	return entity;
 }
 
@@ -174,6 +186,8 @@ void EntityFactory::CreateTree(const EntityCreationAttribs& attribs){
 	entity->force = glm::vec3(0.f);
 
 	entity->collider = colliderManager->ActivateCollider(ColliderType::Box);
+
+	ActivateEntityProcedure(entity);
 }
 
 EntityFactory::EntityFactory():
@@ -190,7 +204,6 @@ Entity* EntityFactory::ActivateEntity(const bool movable){
 	entity->Reset();
 	entity->movable = movable;
 
-	ActivateEntityProcedure(entity);
 	return entity;
 }
 

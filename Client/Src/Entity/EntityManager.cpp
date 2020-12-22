@@ -153,12 +153,13 @@ void EntityManager::Update(){
 		}
 	}
 
-	//for(Entity*& stationaryEntity: stationaryEntities){
-	//	if(stationaryEntity){
-	//		Node* const node = nodeManager->RetrieveRootNode()->FindChild(stationaryEntity);
-	//		node->SetLocalTranslate(stationaryEntity->pos);
-	//	}
-	//}
+	for(Entity*& stationaryEntity: stationaryEntities){
+		stationaryEntity->prevPos = stationaryEntity->pos; //??
+		if(stationaryEntity){
+			Node* const node = nodeManager->RetrieveRootNode()->FindChild(stationaryEntity);
+			node->LocalTranslate(stationaryEntity->pos - stationaryEntity->prevPos);
+		}
+	}
 
 	for(size_t i = 0; i < movableEntities.size(); ++i){
 		Entity*& entity0 = movableEntities[i];
