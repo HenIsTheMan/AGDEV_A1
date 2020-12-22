@@ -113,6 +113,7 @@ void EntityManager::Update(){
 					float t = EaseInOutCubic(sin(elapsedTime) * 0.5f + 0.5f);
 					t *= t;
 					movableEntity->pos.x = (1 - t) * startX + t * endX;
+					//movableEntity->pos.y = 700.0f;
 
 					if(movableEntity->collider != nullptr){
 						static_cast<BoxCollider*>(movableEntity->collider)->SetPos(movableEntity->pos);
