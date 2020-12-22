@@ -97,7 +97,7 @@ void EntityManager::Update(const Cam& cam){
 				case Entity::EntityType::ThinObj: {
 					const float startX = 500.0f;
 					const float endX = -500.0f;
-					float t = EaseInOutCubic(sin(elapsedTime) * 0.5f + 0.5f);
+					float t = EaseInOutBounce(sin(elapsedTime) * 0.5f + 0.5f);
 					t *= t;
 					movableNode->SetLocalTranslation(glm::vec3((1 - t) * startX + t * endX, movableEntity->pos.y, movableEntity->pos.z));
 
