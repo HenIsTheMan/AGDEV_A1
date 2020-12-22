@@ -131,8 +131,7 @@ void EntityManager::Update(const Cam& cam){
 					break;
 				}
 				case Entity::EntityType::EnemyPart: {
-					//movableNode->LocalRotate(glm::quat(glm::vec3(2.0f * dt, 2.0f * dt, 2.0f * dt)));
-					//movableNode->LocalRotate(glm::angleAxis(glm::radians(200.0f * dt), glm::vec3(1.0f, 0.0f, 0.0f)));
+					movableNode->LocalRotate(glm::quat(glm::vec3(5.0f * dt, 0.0f, 0.0f)));
 
 					const float startScale = 0.2f;
 					const float endScale = 0.4f;
