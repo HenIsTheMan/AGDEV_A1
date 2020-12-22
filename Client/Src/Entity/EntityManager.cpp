@@ -100,7 +100,7 @@ void EntityManager::Update(){
 						static_cast<BoxCollider*>(movableEntity->collider)->SetPos(movableEntity->pos);
 					}
 
-					movableNode->LocalTranslate(movableEntity->pos - movableEntity->prevPos);
+					movableNode->SetLocalTranslation(movableEntity->pos);
 
 					break;
 				}
@@ -115,7 +115,7 @@ void EntityManager::Update(){
 						static_cast<BoxCollider*>(movableEntity->collider)->SetPos(movableEntity->pos);
 					}
 
-					movableNode->LocalTranslate(movableEntity->pos - movableEntity->prevPos);
+					movableNode->SetLocalTranslation(movableEntity->pos);
 
 					break;
 				}
@@ -137,7 +137,7 @@ void EntityManager::Update(){
 						static_cast<SphereCollider*>(movableEntity->collider)->SetPos(movableEntity->pos);
 					}
 
-					movableNode->LocalTranslate(movableEntity->pos - movableEntity->prevPos);
+					movableNode->SetLocalTranslation(movableEntity->pos);
 
 					break;
 				}

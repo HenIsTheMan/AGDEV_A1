@@ -47,5 +47,3 @@ private:
 	glm::quat worldRotation;
 	glm::vec3 worldDilation;
 };
-
-//transformUpdates
