@@ -231,19 +231,20 @@ void Scene::CreateEntities(){
 			terrainZScale * 0.4f
 		),
 		glm::vec3(xyScaleEnemyPart, xyScaleEnemyPart, 0.001f),
-		glm::vec4(1.0f, 0.0f, 0.0f, 0.4f),
+		glm::vec4(1.0f, 0.5f, 0.0f, 0.4f),
 		-1,
 	});
 
-	//Node* const rootNode = nodeManager->RetrieveRootNode();
-	//Node* const enemyPartNode = rootNode->DetachChild(enemyPart);
-	//assert(enemyPartNode != nullptr && "Var 'enemyPartNode' is nullptr");
+	Node* const rootNode = nodeManager->RetrieveRootNode();
+	Node* const enemyPartNode = rootNode->DetachChild(enemyPart);
+	assert(enemyPartNode != nullptr && "Var 'enemyPartNode' is nullptr");
 
-	//Node* const enemyBodyNode = rootNode->FindChild(enemyBody);
-	//assert(enemyBodyNode != nullptr && "Var 'enemyBodyNode' is nullptr");
-	//enemyBodyNode->AddChild(enemyPartNode);
-	//
-	//enemyPartNode->SetLocalTranslate(glm::vec3(2.0f, 2.0f, 0.0f));
+	Node* const enemyBodyNode = rootNode->FindChild(enemyBody);
+	assert(enemyBodyNode != nullptr && "Var 'enemyBodyNode' is nullptr");
+
+	enemyPartNode->SetLocalTranslation(glm::vec3(0.0f, 0.0f, 0.0f));
+	enemyPartNode->SetLocalDilation(glm::vec3(1.0f));
+	enemyBodyNode->AddChild(enemyPartNode);
 	//*/
 
 	//* Create coins

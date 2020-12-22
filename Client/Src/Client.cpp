@@ -5,7 +5,7 @@
 extern bool endLoop;
 
 void MainProcess(){
-	App* app = App::GetObjPtr(); //Singleton<App>* test = Singleton<App>::GetObjPtr()??
+	App* app = App::GetObjPtr();
 	while(!endLoop){
 		app->Update();
 		app->PreRender();

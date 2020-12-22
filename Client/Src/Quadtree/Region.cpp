@@ -37,7 +37,7 @@ Region::~Region(){
 }
 
 void Region::Reset(){
-	visible = false;
+	visible = true;
 	parent = nullptr;
 	origin = glm::vec2();
 	size = glm::vec2();
