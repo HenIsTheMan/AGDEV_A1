@@ -23,7 +23,6 @@ public:
 
 	void Reset();
 
-	void GetEntitiesToUpdate(std::vector<Entity*>& movableEntities, std::vector<Entity*>& stationaryEntities);
 	void GetEntitiesToRender(std::multimap<int, Entity*>& entitiesOpaque, std::multimap<int, Entity*>& entitiesNotOpaque, const Cam& cam, const FrustumCulling* const frustumCulling);
 	void GetLeaves(std::vector<Region*>& leaves);
 
@@ -37,6 +36,9 @@ public:
 	void Partition(const bool movable);
 	void VisibilityCheck(const FrustumCulling* const frustumCulling);
 	void MakeSelfAndChildrenInvisible();
+
+	const std::vector<Node*>& GetStationaryNodes() const;
+	const std::vector<Node*>& GetMovableNodes() const;
 private:
 	bool visible;
 

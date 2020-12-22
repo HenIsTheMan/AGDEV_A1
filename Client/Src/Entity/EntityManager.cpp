@@ -68,12 +68,10 @@ void EntityManager::Update(){
 	}
 	entitiesToRemove.clear();
 
-	std::vector<Entity*> movableEntities;
-	std::vector<Entity*> stationaryEntities;
-	regionManager->RetrieveRootRegion()->GetEntitiesToUpdate(movableEntities, stationaryEntities);
-
-	for(Entity*& movableEntity: movableEntities){
-		if(movableEntity){
+	std::vector<Node*> movableNodes = regionManager->RetrieveRootRegion()->GetMovableNodes();
+	for(Node*& movableNode: movableNodes){
+		if(movableNode){
+			Entity* const movableEntity = movableNode->RetrieveEntity();
 			movableEntity->prevPos = movableEntity->pos;
 
 			switch(movableEntity->type){
@@ -102,8 +100,7 @@ void EntityManager::Update(){
 						static_cast<BoxCollider*>(movableEntity->collider)->SetPos(movableEntity->pos);
 					}
 
-					Node* const node = nodeManager->RetrieveRootNode()->FindChild(movableEntity);
-					node->LocalTranslate(movableEntity->pos - movableEntity->prevPos);
+					movableNode->LocalTranslate(movableEntity->pos - movableEntity->prevPos);
 
 					break;
 				}
@@ -113,14 +110,12 @@ void EntityManager::Update(){
 					float t = EaseInOutCubic(sin(elapsedTime) * 0.5f + 0.5f);
 					t *= t;
 					movableEntity->pos.x = (1 - t) * startX + t * endX;
-					//movableEntity->pos.y = 700.0f;
 
 					if(movableEntity->collider != nullptr){
 						static_cast<BoxCollider*>(movableEntity->collider)->SetPos(movableEntity->pos);
 					}
 
-					Node* const node = nodeManager->RetrieveRootNode()->FindChild(movableEntity);
-					node->LocalTranslate(movableEntity->pos - movableEntity->prevPos);
+					movableNode->LocalTranslate(movableEntity->pos - movableEntity->prevPos);
 
 					break;
 				}
@@ -128,11 +123,9 @@ void EntityManager::Update(){
 					movableEntity->life -= dt;
 
 					if(movableEntity->life <= 0.0f){
-						std::vector<Entity*>::iterator iter = std::find(entitiesToRemove.begin(), entitiesToRemove.end(), movableEntity);
-						if(iter == entitiesToRemove.end()){
-							Entity* const entityCopy = movableEntity;
-							entitiesToRemove.emplace_back(entityCopy);
-							movableEntity = nullptr;
+						if(std::find(entitiesToRemove.begin(), entitiesToRemove.end(), movableEntity) == entitiesToRemove.end()){
+							entitiesToRemove.emplace_back(movableEntity);
+							movableNode = nullptr;
 						}
 						continue;
 					}
@@ -144,8 +137,7 @@ void EntityManager::Update(){
 						static_cast<SphereCollider*>(movableEntity->collider)->SetPos(movableEntity->pos);
 					}
 
-					Node* const node = nodeManager->RetrieveRootNode()->FindChild(movableEntity);
-					node->LocalTranslate(movableEntity->pos - movableEntity->prevPos);
+					movableNode->LocalTranslate(movableEntity->pos - movableEntity->prevPos);
 
 					break;
 				}
@@ -153,36 +145,30 @@ void EntityManager::Update(){
 		}
 	}
 
-	for(Entity*& stationaryEntity: stationaryEntities){
-		stationaryEntity->prevPos = stationaryEntity->pos; //??
-		if(stationaryEntity){
-			Node* const node = nodeManager->RetrieveRootNode()->FindChild(stationaryEntity);
-			node->LocalTranslate(stationaryEntity->pos - stationaryEntity->prevPos);
-		}
-	}
-
-	for(size_t i = 0; i < movableEntities.size(); ++i){
-		Entity*& entity0 = movableEntities[i];
-		if(entity0 == nullptr){
+	const size_t size = movableNodes.size();
+	for(size_t i = 0; i < size; ++i){
+		Node*& movableNode0 = movableNodes[i];
+		if(movableNode0 == nullptr){
 			continue;
 		}
 
-		for(size_t j = i + 1; j < movableEntities.size(); ++j){
-			Entity*& entity1 = movableEntities[j];
-			if(entity1 == nullptr){
+		for(size_t j = i + 1; j < size; ++j){
+			Node*& movableNode1 = movableNodes[j];
+			if(movableNode1 == nullptr){
 				continue;
 			}
+
+			Entity* const entity0 = movableNode0->RetrieveEntity();
+			Entity* const entity1 = movableNode1->RetrieveEntity();
 
 			if(entity0->type != entity1->type){
 				if(entity0->type == Entity::EntityType::Bullet){
 					if(Collision::DetectCollision(entity0, entity1)){
 						entity1->colour = glm::vec4(PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), 1.0f);
 
-						std::vector<Entity*>::iterator iter = std::find(entitiesToRemove.begin(), entitiesToRemove.end(), entity0);
-						if(iter == entitiesToRemove.end()){
-							Entity* const entityCopy = entity0;
-							entitiesToRemove.emplace_back(entityCopy);
-							entity0 = nullptr;
+						if(std::find(entitiesToRemove.begin(), entitiesToRemove.end(), entity0) == entitiesToRemove.end()){
+							entitiesToRemove.emplace_back(entity0);
+							movableNode0 = nullptr;
 							break;
 						}
 					}
@@ -190,22 +176,21 @@ void EntityManager::Update(){
 					if(Collision::DetectCollision(entity1, entity0)){
 						entity0->colour = glm::vec4(PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), 1.0f);
 
-						std::vector<Entity*>::iterator iter = std::find(entitiesToRemove.begin(), entitiesToRemove.end(), entity1);
-						if(iter == entitiesToRemove.end()){
-							Entity* const entityCopy = entity1;
-							entitiesToRemove.emplace_back(entityCopy);
-							entity1 = nullptr;
+						if(std::find(entitiesToRemove.begin(), entitiesToRemove.end(), entity1) == entitiesToRemove.end()){
+							entitiesToRemove.emplace_back(entity1);
+							movableNode1 = nullptr;
+							break;
 						}
 					}
 				}
 			}
 		}
-
-		for(Entity* const entity: entitiesToRemove){
-			DeactivateEntity(entity);
-		}
-		entitiesToRemove.clear();
 	}
+
+	for(Entity* const entity: entitiesToRemove){
+		DeactivateEntity(entity);
+	}
+	entitiesToRemove.clear();
 }
 
 void EntityManager::Render(ShaderProg& SP, const Cam& cam){
