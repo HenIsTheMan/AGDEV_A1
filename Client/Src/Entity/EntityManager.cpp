@@ -78,18 +78,19 @@ void EntityManager::Update(const Cam& cam){
 					UpdatePlayerVert(movableEntity);
 
 					movableEntity->vel += movableEntity->force / movableEntity->mass * dt;
-					movableNode->LocalTranslate(movableEntity->vel * dt);
-					const glm::vec3& localTranslation = movableNode->GetLocalTranslation();
+					movableEntity->pos += movableEntity->vel * dt;
+
+					if(movableEntity->pos.y < movableEntity->yMin){
+						IsAirborneWrapper::isAirborne = false;
+					}
 
 					movableEntity->yMin = terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(
-						localTranslation.x / terrainXScale,
-						localTranslation.z / terrainZScale,
+						movableEntity->pos.x / terrainXScale,
+						movableEntity->pos.z / terrainZScale,
 						false
 					) + movableEntity->scale.y;
 
-					if(IsAirborneWrapper::isAirborne && movableEntity->pos.y < movableEntity->yMin){
-						IsAirborneWrapper::isAirborne = false;
-					}
+					movableNode->SetLocalTranslation(movableEntity->pos);
 
 					break;
 				}
