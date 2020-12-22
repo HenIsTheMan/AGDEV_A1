@@ -36,9 +36,9 @@ void Node::Update(){
 	}
 
 	if(entity){
-		worldTranslation.x = std::min(entity->xMax, std::max(entity->xMin, entity->pos.x));
-		worldTranslation.y = std::min(entity->yMax, std::max(entity->yMin, entity->pos.y));
-		worldTranslation.z = std::min(entity->zMax, std::max(entity->zMin, entity->pos.z));
+		worldTranslation.x = std::min(entity->xMax, std::max(entity->xMin, worldTranslation.x));
+		worldTranslation.y = std::min(entity->yMax, std::max(entity->yMin, worldTranslation.y));
+		worldTranslation.z = std::min(entity->zMax, std::max(entity->zMin, worldTranslation.z));
 
 		entity->pos = worldTranslation;
 		//entity->SetFacingDir();
