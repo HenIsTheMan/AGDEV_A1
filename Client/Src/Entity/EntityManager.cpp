@@ -48,7 +48,7 @@ void EntityManager::Init(){
 	entityPool->Init(entityPoolSize, entityPoolSize);
 }
 
-void EntityManager::Update(){
+void EntityManager::Update(const Cam& cam){
 	elapsedTime += dt;
 
 	static bool isPressedC = false;
@@ -138,6 +138,10 @@ void EntityManager::Update(){
 					movableNode->SetLocalTranslation(movableEntity->pos);
 
 					break;
+				}
+				case Entity::EntityType::EnemyBody: {
+					movableNode->LocalTranslate(glm::vec3(40.0f, 0.0f, 0.0f) * dt);
+					movableNode->LocalScale(glm::vec3(40.0f, 40.0f, 0.0f) * dt);
 				}
 			}
 		}

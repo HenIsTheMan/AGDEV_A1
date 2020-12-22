@@ -14,7 +14,7 @@ public:
 	~EntityManager();
 
 	void Init();
-	void Update();
+	void Update(const Cam& cam);
 	void Render(ShaderProg& SP, const Cam& cam);
 
 	EntityFactory* RetrieveEntityFactory();

@@ -117,7 +117,7 @@ void Node::LocalRotate(const glm::quat& localRotate){
 }
 
 void Node::LocalScale(const glm::vec3& localScale){
-	localDilation *= localScale;
+	localDilation += localScale;
 }
 
 bool Node::GetVisible() const{

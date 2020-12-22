@@ -728,7 +728,7 @@ void Scene::GameUpdate(GLFWwindow* const& win){
 	#endif
 
 	if(shldUpdateEntityManager){
-		entityManager->Update();
+		entityManager->Update(cam);
 	}
 }
 
