@@ -225,10 +225,10 @@ void Scene::CreateEntities(){
 		-1,
 	});
 
-	const Entity* enemyParts[4]{nullptr, nullptr, nullptr, nullptr};
+	const Entity* enemyParts[6]{nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 	Node* const rootNode = nodeManager->RetrieveRootNode();
 
-	for(int i = 0; i < 4; ++i){
+	for(int i = 0; i < 6; ++i){
 		const Entity*& enemyPart = enemyParts[i];
 		enemyPart = entityFactory->CreateEnemyPart({
 			glm::vec3(),
@@ -241,18 +241,32 @@ void Scene::CreateEntities(){
 		Node* const enemyBodyNode = rootNode->FindChild(enemyBody);
 		enemyBodyNode->AddChild(enemyPartNode);
 
+		enemyPartNode->SetUseLocalRotationUpdate(true);
+		enemyPartNode->SetLocalDilation(glm::vec3(0.5f));
 		switch(i){
 			case 0:
-				enemyPartNode->SetLocalTranslation(glm::vec3(0.0f, 800.0f, 0.0f));
-				enemyPartNode->SetLocalDilation(glm::vec3(0.5f));
-				enemyPartNode->SetUseLocalRotationUpdate(true);
-				enemyPartNode->SetLocalRotationUpdate(glm::quat(glm::vec3(10.0f, 0.0f, 0.0f)));
+				enemyPartNode->SetLocalTranslation(glm::vec3(800.0f, 0.0f, 0.0f));
+				enemyPartNode->SetLocalRotationUpdate(glm::quat(glm::vec3(0.0f, 10.0f, 0.0f)));
 				break;
 			case 1:
+				enemyPartNode->SetLocalTranslation(glm::vec3(800.0f, 0.0f, 0.0f));
+				enemyPartNode->SetLocalRotationUpdate(glm::quat(glm::vec3(0.0f, 0.0f, 10.0f)));
 				break;
 			case 2:
+				enemyPartNode->SetLocalTranslation(glm::vec3(0.0f, 800.0f, 0.0f));
+				enemyPartNode->SetLocalRotationUpdate(glm::quat(glm::vec3(10.0f, 0.0f, 0.0f)));
 				break;
 			case 3:
+				enemyPartNode->SetLocalTranslation(glm::vec3(0.0f, 800.0f, 0.0f));
+				enemyPartNode->SetLocalRotationUpdate(glm::quat(glm::vec3(0.0f, 0.0f, 10.0f)));
+				break;
+			case 4:
+				enemyPartNode->SetLocalTranslation(glm::vec3(0.0f, 0.0f, 800.0f));
+				enemyPartNode->SetLocalRotationUpdate(glm::quat(glm::vec3(10.0f, 0.0f, 0.0f)));
+				break;
+			case 5:
+				enemyPartNode->SetLocalTranslation(glm::vec3(0.0f, 0.0f, 800.0f));
+				enemyPartNode->SetLocalRotationUpdate(glm::quat(glm::vec3(0.0f, 10.0f, 0.0f)));
 				break;
 		}
 	}
