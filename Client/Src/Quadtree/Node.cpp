@@ -148,6 +148,18 @@ const Entity* Node::GetEntity() const{
 	return entity;
 }
 
+const glm::vec3& Node::GetLocalTranslation() const{
+	return localTranslation;
+}
+
+const glm::quat& Node::GetLocalRotation() const{
+	return localRotation;
+}
+
+const glm::vec3& Node::GetLocalDilation() const{
+	return localDilation;
+}
+
 void Node::SetVisible(const bool visible){
 	this->visible = visible;
 }

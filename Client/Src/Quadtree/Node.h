@@ -25,6 +25,9 @@ public:
 	///Getters
 	bool GetVisible() const;
 	const Entity* GetEntity() const;
+	const glm::vec3& GetLocalTranslation() const;
+	const glm::quat& GetLocalRotation() const;
+	const glm::vec3& GetLocalDilation() const;
 
 	///Setters
 	void SetVisible(const bool visible);

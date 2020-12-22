@@ -79,16 +79,17 @@ void EntityManager::Update(const Cam& cam){
 
 					movableEntity->vel += movableEntity->force / movableEntity->mass * dt;
 					movableNode->LocalTranslate(movableEntity->vel * dt);
-
-					//if(movableEntity->pos.y < movableEntity->yMin){
-					//	IsAirborneWrapper::isAirborne = false;
-					//}
+					const glm::vec3& localTranslation = movableNode->GetLocalTranslation();
 
 					movableEntity->yMin = terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(
-						movableEntity->pos.x / terrainXScale,
-						movableEntity->pos.z / terrainZScale,
+						localTranslation.x / terrainXScale,
+						localTranslation.z / terrainZScale,
 						false
 					) + movableEntity->scale.y;
+
+					if(IsAirborneWrapper::isAirborne && movableEntity->pos.y < movableEntity->yMin){
+						IsAirborneWrapper::isAirborne = false;
+					}
 
 					break;
 				}
@@ -97,9 +98,7 @@ void EntityManager::Update(const Cam& cam){
 					const float endX = -500.0f;
 					float t = EaseInOutCubic(sin(elapsedTime) * 0.5f + 0.5f);
 					t *= t;
-					movableEntity->pos.x = (1 - t) * startX + t * endX;
-
-					movableNode->SetLocalTranslation(movableEntity->pos);
+					movableNode->SetLocalTranslation(glm::vec3((1 - t) * startX + t * endX, movableEntity->pos.y, movableEntity->pos.z));
 
 					break;
 				}
@@ -139,6 +138,8 @@ void EntityManager::Update(const Cam& cam){
 			}
 		}
 	}
+
+	nodeManager->Update();
 
 	const size_t size = movableNodes.size();
 	for(size_t i = 0; i < size; ++i){
@@ -194,8 +195,6 @@ void EntityManager::Update(const Cam& cam){
 		DeactivateEntity(entity);
 	}
 	entitiesToRemove.clear();
-
-	nodeManager->Update();
 }
 
 void EntityManager::Render(ShaderProg& SP, const Cam& cam){
