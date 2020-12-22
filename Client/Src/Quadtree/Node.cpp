@@ -1,5 +1,8 @@
 #include "Node.h"
 
+#include "../Collision/Collider/Colliders/BoxCollider.h"
+#include "../Collision/Collider/Colliders/SphereCollider.h"
+
 extern float dt;
 
 Node::Node():
@@ -33,9 +36,22 @@ void Node::Update(){
 	}
 
 	if(entity){
-		entity->SetPos(worldTranslation);
+		entity->pos = worldTranslation;
 		//entity->SetFacingDir();
-		entity->SetScale(worldDilation);
+		entity->scale = worldDilation;
+
+		if(entity->collider != nullptr){
+			if(entity->collider->type == ColliderType::Box){
+				BoxCollider* const boxCollider = static_cast<BoxCollider*>(entity->collider);
+				boxCollider->SetPos(entity->pos);
+				//boxCollider->SetFacingDir();
+				boxCollider->SetScale(entity->scale);
+			} else{
+				SphereCollider* const sphereCollider = static_cast<SphereCollider*>(entity->collider);
+				sphereCollider->SetPos(entity->pos);
+				sphereCollider->SetRadius(entity->scale[0]);
+			}
+		}
 	}
 
 	for(Node* const child: children){

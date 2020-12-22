@@ -11,6 +11,7 @@ class Entity final{
 	friend class Collision;
 	friend class EntityFactory;
 	friend class EntityManager;
+	friend class Node;
 	friend class Region;
 	friend class RegionManager;
 	friend class Shotgun;

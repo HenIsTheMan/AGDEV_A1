@@ -7,6 +7,7 @@ enum struct ColliderType: int{
 };
 
 class Collider{ //Abstract class
+	friend class Node;
 	friend class ColliderManager;
 public:
 	virtual ~Collider() = default;
