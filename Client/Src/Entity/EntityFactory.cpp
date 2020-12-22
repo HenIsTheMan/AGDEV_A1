@@ -212,6 +212,7 @@ void EntityFactory::ActivateEntityProcedure(Entity* const entity){
 
 	node->SetEntity(entity);
 	node->LocalTranslate(entity->GetPos());
+	//node->LocalRotate(glm::vec4(0.0f, 1.0f, 0.0f, 0.0f)); //Can be better
 	node->LocalScale(entity->GetScale());
 
 	nodeManager->RetrieveRootNode()->AddChild(node);
