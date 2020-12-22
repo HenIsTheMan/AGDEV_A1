@@ -116,6 +116,10 @@ const Region* Region::FindRegion(Node* const node, const bool movable) const{
 	return nullptr;
 }
 
+const Region* Region::FindParentRegion(Node* const node, const bool movable) const{
+	return IFindParentRegion(node, movable, this);
+}
+
 void Region::AddNode(Node* const node, const bool movable){
 	(movable ? movableNodes : stationaryNodes).emplace_back(node);
 }
@@ -338,6 +342,42 @@ const std::vector<Node*>& Region::GetStationaryNodes() const{
 
 const std::vector<Node*>& Region::GetMovableNodes() const{
 	return movableNodes;
+}
+
+const Region* Region::IFindParentRegion(Node* const node, const bool movable, const Region* const parentRegion) const{
+	if(topLeft){
+		const Region* const& region = topLeft->IFindParentRegion(node, movable, topLeft);
+		if(region){
+			return region;
+		}
+	}
+	if(topRight){
+		const Region* const& region = topRight->IFindParentRegion(node, movable, topRight);
+		if(region){
+			return region;
+		}
+	}
+	if(bottomLeft){
+		const Region* const& region = bottomLeft->IFindParentRegion(node, movable, bottomLeft);
+		if(region){
+			return region;
+		}
+	}
+	if(bottomRight){
+		const Region* const& region = bottomRight->IFindParentRegion(node, movable, bottomRight);
+		if(region){
+			return region;
+		}
+	}
+
+	const std::vector<Node*>& nodes = movable ? movableNodes : stationaryNodes;
+	for(const Node* const& myNode: nodes){
+		if(myNode == node){
+			return parentRegion;
+		}
+	}
+
+	return nullptr;
 }
 
 void Region::IGetEntitiesToRender(

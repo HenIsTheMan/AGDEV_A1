@@ -68,7 +68,9 @@ void EntityManager::Update(const Cam& cam){
 	}
 	entitiesToRemove.clear();
 
-	std::vector<Node*> movableNodes = regionManager->RetrieveRootRegion()->GetMovableNodes();
+	Region* const rootRegion = regionManager->RetrieveRootRegion();
+	std::vector<Node*> movableNodes = rootRegion->GetMovableNodes();
+
 	for(Node*& movableNode: movableNodes){
 		if(movableNode){
 			Entity* const movableEntity = movableNode->RetrieveEntity();
@@ -145,55 +147,63 @@ void EntityManager::Update(const Cam& cam){
 
 	nodeManager->Update();
 
-	const size_t size = movableNodes.size();
-	for(size_t i = 0; i < size; ++i){
-		Node*& movableNode0 = movableNodes[i];
-		if(movableNode0 == nullptr){
-			continue;
-		}
-
-		for(size_t j = i + 1; j < size; ++j){
-			Node*& movableNode1 = movableNodes[j];
-			if(movableNode1 == nullptr){
-				continue;
-			}
-
-			Entity* const entity0 = movableNode0->RetrieveEntity();
-			Entity* const entity1 = movableNode1->RetrieveEntity();
-
-			if(entity0->type != entity1->type){
-				if(entity0->type == Entity::EntityType::Bullet){
-					if(Collision::DetectCollision(entity0, entity1)){
-						switch(entity1->type){
-							case Entity::EntityType::ThinObj:
-								entity1->colour = glm::vec4(PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), 1.0f);
-								break;
-						}
-
-						if(std::find(entitiesToRemove.begin(), entitiesToRemove.end(), entity0) == entitiesToRemove.end()){
-							entitiesToRemove.emplace_back(entity0);
-							movableNode0 = nullptr;
-							break;
-						}
-					}
-				} else if(entity1->type == Entity::EntityType::Bullet){
-					if(Collision::DetectCollision(entity1, entity0)){
-						switch(entity0->type){
-							case Entity::EntityType::ThinObj:
-								entity0->colour = glm::vec4(PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), 1.0f);
-								break;
-						}
-
-						if(std::find(entitiesToRemove.begin(), entitiesToRemove.end(), entity1) == entitiesToRemove.end()){
-							entitiesToRemove.emplace_back(entity1);
-							movableNode1 = nullptr;
-							break;
-						}
-					}
-				}
-			}
+	for(Node*& movableNode: movableNodes){
+		Entity* const movableEntity = movableNode->RetrieveEntity();
+		if(movableEntity->type == Entity::EntityType::Bullet){
+			const Region* const parentRegion = rootRegion->FindParentRegion(movableNode, true);
+			std::vector<Node*> nearbyMovableNodes = parentRegion->GetMovableNodes();
 		}
 	}
+
+	//const size_t size = movableNodes.size();
+	//for(size_t i = 0; i < size; ++i){
+	//	Node*& movableNode0 = movableNodes[i];
+	//	if(movableNode0 == nullptr){
+	//		continue;
+	//	}
+
+	//	for(size_t j = i + 1; j < size; ++j){
+	//		Node*& movableNode1 = movableNodes[j];
+	//		if(movableNode1 == nullptr){
+	//			continue;
+	//		}
+
+	//		Entity* const entity0 = movableNode0->RetrieveEntity();
+	//		Entity* const entity1 = movableNode1->RetrieveEntity();
+
+	//		if(entity0->type != entity1->type){
+	//			if(entity0->type == Entity::EntityType::Bullet){
+	//				if(Collision::DetectCollision(entity0, entity1)){
+	//					switch(entity1->type){
+	//						case Entity::EntityType::ThinObj:
+	//							entity1->colour = glm::vec4(PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), 1.0f);
+	//							break;
+	//					}
+
+	//					if(std::find(entitiesToRemove.begin(), entitiesToRemove.end(), entity0) == entitiesToRemove.end()){
+	//						entitiesToRemove.emplace_back(entity0);
+	//						movableNode0 = nullptr;
+	//						break;
+	//					}
+	//				}
+	//			} else if(entity1->type == Entity::EntityType::Bullet){
+	//				if(Collision::DetectCollision(entity1, entity0)){
+	//					switch(entity0->type){
+	//						case Entity::EntityType::ThinObj:
+	//							entity0->colour = glm::vec4(PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), 1.0f);
+	//							break;
+	//					}
+
+	//					if(std::find(entitiesToRemove.begin(), entitiesToRemove.end(), entity1) == entitiesToRemove.end()){
+	//						entitiesToRemove.emplace_back(entity1);
+	//						movableNode1 = nullptr;
+	//						break;
+	//					}
+	//				}
+	//			}
+	//		}
+	//	}
+	//}
 
 	for(Entity* const entity: entitiesToRemove){
 		DeactivateEntity(entity);
