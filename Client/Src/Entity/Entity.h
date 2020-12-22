@@ -30,6 +30,7 @@ public:
 	///Setter
 	void SetFacingDir(const glm::vec3& facingDir);
 	void SetPos(const glm::vec3& pos);
+	void SetScale(const glm::vec3& scale);
 private:
 	enum struct EntityType: int{
 		Bullet,

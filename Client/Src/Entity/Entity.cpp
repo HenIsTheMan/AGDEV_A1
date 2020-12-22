@@ -48,6 +48,10 @@ void Entity::SetPos(const glm::vec3& pos){
 	this->pos = pos;
 }
 
+void Entity::SetScale(const glm::vec3& scale){
+	this->scale = scale;
+}
+
 Entity::Entity():
 	type(EntityType::Amt),
 	movable(false),

@@ -19,7 +19,7 @@ public:
 	Entity* RetrieveEntity();
 
 	void LocalTranslate(const glm::vec3& localTranslate);
-	void LocalRotate(const glm::vec4& localRotate);
+	void LocalRotate(const glm::quat& localRotate);
 	void LocalScale(const glm::vec3& localScale);
 
 	///Getters
@@ -29,6 +29,9 @@ public:
 	///Setters
 	void SetVisible(const bool visible);
 	void SetEntity(Entity* const entity);
+	void SetLocalTranslation(const glm::vec3& localTranslation);
+	void SetLocalRotation(const glm::quat& localRotation);
+	void SetLocalScaling(const glm::vec3& localScaling);
 private:
 	bool visible;
 	Entity* entity;
@@ -36,10 +39,13 @@ private:
 	Node* parent;
 	std::vector<Node*> children;
 
-	glm::mat4 localTranslation;
-	glm::mat4 localRotation;
-	glm::mat4 localScaling;
+	glm::vec3 localTranslation;
+	glm::quat localRotation;
+	glm::vec3 localScaling;
 
-	glm::mat4 worldTransform;
-	glm::mat4 worldTransformNoScale;
+	glm::vec3 worldTranslation;
+	glm::quat worldRotation;
+	glm::vec3 worldScaling;
 };
+
+//transformUpdates
