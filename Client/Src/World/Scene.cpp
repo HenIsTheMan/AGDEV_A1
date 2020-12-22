@@ -215,7 +215,7 @@ void Scene::CreateEntities(){
 	const Entity* const enemyBody = entityFactory->CreateEnemyBody({
 		glm::vec3(
 			0.0f,
-			terrainYScale * myTerrain->GetHeightAtPt(0.0f, 0.4f, false) + xyScaleEnemyBody,
+			terrainYScale * 2.0f,
 			terrainZScale * 0.4f
 		),
 		glm::vec3(xyScaleEnemyBody, xyScaleEnemyBody, 0.001f),
@@ -306,7 +306,6 @@ void Scene::CreateTreesAndCubes(){
 	cubeMesh->ReserveDiffuseTexIndices(2000);
 
 	for(int i = 0; i < 2000; ++i){
-		const float scaleFactor = 200.0f;
 		const float offsetFactor = 100.0f;
 		const float xPos = PseudorandMinMax(-terrainXScale * 0.5f + offsetFactor, terrainXScale * 0.5f - offsetFactor);
 		const float zPos = PseudorandMinMax(-terrainZScale * 0.5f + offsetFactor, -offsetFactor);
@@ -319,7 +318,7 @@ void Scene::CreateTreesAndCubes(){
 		modelStack.PushModel({
 			modelStack.Translate(pos),
 			modelStack.Rotate(glm::vec4(0.f, 1.f, 0.f, PseudorandMinMax(0.0f, 360.0f))),
-			modelStack.Scale(glm::vec3(scaleFactor))
+			modelStack.Scale(glm::vec3((float)PseudorandMinMax(210, 400), (float)PseudorandMinMax(180, 300), (float)PseudorandMinMax(210, 400)))
 		});
 			const glm::mat4& modelMat = modelStack.GetTopModel();
 			const glm::vec3& color = glm::vec3(PseudorandMinMax(0.25f, 1.0f), 0.0f, 0.0f);
@@ -339,9 +338,9 @@ void Scene::CreateTreesAndCubes(){
 		modelStack.PopModel();
 
 		modelStack.PushModel({
-			modelStack.Translate(pos + glm::vec3(0.0f, (float)PseudorandMinMax(1600, 2000), terrainZScale * 0.5f)),
+			modelStack.Translate(pos + glm::vec3(0.0f, (float)PseudorandMinMax(1600, 2000), 0.0f)),
 			modelStack.Rotate(glm::vec4(0.f, 1.f, 0.f, PseudorandMinMax(0.0f, 360.0f))),
-			modelStack.Scale(glm::vec3(40.0f)),
+			modelStack.Scale(glm::vec3((float)PseudorandMinMax(35, 55))),
 		});
 			cubeMesh->AddModelMat(modelStack.GetTopModel());
 			cubeMesh->AddColor(glm::vec4(1.0f));
@@ -820,7 +819,12 @@ void Scene::GameRender(){
 		Meshes::meshes[(int)MeshType::Terrain]->Render(forwardSP);
 	modelStack.PopModel();
 
-	cubeMesh->InstancedRender(forwardSP);
+	modelStack.PushModel({
+
+	});
+		cubeMesh->SetModel(modelStack.GetTopModel());
+		cubeMesh->InstancedRender(forwardSP);
+	modelStack.PopModel();
 
 	const glm::vec3 playerPos = myPlayer->GetPos();
 
