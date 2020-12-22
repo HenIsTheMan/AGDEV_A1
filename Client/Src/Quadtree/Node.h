@@ -11,32 +11,30 @@ public:
 	~Node();
 
 	void Update();
-
 	void Reset();
 
 	void AddChild(Node* const child);
 	Node* DetachChild(const Node* const child);
 	Node* DetachChild(const Entity* const entity);
 	Node* FindChild(const Entity* const entity);
-
 	Entity* RetrieveEntity();
+
+	void LocalTranslate(const glm::vec3& localTranslate);
+	void LocalRotate(const glm::vec4& localRotate);
+	void LocalScale(const glm::vec3& localScale);
 
 	///Getters
 	bool GetVisible() const;
 	const Entity* GetEntity() const;
 	const Node* GetParent() const;
 
-	const glm::vec3& GetLocalTranslate() const;
-	const glm::vec4& GetLocalRotate() const;
-	const glm::vec3& GetLocalScale() const;
+	const glm::mat4& GetLocalTranslation() const;
+	const glm::mat4& GetLocalRotation() const;
+	const glm::mat4& GetLocalScaling() const;
 
 	///Setters
 	void SetVisible(const bool visible);
 	void SetEntity(Entity* const entity);
-
-	void SetLocalTranslate(const glm::vec3& localTranslate);
-	void SetLocalRotate(const glm::vec4& localRotate);
-	void SetLocalScale(const glm::vec3& localScale);
 private:
 	bool visible;
 
@@ -44,10 +42,10 @@ private:
 	Node* parent;
 	Entity* entity;
 
+	glm::mat4 localTranslation;
+	glm::mat4 localRotation;
+	glm::mat4 localScaling;
+
 	glm::mat4 worldTransform;
 	glm::mat4 worldTransformNoScale;
-
-	glm::vec3 localTranslate;
-	glm::vec4 localRotate;
-	glm::vec3 localScale;
 };

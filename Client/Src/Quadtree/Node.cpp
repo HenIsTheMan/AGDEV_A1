@@ -5,11 +5,11 @@ Node::Node():
 	children(),
 	parent(nullptr),
 	entity(nullptr),
+	localTranslation(glm::mat4(1.0f)),
+	localRotation(glm::mat4(1.0f)),
+	localScaling(glm::mat4(1.0f)),
 	worldTransform(glm::mat4(1.0f)),
-	worldTransformNoScale(glm::mat4(1.0f)),
-	localTranslate(glm::vec3(0.0f)),
-	localRotate(glm::vec4(0.0f, 1.0f, 0.0f, 0.0f)),
-	localScale(glm::vec3(1.0f))
+	worldTransformNoScale(glm::mat4(1.0f))
 {
 }
 
@@ -19,14 +19,14 @@ Node::~Node(){
 }
 
 void Node::Update(){
-	const glm::mat4 localTransformNoScale = glm::translate(glm::mat4(1.0f), localTranslate) * glm::rotate(glm::mat4(1.0f), glm::radians(localRotate.w), glm::vec3(localRotate));
+	const glm::mat4 localTransformNoScale = localTranslation * localRotation;
 
 	if(parent){
 		worldTransformNoScale = parent->worldTransformNoScale * localTransformNoScale;
-		worldTransform = parent->worldTransformNoScale * localTransformNoScale * glm::scale(glm::mat4(1.0f), localScale);
+		worldTransform = parent->worldTransformNoScale * localTransformNoScale * localScaling;
 	} else{
 		worldTransformNoScale = localTransformNoScale;
-		worldTransform = localTransformNoScale * glm::scale(glm::mat4(1.0f), localScale);
+		worldTransform = localTransformNoScale * localScaling;
 	}
 
 	if(entity){
@@ -115,6 +115,18 @@ Entity* Node::RetrieveEntity(){
 	return entity;
 }
 
+void Node::LocalTranslate(const glm::vec3& localTranslate){
+	localTranslation = glm::translate(localTranslation, localTranslate);
+}
+
+void Node::LocalRotate(const glm::vec4& localRotate){
+	localRotation = glm::rotate(localRotation, glm::radians(localRotate.w), glm::vec3(localRotate));
+}
+
+void Node::LocalScale(const glm::vec3& localScale){
+	localScaling = glm::scale(localScaling, localScale);
+}
+
 bool Node::GetVisible() const{
 	return visible;
 }
@@ -127,16 +139,16 @@ const Node* Node::GetParent() const{
 	return parent;
 }
 
-const glm::vec3& Node::GetLocalTranslate() const{
-	return localTranslate;
+const glm::mat4& Node::GetLocalTranslation() const{
+	return localTranslation;
 }
 
-const glm::vec4& Node::GetLocalRotate() const{
-	return localRotate;
+const glm::mat4& Node::GetLocalRotation() const{
+	return localRotation;
 }
 
-const glm::vec3& Node::GetLocalScale() const{
-	return localScale;
+const glm::mat4& Node::GetLocalScaling() const{
+	return localScaling;
 }
 
 void Node::SetVisible(const bool visible){
@@ -145,16 +157,4 @@ void Node::SetVisible(const bool visible){
 
 void Node::SetEntity(Entity* const entity){
 	this->entity = entity;
-}
-
-void Node::SetLocalTranslate(const glm::vec3& localTranslate){
-	this->localTranslate = localTranslate;
-}
-
-void Node::SetLocalRotate(const glm::vec4& localRotate){
-	this->localRotate = localRotate;
-}
-
-void Node::SetLocalScale(const glm::vec3& localScale){
-	this->localScale = localScale;
 }
