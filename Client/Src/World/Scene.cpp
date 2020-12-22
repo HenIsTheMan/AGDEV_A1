@@ -340,7 +340,7 @@ void Scene::CreateTreesAndCubes(){
 		modelStack.PopModel();
 
 		modelStack.PushModel({
-			modelStack.Translate(pos + glm::vec3(0.0f, (float)PseudorandMinMax(1600, 2000), 0.0f)),
+			modelStack.Translate(pos + glm::vec3(0.0f, PseudorandMinMax(1600.0f, 2000.0f), 0.0f)),
 			modelStack.QuatRotate(glm::quat(glm::vec3((float)PseudorandMinMax(0, 360), (float)PseudorandMinMax(0, 360), (float)PseudorandMinMax(0, 360)))),
 			modelStack.Scale(glm::vec3((float)PseudorandMinMax(35, 55))),
 		});
@@ -821,13 +821,12 @@ void Scene::GameRender(){
 		Meshes::meshes[(int)MeshType::Terrain]->Render(forwardSP);
 	modelStack.PopModel();
 
-	static float yStart = 50.0f;
-	static float yEnd = -50.0f;
+	static float yStart = 400.0f;
+	static float yEnd = -400.0f;
 	const float factor = EaseOutBounce((cos(elapsedTime) + 1.0f) * 0.5f);
 
 	modelStack.PushModel({
 		modelStack.Translate(glm::vec3(0.0f, glm::mix(yStart, yEnd, factor), 0.0f)),
-		modelStack.Rotate(glm::vec4(0.0f, 1.0f, 0.0f, 45.0f))
 	});
 		cubeMesh->SetModel(modelStack.GetTopModel());
 		cubeMesh->InstancedRender(forwardSP);
