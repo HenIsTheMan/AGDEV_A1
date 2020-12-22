@@ -36,6 +36,10 @@ void Node::Update(){
 	}
 
 	if(entity){
+		worldTranslation.x = std::min(entity->xMax, std::max(entity->xMin, entity->pos.x));
+		worldTranslation.y = std::min(entity->yMax, std::max(entity->yMin, entity->pos.y));
+		worldTranslation.z = std::min(entity->zMax, std::max(entity->zMin, entity->pos.z));
+
 		entity->pos = worldTranslation;
 		//entity->SetFacingDir();
 		entity->scale = worldDilation;

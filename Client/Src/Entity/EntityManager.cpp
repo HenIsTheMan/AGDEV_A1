@@ -78,23 +78,17 @@ void EntityManager::Update(const Cam& cam){
 					UpdatePlayerVert(movableEntity);
 
 					movableEntity->vel += movableEntity->force / movableEntity->mass * dt;
-					movableEntity->pos += movableEntity->vel * dt;
+					movableNode->LocalTranslate(movableEntity->vel * dt);
 
-					if(movableEntity->pos.y < movableEntity->yMin){
-						IsAirborneWrapper::isAirborne = false;
-					}
+					//if(movableEntity->pos.y < movableEntity->yMin){
+					//	IsAirborneWrapper::isAirborne = false;
+					//}
 
 					movableEntity->yMin = terrainYScale * static_cast<Terrain*>(Meshes::meshes[(int)MeshType::Terrain])->GetHeightAtPt(
 						movableEntity->pos.x / terrainXScale,
 						movableEntity->pos.z / terrainZScale,
 						false
 					) + movableEntity->scale.y;
-
-					movableEntity->pos.x = std::min(movableEntity->xMax, std::max(movableEntity->xMin, movableEntity->pos.x));
-					movableEntity->pos.y = std::min(movableEntity->yMax, std::max(movableEntity->yMin, movableEntity->pos.y));
-					movableEntity->pos.z = std::min(movableEntity->zMax, std::max(movableEntity->zMin, movableEntity->pos.z));
-
-					movableNode->SetLocalTranslation(movableEntity->pos);
 
 					break;
 				}
@@ -121,9 +115,7 @@ void EntityManager::Update(const Cam& cam){
 					}
 
 					movableEntity->vel += movableEntity->force / movableEntity->mass * dt;
-					movableEntity->pos += movableEntity->vel * dt;
-
-					movableNode->SetLocalTranslation(movableEntity->pos);
+					movableNode->LocalTranslate(movableEntity->vel * dt);
 
 					break;
 				}
