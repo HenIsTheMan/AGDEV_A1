@@ -225,24 +225,37 @@ void Scene::CreateEntities(){
 		-1,
 	});
 
-	const Entity* const enemyPart = entityFactory->CreateEnemyPart({
-		glm::vec3(),
-		glm::vec3(),
-		glm::vec4(1.0f, 0.5f, 0.0f, 0.4f),
-		-1,
-	});
-
+	const Entity* enemyParts[4]{nullptr, nullptr, nullptr, nullptr};
 	Node* const rootNode = nodeManager->RetrieveRootNode();
-	Node* const enemyPartNode = rootNode->DetachChild(enemyPart);
-	assert(enemyPartNode != nullptr && "Var 'enemyPartNode' is nullptr");
 
-	Node* const enemyBodyNode = rootNode->FindChild(enemyBody);
-	assert(enemyBodyNode != nullptr && "Var 'enemyBodyNode' is nullptr");
-	enemyBodyNode->AddChild(enemyPartNode);
+	for(int i = 0; i < 4; ++i){
+		const Entity*& enemyPart = enemyParts[i];
+		enemyPart = entityFactory->CreateEnemyPart({
+			glm::vec3(),
+			glm::vec3(),
+			glm::vec4(1.0f, 0.5f, 0.0f, 0.4f),
+			-1,
+		});
 
-	enemyPartNode->SetLocalTranslation(glm::vec3(0.0f, 800.0f, 0.0f));
-	enemyPartNode->SetLocalDilation(glm::vec3(0.5f));
+		Node* const enemyPartNode = rootNode->DetachChild(enemyPart);
+		Node* const enemyBodyNode = rootNode->FindChild(enemyBody);
+		enemyBodyNode->AddChild(enemyPartNode);
 
+		switch(i){
+			case 0:
+				enemyPartNode->SetLocalTranslation(glm::vec3(0.0f, 800.0f, 0.0f));
+				enemyPartNode->SetLocalDilation(glm::vec3(0.5f));
+				enemyPartNode->SetUseLocalRotationUpdate(true);
+				enemyPartNode->SetLocalRotationUpdate(glm::quat(glm::vec3(10.0f, 0.0f, 0.0f)));
+				break;
+			case 1:
+				break;
+			case 2:
+				break;
+			case 3:
+				break;
+		}
+	}
 	//*/
 
 	//* Create coins
