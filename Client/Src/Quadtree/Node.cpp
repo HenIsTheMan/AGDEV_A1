@@ -1,7 +1,7 @@
 #include "Node.h"
 
 Node::Node():
-	visible(false),
+	visible(true),
 	children(),
 	parent(nullptr),
 	entity(nullptr),

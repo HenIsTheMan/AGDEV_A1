@@ -118,8 +118,8 @@ void EntityManager::Update(){
 						static_cast<BoxCollider*>(movableEntity->collider)->SetPos(movableEntity->pos);
 					}
 
-					//Node* const node = nodeManager->RetrieveRootNode()->FindChild(movableEntity);
-					//node->SetLocalTranslate(movableEntity->pos);
+					Node* const node = nodeManager->RetrieveRootNode()->FindChild(movableEntity);
+					node->SetLocalTranslate(movableEntity->pos);
 
 					break;
 				}
@@ -143,8 +143,8 @@ void EntityManager::Update(){
 						static_cast<SphereCollider*>(movableEntity->collider)->SetPos(movableEntity->pos);
 					}
 
-					//Node* const node = nodeManager->RetrieveRootNode()->FindChild(movableEntity);
-					//node->SetLocalTranslate(movableEntity->pos);
+					Node* const node = nodeManager->RetrieveRootNode()->FindChild(movableEntity);
+					node->SetLocalTranslate(movableEntity->pos);
 
 					break;
 				}
@@ -152,12 +152,12 @@ void EntityManager::Update(){
 		}
 	}
 
-	//for(Entity*& stationaryEntity: stationaryEntities){
-	//	if(stationaryEntity){
-	//		Node* const node = nodeManager->RetrieveRootNode()->FindChild(stationaryEntity);
-	//		node->SetLocalTranslate(stationaryEntity->pos);
-	//	}
-	//}
+	for(Entity*& stationaryEntity: stationaryEntities){
+		if(stationaryEntity){
+			Node* const node = nodeManager->RetrieveRootNode()->FindChild(stationaryEntity);
+			node->SetLocalTranslate(stationaryEntity->pos);
+		}
+	}
 
 	for(size_t i = 0; i < movableEntities.size(); ++i){
 		Entity*& entity0 = movableEntities[i];

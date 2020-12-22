@@ -247,39 +247,39 @@ void Scene::CreateEntities(){
 	//*/
 
 	//* Create coins
-	for(short i = 0; i < 20; ++i){
-		const float scaleFactor = 70.0f;
-		const float offsetFactor = 5.0f;
-		const float xPos = PseudorandMinMax(-terrainXScale * 0.5f + offsetFactor, terrainXScale * 0.5f - offsetFactor);
-		const float zPos = PseudorandMinMax(offsetFactor, terrainZScale * 0.5f - offsetFactor);
-		const glm::vec3 pos = glm::vec3(
-			xPos,
-			terrainYScale * myTerrain->GetHeightAtPt(xPos / terrainXScale, zPos / terrainZScale, false) + scaleFactor,
-			zPos
-		);
-		entityFactory->CreateCoin({
-			pos,
-			glm::vec3(scaleFactor),
-			glm::vec4(1.0f),
-			-1,
-		});
+	//for(short i = 0; i < 20; ++i){
+	//	const float scaleFactor = 70.0f;
+	//	const float offsetFactor = 5.0f;
+	//	const float xPos = PseudorandMinMax(-terrainXScale * 0.5f + offsetFactor, terrainXScale * 0.5f - offsetFactor);
+	//	const float zPos = PseudorandMinMax(offsetFactor, terrainZScale * 0.5f - offsetFactor);
+	//	const glm::vec3 pos = glm::vec3(
+	//		xPos,
+	//		terrainYScale * myTerrain->GetHeightAtPt(xPos / terrainXScale, zPos / terrainZScale, false) + scaleFactor,
+	//		zPos
+	//	);
+	//	entityFactory->CreateCoin({
+	//		pos,
+	//		glm::vec3(scaleFactor),
+	//		glm::vec4(1.0f),
+	//		-1,
+	//	});
 
-		ISound* music = soundEngine->play3D("Audio/Music/Spin.mp3", vec3df(pos.x, pos.y, pos.z), true, true, true, ESM_AUTO_DETECT, true);
-		if(music){
-			music->setMinDistance(3.f);
-			music->setVolume(5);
+	//	ISound* music = soundEngine->play3D("Audio/Music/Spin.mp3", vec3df(pos.x, pos.y, pos.z), true, true, true, ESM_AUTO_DETECT, true);
+	//	if(music){
+	//		music->setMinDistance(3.f);
+	//		music->setVolume(5);
 
-			ISoundEffectControl* soundFX = music->getSoundEffectControl();
-			if(!soundFX){
-				(void)puts("No soundFX support!\n");
-			}
-			coinSoundFX.emplace_back(soundFX);
+	//		ISoundEffectControl* soundFX = music->getSoundEffectControl();
+	//		if(!soundFX){
+	//			(void)puts("No soundFX support!\n");
+	//		}
+	//		coinSoundFX.emplace_back(soundFX);
 
-			coinMusic.emplace_back(music);
-		} else{
-			(void)puts("Failed to init music!\n");
-		}
-	}
+	//		coinMusic.emplace_back(music);
+	//	} else{
+	//		(void)puts("Failed to init music!\n");
+	//	}
+	//}
 	//*/
 }
 
