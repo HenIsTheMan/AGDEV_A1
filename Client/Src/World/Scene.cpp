@@ -245,10 +245,6 @@ void Scene::CreateEntities(){
 
 	enemyPartNode->SetLocalTranslation(glm::vec3(0.0f, 700.0f, 0.0f));
 	enemyPartNode->SetLocalDilation(glm::vec3(0.5f));
-	enemyPartNode->SetUseLocalTranslationUpdate(true);
-	enemyPartNode->SetLocalTranslationUpdate(glm::vec3(100.0f, 0.0f, 0.0f));
-	enemyPartNode->SetUseLocalDilationUpdate(true);
-	enemyPartNode->SetLocalDilationUpdate(glm::vec3(20.0f, 20.0f, 1.0f));
 	//*/
 
 	//* Create coins

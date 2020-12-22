@@ -3,9 +3,6 @@
 extern float dt;
 
 Node::Node():
-	useLocalTranslationUpdate(false),
-	useLocalRotationUpdate(false),
-	useLocalDilationUpdate(false),
 	visible(true),
 	entity(nullptr),
 	parent(nullptr),
@@ -15,10 +12,7 @@ Node::Node():
 	localDilation(glm::vec3(1.0f)),
 	worldTranslation(glm::vec3()),
 	worldRotation(glm::quat()),
-	worldDilation(glm::vec3(1.0f)),
-	localTranslationUpdate(glm::vec3()),
-	localRotationUpdate(glm::quat()),
-	localDilationUpdate(glm::vec3(1.0f))
+	worldDilation(glm::vec3(1.0f))
 {
 }
 
@@ -28,16 +22,6 @@ Node::~Node(){
 }
 
 void Node::Update(){
-	if(useLocalTranslationUpdate){
-		localTranslation += localTranslationUpdate * dt;
-	}
-	if(useLocalRotationUpdate){
-		localRotation = glm::quat(localRotationUpdate.w * dt, localRotationUpdate.x, localRotationUpdate.y, localRotationUpdate.z) * localRotation;
-	}
-	if(useLocalDilationUpdate){
-		localDilation += localDilationUpdate * dt;
-	}
-
 	if(parent){
 		worldTranslation = parent->worldTranslation + localTranslation;
 		worldRotation = parent->worldRotation * localRotation;
@@ -144,18 +128,6 @@ const Entity* Node::GetEntity() const{
 	return entity;
 }
 
-void Node::SetUseLocalTranslationUpdate(const bool useLocalTranslationUpdate){
-	this->useLocalTranslationUpdate = useLocalTranslationUpdate;
-}
-
-void Node::SetUseLocalRotationUpdate(const bool useLocalRotationUpdate){
-	this->useLocalRotationUpdate = useLocalRotationUpdate;
-}
-
-void Node::SetUseLocalDilationUpdate(const bool useLocalDilationUpdate){
-	this->useLocalDilationUpdate = useLocalDilationUpdate;
-}
-
 void Node::SetVisible(const bool visible){
 	this->visible = visible;
 }
@@ -174,16 +146,4 @@ void Node::SetLocalRotation(const glm::quat& localRotation){
 
 void Node::SetLocalDilation(const glm::vec3& localDilation){
 	this->localDilation = localDilation;
-}
-
-void Node::SetLocalTranslationUpdate(const glm::vec3& localTranslationUpdate){
-	this->localTranslationUpdate = localTranslationUpdate;
-}
-
-void Node::SetLocalRotationUpdate(const glm::quat& localRotationUpdate){
-	this->localRotationUpdate = localRotationUpdate;
-}
-
-void Node::SetLocalDilationUpdate(const glm::vec3& localDilationUpdate){
-	this->localDilationUpdate = localDilationUpdate;
 }
