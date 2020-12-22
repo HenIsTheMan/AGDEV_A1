@@ -37,7 +37,6 @@ void Node::Update(){
 	//	worldTransform = localTransformNoScale * glm::scale(glm::mat4(1.0f), localDilation);
 	//}
 
-
 	if(parent){
 		worldTranslation = parent->worldTranslation + localTranslation;
 		worldRotation = parent->worldRotation * localRotation;

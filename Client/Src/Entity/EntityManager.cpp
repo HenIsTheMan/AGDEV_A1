@@ -128,11 +128,10 @@ void EntityManager::Update(const Cam& cam){
 					if(glm::length2(displacementVec) > 25.0f){
 						movableNode->LocalTranslate(glm::normalize(displacementVec) * 200.0f * dt);
 					}
-					//movableNode->LocalScale(glm::vec3(20.0f, 20.0f, 0.0f) * dt);
 					break;
 				}
 				case Entity::EntityType::EnemyPart: {
-					movableNode->SetLocalRotation(glm::quat(glm::vec3(40.0f * dt, 40.0f * dt, 40.0f * dt)));
+					//movableNode->LocalRotate(glm::quat(glm::vec3(2.0f * dt, 2.0f * dt, 2.0f * dt)));
 					//movableNode->LocalRotate(glm::angleAxis(glm::radians(200.0f * dt), glm::vec3(1.0f, 0.0f, 0.0f)));
 
 					const float startScale = 0.2f;

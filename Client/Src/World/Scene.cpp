@@ -227,11 +227,7 @@ void Scene::CreateEntities(){
 
 	const float xyScaleEnemyPart = 44.0f;
 	const Entity* const enemyPart = entityFactory->CreateEnemyPart({
-		glm::vec3(
-			50.0f,
-			terrainYScale * myTerrain->GetHeightAtPt(50.0f / terrainXScale, 0.4f, false) + xyScaleEnemyPart,
-			terrainZScale * 0.4f
-		),
+		glm::vec3(),
 		glm::vec3(xyScaleEnemyPart, xyScaleEnemyPart, 0.001f),
 		glm::vec4(1.0f, 0.5f, 0.0f, 0.4f),
 		-1,
