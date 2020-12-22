@@ -5,7 +5,7 @@
 extern float terrainXScale;
 
 Region::Region():
-	visible(false),
+	visible(true),
 	parent(nullptr),
 	origin(glm::vec2()),
 	size(glm::vec2()),

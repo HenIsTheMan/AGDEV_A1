@@ -42,7 +42,16 @@ void Node::Update(){
 }
 
 void Node::Reset(){
-	//??
+	visible = true;
+	entity = nullptr;
+	parent = nullptr;
+	children = std::vector<Node*>();
+	localTranslation = glm::vec3();
+	localRotation = glm::quat();
+	localDilation = glm::vec3(1.0f);
+	worldTranslation = glm::vec3();
+	worldRotation = glm::quat();
+	worldDilation = glm::vec3(1.0f);
 }
 
 void Node::AddChild(Node* const child){
