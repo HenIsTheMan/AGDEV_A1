@@ -132,10 +132,11 @@ void EntityManager::Update(const Cam& cam){
 					break;
 				}
 				case Entity::EntityType::EnemyPart: {
-					movableNode->LocalTranslate(glm::vec3(0.0f, cos(elapsedTime) * 0.5f, 0.0f));
+					movableNode->SetLocalRotation(glm::quat(glm::vec3(40.0f * dt, 40.0f * dt, 40.0f * dt)));
+					//movableNode->LocalRotate(glm::angleAxis(glm::radians(200.0f * dt), glm::vec3(1.0f, 0.0f, 0.0f)));
 
-					const float startScale = 0.1f;
-					const float endScale = 0.5f;
+					const float startScale = 0.2f;
+					const float endScale = 0.4f;
 					const float lerpFactor = EaseInOutCubic(sin(elapsedTime) * 0.5f + 0.5f);
 					const float component = (1.0f - lerpFactor) * startScale + lerpFactor * endScale;
 					movableNode->SetLocalDilation(glm::vec3(component, component, 0.0f));

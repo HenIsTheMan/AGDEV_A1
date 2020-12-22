@@ -1,5 +1,7 @@
 #include "Node.h"
 
+#include <glm/gtx/quaternion.hpp>
+
 #include "../Collision/Collider/Colliders/BoxCollider.h"
 #include "../Collision/Collider/Colliders/SphereCollider.h"
 
@@ -25,6 +27,17 @@ Node::~Node(){
 }
 
 void Node::Update(){
+	//const glm::mat4 localTransformNoScale = glm::translate(glm::mat4(1.0f), localTranslation) * glm::toMat4(localRotation);
+
+	//if(parent){
+	//	worldTransformNoScale = parent->worldTransformNoScale * localTransformNoScale;
+	//	worldTransform = parent->worldTransformNoScale * localTransformNoScale * glm::scale(glm::mat4(1.0f), localDilation);
+	//} else{
+	//	worldTransformNoScale = localTransformNoScale;
+	//	worldTransform = localTransformNoScale * glm::scale(glm::mat4(1.0f), localDilation);
+	//}
+
+
 	if(parent){
 		worldTranslation = parent->worldTranslation + localTranslation;
 		worldRotation = parent->worldRotation * localRotation;
@@ -40,8 +53,9 @@ void Node::Update(){
 		worldTranslation.y = std::min(entity->yMax, std::max(entity->yMin, worldTranslation.y));
 		worldTranslation.z = std::min(entity->zMax, std::max(entity->zMin, worldTranslation.z));
 
-		entity->pos = worldTranslation;
+		//entity->pos = glm::vec3((glm::translate(glm::mat4(1.0f), localTranslation) * glm::toMat4(localRotation))[3]);
 		//entity->SetFacingDir();
+		entity->pos = glm::vec3((glm::translate(glm::toMat4(worldRotation), worldTranslation))[3]);
 		entity->scale = worldDilation;
 
 		if(entity->collider != nullptr){
@@ -57,6 +71,10 @@ void Node::Update(){
 			}
 		}
 	}
+
+	//if(entity){
+	//	entity->SetPos(glm::vec3(worldTransform[3]));
+	//}
 
 	for(Node* const child: children){
 		child->Update();

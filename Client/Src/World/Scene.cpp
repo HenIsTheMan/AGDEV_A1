@@ -225,7 +225,7 @@ void Scene::CreateEntities(){
 		-1,
 	});
 
-	const float xyScaleEnemyPart = 40.0f;
+	const float xyScaleEnemyPart = 44.0f;
 	const Entity* const enemyPart = entityFactory->CreateEnemyPart({
 		glm::vec3(
 			50.0f,
