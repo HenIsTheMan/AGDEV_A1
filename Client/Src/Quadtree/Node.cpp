@@ -35,7 +35,7 @@ void Node::Update(){
 		localRotation = glm::quat(localRotationUpdate.w * dt, localRotationUpdate.x, localRotationUpdate.y, localRotationUpdate.z) * localRotation;
 	}
 	if(useLocalDilationUpdate){
-		localDilation *= localDilationUpdate * dt;
+		localDilation += localDilationUpdate * dt;
 	}
 
 	if(parent){
@@ -174,4 +174,16 @@ void Node::SetLocalRotation(const glm::quat& localRotation){
 
 void Node::SetLocalDilation(const glm::vec3& localDilation){
 	this->localDilation = localDilation;
+}
+
+void Node::SetLocalTranslationUpdate(const glm::vec3& localTranslationUpdate){
+	this->localTranslationUpdate = localTranslationUpdate;
+}
+
+void Node::SetLocalRotationUpdate(const glm::quat& localRotationUpdate){
+	this->localRotationUpdate = localRotationUpdate;
+}
+
+void Node::SetLocalDilationUpdate(const glm::vec3& localDilationUpdate){
+	this->localDilationUpdate = localDilationUpdate;
 }

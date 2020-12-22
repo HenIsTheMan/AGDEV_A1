@@ -241,10 +241,14 @@ void Scene::CreateEntities(){
 
 	Node* const enemyBodyNode = rootNode->FindChild(enemyBody);
 	assert(enemyBodyNode != nullptr && "Var 'enemyBodyNode' is nullptr");
+	enemyBodyNode->AddChild(enemyPartNode);
 
 	enemyPartNode->SetLocalTranslation(glm::vec3(0.0f, 700.0f, 0.0f));
 	enemyPartNode->SetLocalDilation(glm::vec3(0.5f));
-	enemyBodyNode->AddChild(enemyPartNode);
+	enemyPartNode->SetUseLocalTranslationUpdate(true);
+	enemyPartNode->SetLocalTranslationUpdate(glm::vec3(100.0f, 0.0f, 0.0f));
+	enemyPartNode->SetUseLocalDilationUpdate(true);
+	enemyPartNode->SetLocalDilationUpdate(glm::vec3(20.0f, 20.0f, 1.0f));
 	//*/
 
 	//* Create coins
@@ -339,7 +343,7 @@ void Scene::CreateTreesAndCubes(){
 		modelStack.PopModel();
 
 		modelStack.PushModel({
-			modelStack.Translate(pos + glm::vec3(0.0f, (float)PseudorandMinMax(1200, 1600), terrainZScale * 0.5f)),
+			modelStack.Translate(pos + glm::vec3(0.0f, (float)PseudorandMinMax(1600, 2000), terrainZScale * 0.5f)),
 			modelStack.Rotate(glm::vec4(0.f, 1.f, 0.f, PseudorandMinMax(0.0f, 360.0f))),
 			modelStack.Scale(glm::vec3(40.0f)),
 		});

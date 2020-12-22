@@ -35,6 +35,9 @@ public:
 	void SetLocalTranslation(const glm::vec3& localTranslation);
 	void SetLocalRotation(const glm::quat& localRotation);
 	void SetLocalDilation(const glm::vec3& localDilation);
+	void SetLocalTranslationUpdate(const glm::vec3& localTranslationUpdate);
+	void SetLocalRotationUpdate(const glm::quat& localRotationUpdate);
+	void SetLocalDilationUpdate(const glm::vec3& localDilationUpdate);
 private:
 	bool useLocalTranslationUpdate;
 	bool useLocalRotationUpdate;
