@@ -44,6 +44,7 @@ Advanced Collision Detection (ACD)
 - Raycasting (can collide with thin obj)
 - Fused with Quadtree for higher efficiency
 - Cam collision with terrain (using barycentric interpolation)
+- Rendering of colliders
 
 LOD
 - Diff mesh(es)/model(s) and texture(s)
@@ -56,6 +57,7 @@ Scene Graph
 
 Spatial Partitioning
 - Merged with Scene Graph in Quadtree
+- Rendering of Quadtree
 
 Frustum Culling
 - Merged with Quadtree
@@ -63,6 +65,7 @@ Frustum Culling
 
 New others
 - Easing
+- Rotation using quaternions
 - Generic class for Obj Pooling
 - Better abstraction for most parts of the code
 
