@@ -33,32 +33,20 @@ Left Mouse Button (LMB) - select different options
 Features:
 
 Walking
-Sprinting
 Jumping
-Crouching
-Proning
 
 Shooting weapons
 Changing weapons
 Diff weapon attributes
-Collecting of ammo from the ground
 
-Collision between player and boundary
-Collision between player and sphere (player and enemy, player and spherical walls)
-Collision between player and cuboid
-Collision between sphere and sphere (bullet and enemy)
-
-Score system (file I/O for saving and loading scores, storing and sorting scores in a container)
-Lives
-Health
 Inventory
 
-Camera collision with terrain
+Cam collision with terrain (using barycentric interpolation)
 Night vision (combined with scoped mode for sniper)
 Scoped mode (for sniper)
 
 2D audio
-3D audio (coin spinning music and fire burning music)
+3D audio
 
 Object pooling
 Skybox with bounds checking
