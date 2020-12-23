@@ -464,7 +464,7 @@ bool Scene::Init(){
 		(void)puts("Failed to init soundEngine!\n");
 	}
 	soundEngine->play2D("Audio/Music/Theme.mp3", true);
-	soundEngine->setSoundVolume(0);
+	//soundEngine->setSoundVolume(0);
 
 	InitEntities();
 
