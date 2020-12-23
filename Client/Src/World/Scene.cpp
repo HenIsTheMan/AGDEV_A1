@@ -221,7 +221,7 @@ void Scene::CreateEntities(){
 			terrainZScale * 0.4f
 		),
 		glm::vec3(xyScaleEnemyBody, xyScaleEnemyBody, 5.0f),
-		glm::vec4(1.0f, 1.0f, 1.0f, 0.4f),
+		glm::vec4(0.3f, 0.3f, 0.3f, 0.4f),
 		-1,
 	});
 
