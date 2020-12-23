@@ -27,7 +27,6 @@ public:
 	void GetLeaves(std::vector<Region*>& leaves);
 
 	const Region* FindRegion(Node* const node, const bool movable) const;
-	const Region* FindParentRegion(Node* const node, const bool movable) const;
 
 	void AddNode(Node* const node, const bool movable);
 	void RemoveNode(Node* const node, const bool movable);
@@ -38,6 +37,8 @@ public:
 	void VisibilityCheck(const FrustumCulling* const frustumCulling);
 	void MakeSelfAndChildrenInvisible();
 
+	///Getters
+	const Region* GetParent() const;
 	const std::vector<Node*>& GetStationaryNodes() const;
 	const std::vector<Node*>& GetMovableNodes() const;
 private:
@@ -57,8 +58,6 @@ private:
 	std::vector<Node*> movableNodes;
 
 	ObjPool<Region>* regionPool;
-
-	const Region* IFindParentRegion(Node* const node, const bool movable, const Region* const parentRegion) const;
 
 	void IGetEntitiesToRender(
 		std::unordered_set<Entity*>& entitySetOpaque, std::unordered_set<Entity*>& entitySetNotOpaque,

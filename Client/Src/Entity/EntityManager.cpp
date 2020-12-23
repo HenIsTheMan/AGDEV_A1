@@ -147,14 +147,39 @@ void EntityManager::Update(const Cam& cam){
 
 	nodeManager->Update();
 
-	for(Node*& movableNode: movableNodes){
+	//* Using quadtree for collision detection and hence collision response
+	for(Node* const movableNode : movableNodes){
+		if(movableNode == nullptr){
+			continue;
+		}
+
 		Entity* const movableEntity = movableNode->RetrieveEntity();
 		if(movableEntity->type == Entity::EntityType::Bullet){
-			const Region* const parentRegion = rootRegion->FindParentRegion(movableNode, true);
+			const Region* const region = rootRegion->FindRegion(movableNode, true);
+			const Region* const parentRegion = region->GetParent();
 			std::vector<Node*> nearbyMovableNodes = parentRegion->GetMovableNodes();
+
+			for(Node* const nearbyMovableNode: nearbyMovableNodes){
+				Entity* const nearbyMovableEntity = nearbyMovableNode->RetrieveEntity();
+
+				if(movableEntity->type != nearbyMovableEntity->type && Collision::DetectCollision(movableEntity, nearbyMovableEntity)){
+					switch(nearbyMovableEntity->type){
+						case Entity::EntityType::ThinObj:
+							nearbyMovableEntity->colour = glm::vec4(PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), 1.0f);
+							break;
+					}
+
+					if(std::find(entitiesToRemove.begin(), entitiesToRemove.end(), movableEntity) == entitiesToRemove.end()){
+						entitiesToRemove.emplace_back(movableEntity);
+						break;
+					}
+				}
+			}
 		}
 	}
+	//*/
 
+	//* Naive way of detecting and resolving collisions
 	//const size_t size = movableNodes.size();
 	//for(size_t i = 0; i < size; ++i){
 	//	Node*& movableNode0 = movableNodes[i];
@@ -204,6 +229,7 @@ void EntityManager::Update(const Cam& cam){
 	//		}
 	//	}
 	//}
+	//*/
 
 	for(Entity* const entity: entitiesToRemove){
 		DeactivateEntity(entity);
