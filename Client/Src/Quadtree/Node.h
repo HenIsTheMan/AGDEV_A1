@@ -6,6 +6,7 @@
 
 class Node final{
 	friend class Region;
+	friend class NodeManager;
 public:
 	Node();
 	~Node();
@@ -18,6 +19,8 @@ public:
 	Node* FindChild(const Entity* const entity);
 	Entity* RetrieveEntity();
 
+	size_t CalcAmtOfChildren() const;
+
 	void LocalTranslate(const glm::vec3& localTranslate);
 	void LocalRotate(const glm::quat& localRotate);
 	void LocalScale(const glm::vec3& localScale);
@@ -25,6 +28,7 @@ public:
 	///Getters
 	bool GetVisible() const;
 	const Entity* GetEntity() const;
+	const Node* GetParent() const;
 	const glm::vec3& GetLocalTranslation() const;
 	const glm::quat& GetLocalRotation() const;
 	const glm::vec3& GetLocalDilation() const;

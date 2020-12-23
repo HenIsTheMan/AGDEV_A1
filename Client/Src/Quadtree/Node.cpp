@@ -146,6 +146,10 @@ Entity* Node::RetrieveEntity(){
 	return entity;
 }
 
+size_t Node::CalcAmtOfChildren() const{
+	return children.size();
+}
+
 void Node::LocalTranslate(const glm::vec3& localTranslate){
 	localTranslation += localTranslate;
 }
@@ -164,6 +168,10 @@ bool Node::GetVisible() const{
 
 const Entity* Node::GetEntity() const{
 	return entity;
+}
+
+const Node* Node::GetParent() const{
+	return parent;
 }
 
 const glm::vec3& Node::GetLocalTranslation() const{

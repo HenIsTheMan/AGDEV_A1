@@ -124,6 +124,14 @@ void EntityManager::Update(const Cam& cam){
 					break;
 				}
 				case Entity::EntityType::EnemyBody: {
+					if(movableNode->CalcAmtOfChildren() == (size_t)0){
+						if(std::find(entitiesToRemove.begin(), entitiesToRemove.end(), movableEntity) == entitiesToRemove.end()){
+							entitiesToRemove.emplace_back(movableEntity);
+							movableNode = nullptr;
+						}
+						continue;
+					}
+
 					glm::vec3 displacementVec = cam.GetPos() - movableEntity->pos;
 					displacementVec.y = 0.0f;
 
@@ -133,6 +141,14 @@ void EntityManager::Update(const Cam& cam){
 					break;
 				}
 				case Entity::EntityType::EnemyPart: {
+					if(movableNode->GetParent() == nullptr){
+						if(std::find(entitiesToRemove.begin(), entitiesToRemove.end(), movableEntity) == entitiesToRemove.end()){
+							entitiesToRemove.emplace_back(movableEntity);
+							movableNode = nullptr;
+						}
+						continue;
+					}
+
 					//movableNode->LocalRotate(glm::quat(glm::vec3(5.0f * dt, 0.0f, 0.0f))); //Why much faster??
 
 					const float startScale = 0.2f;
@@ -407,8 +423,8 @@ void EntityManager::DeactivateEntityProcedure(Entity* const entity){
 			return (void)printf("Var 'node' is nullptr!");
 		}
 
-		node->SetEntity(nullptr);
 		regionManager->RetrieveRootRegion()->RemoveNode(node, entity->movable);
+		nodeManager->DeactivateNode(node);
 
 		removedEntities.insert(entity);
 	}
