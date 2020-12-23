@@ -149,6 +149,8 @@ void EntityManager::Update(const Cam& cam){
 						continue;
 					}
 
+					movableEntity->colour.a = movableEntity->life / movableEntity->maxLife;
+
 					//movableNode->LocalRotate(glm::quat(glm::vec3(5.0f * dt, 0.0f, 0.0f))); //Why much faster??
 
 					const float startScale = 0.2f;
@@ -164,7 +166,7 @@ void EntityManager::Update(const Cam& cam){
 	nodeManager->Update();
 
 	//* Using quadtree for collision detection and hence collision response
-	for(Node* const movableNode : movableNodes){
+	for(Node* const movableNode: movableNodes){
 		if(movableNode == nullptr){
 			continue;
 		}
@@ -175,13 +177,29 @@ void EntityManager::Update(const Cam& cam){
 			const Region* const parentRegion = region->GetParent();
 			std::vector<Node*> nearbyMovableNodes = parentRegion->GetMovableNodes();
 
-			for(Node* const nearbyMovableNode: nearbyMovableNodes){
+			for(Node*& nearbyMovableNode: nearbyMovableNodes){
+				if(nearbyMovableNode == nullptr){
+					continue;
+				}
+
 				Entity* const nearbyMovableEntity = nearbyMovableNode->RetrieveEntity();
 
 				if(movableEntity->type != nearbyMovableEntity->type && Collision::DetectCollision(movableEntity, nearbyMovableEntity)){
 					switch(nearbyMovableEntity->type){
 						case Entity::EntityType::ThinObj:
 							nearbyMovableEntity->colour = glm::vec4(PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), 0.5f);
+							break;
+						case Entity::EntityType::EnemyPart:
+							--nearbyMovableEntity->life;
+
+							if(nearbyMovableEntity->life <= 0.0f){
+								if(std::find(entitiesToRemove.begin(), entitiesToRemove.end(), nearbyMovableEntity) == entitiesToRemove.end()){
+									entitiesToRemove.emplace_back(nearbyMovableEntity);
+									nearbyMovableNode = nullptr;
+								}
+								continue;
+							}
+
 							break;
 					}
 
@@ -215,11 +233,11 @@ void EntityManager::Update(const Cam& cam){
 	//		if(entity0->type != entity1->type){
 	//			if(entity0->type == Entity::EntityType::Bullet){
 	//				if(Collision::DetectCollision(entity0, entity1)){
-	//					switch(entity1->type){
-	//						case Entity::EntityType::ThinObj:
-	//							entity1->colour = glm::vec4(PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), 1.0f);
-	//							break;
-	//					}
+	//					//switch(entity1->type){
+	//						//case Entity::EntityType::ThinObj:
+	//							entity1->colour = glm::vec4(PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), 0.5f);
+	//							//break;
+	//					//}
 
 	//					if(std::find(entitiesToRemove.begin(), entitiesToRemove.end(), entity0) == entitiesToRemove.end()){
 	//						entitiesToRemove.emplace_back(entity0);
@@ -229,11 +247,11 @@ void EntityManager::Update(const Cam& cam){
 	//				}
 	//			} else if(entity1->type == Entity::EntityType::Bullet){
 	//				if(Collision::DetectCollision(entity1, entity0)){
-	//					switch(entity0->type){
-	//						case Entity::EntityType::ThinObj:
-	//							entity0->colour = glm::vec4(PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), 1.0f);
-	//							break;
-	//					}
+	//					//switch(entity0->type){
+	//						//case Entity::EntityType::ThinObj:
+	//							entity0->colour = glm::vec4(PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), 0.5f);
+	//							//break;
+	//					//}
 
 	//					if(std::find(entitiesToRemove.begin(), entitiesToRemove.end(), entity1) == entitiesToRemove.end()){
 	//						entitiesToRemove.emplace_back(entity1);
