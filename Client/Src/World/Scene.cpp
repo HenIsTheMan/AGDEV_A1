@@ -207,7 +207,7 @@ void Scene::CreateEntities(){
 			terrainZScale * 0.25f
 		),
 		glm::vec3(xyScaleThinObj, xyScaleThinObj, 0.001f),
-		glm::vec4(1.0f),
+		glm::vec4(1.0f, 1.0f, 1.0f, 0.5f),
 		-1,
 	});
 	//*/

@@ -181,7 +181,7 @@ void EntityManager::Update(const Cam& cam){
 				if(movableEntity->type != nearbyMovableEntity->type && Collision::DetectCollision(movableEntity, nearbyMovableEntity)){
 					switch(nearbyMovableEntity->type){
 						case Entity::EntityType::ThinObj:
-							nearbyMovableEntity->colour = glm::vec4(PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), 1.0f);
+							nearbyMovableEntity->colour = glm::vec4(PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), PseudorandMinMax(0.0f, 1.0f), 0.5f);
 							break;
 					}
 
