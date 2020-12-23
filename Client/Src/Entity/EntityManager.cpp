@@ -183,6 +183,9 @@ void EntityManager::Update(const Cam& cam){
 				}
 
 				Entity* const nearbyMovableEntity = nearbyMovableNode->RetrieveEntity();
+				if(nearbyMovableEntity->type == Entity::EntityType::EnemyBody){
+					continue;
+				}
 
 				if(movableEntity->type != nearbyMovableEntity->type && Collision::DetectCollision(movableEntity, nearbyMovableEntity)){
 					switch(nearbyMovableEntity->type){

@@ -220,8 +220,8 @@ void Scene::CreateEntities(){
 			terrainYScale * 2.0f,
 			terrainZScale * 0.4f
 		),
-		glm::vec3(xyScaleEnemyBody, xyScaleEnemyBody, 0.001f),
-		glm::vec4(0.8f, 0.0f, 0.0f, 0.6f),
+		glm::vec3(xyScaleEnemyBody, xyScaleEnemyBody, 5.0f),
+		glm::vec4(1.0f, 1.0f, 1.0f, 0.4f),
 		-1,
 	});
 
@@ -233,7 +233,7 @@ void Scene::CreateEntities(){
 		enemyPart = entityFactory->CreateEnemyPart({
 			glm::vec3(),
 			glm::vec3(),
-			glm::vec4(1.0f, 0.5f, 0.0f, 1.0f),
+			glm::vec4(1.0f, 0.0f, 0.0f, 1.0f),
 			-1,
 		});
 
