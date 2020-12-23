@@ -1,4 +1,4 @@
-***** 193541T GDEV *****
+***** 193541T AGDEV A1 *****
 
 Game Controls:
 
@@ -7,20 +7,24 @@ Left Mouse Button (LMB) - Shoot
 Right Mouse Button (RMB) - Reduce Field Of View (FOV)
 F1 - Toggle fullscreen
 F2 - Change polygon mode
-WASD - Move player
-Space - Prone --> Crouch --> Stand --> Jump
-C - Stand --> Crouch --> Prone
-Shift - Toggle sprint
+
+WASD - Move cam when cam is detached from player/Move cam and player when cam is attached to player
+Space - Jump
+R - Reload currently selected gun
+C - Show/Hide colliders
+B - Attach/Detach cam
+N - Show/Hide regions
+M - Show/Hide viewing frustum
+U - Rotate viewing frustum anticlockwise
+O - Rotate viewing frustum clockwise
+IJKL - Move player when cam is detached from player
 1 - Select inv[0]
 2 - Select inv[1]
 3 - Select inv[2]
 4 - Select inv[3]
 5 - Select inv[4]
-I - Toggle distortion
-O - Toggle echo
-P - Toggle wavesReverb
-L - Reset sound
-R - Reload currently selected gun
+6 - Toggle shldUpdateEntityManager
+7 - Toggle shldRenderEntityManager
 
 Non-Game Controls:
 
