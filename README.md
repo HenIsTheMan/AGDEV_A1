@@ -32,31 +32,54 @@ Left Mouse Button (LMB) - select different options
 
 Features:
 
-Walking
-Jumping
+Instancing
+- Can translate, rotate and scale instanced group
+- Can have different transforms, color and texture per instance
 
-Shooting weapons
-Changing weapons
-Diff weapon attributes
+Demo of frame rate
+- Elements in the scene are rendered to show a visual output of the effects
+- Text on screen shows prog performance stats
 
-Inventory
+Advanced Collision Detection (ACD)
+- Raycasting (can collide with thin obj)
+- Fused with Quadtree for higher efficiency
+- Cam collision with terrain (using barycentric interpolation)
 
-Cam collision with terrain (using barycentric interpolation)
-Night vision (combined with scoped mode for sniper)
-Scoped mode (for sniper)
+LOD
+- Diff mesh(es)/model(s) and texture(s)
+- 3 diff detail lvls (High, Medium, Low)
+- Allows for developer(s) to choose to not show the mesh(es)/model(s) at all
+- Merged with instancing
 
-2D audio
-3D audio
+Scene Graph
+- Merged with Spatial Partitioning in Quadtree
 
-Object pooling
-Skybox with bounds checking
-Ray casting to check for ray-sphere intersection
-HDR rendering
-Bloom
-Deferred rendering pipeline + Forward rendering pipeline
-Terrain with normals
-Sprite Animation (coin and fire)
-All meshes used are UV-mapped
+Spatial Partitioning
+- Merged with Scene Graph in Quadtree
+
+Frustum Culling
+- Merged with Quadtree
+- Can render out viewing frustum
+
+New others
+- Easing
+- Generic class for Obj Pooling
+- Better abstraction for most parts of the code
+
+Old others
+- Walking
+- Jumping
+- Shooting weapons
+- Changing weapons
+- Diff weapon attributes
+- Inventory
+- Night vision (combined with scoped mode for sniper)
+- Scoped mode (for sniper)
+- Terrain with normals
+- Sprite Animation
+- Skybox with bounds checking
+- 2D audio
+- 3D audio
 
 No warnings (except for the ones from the external libraries)
 No memory leaks
