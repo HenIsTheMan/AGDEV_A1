@@ -11,7 +11,7 @@ public:
 	void Init(const size_t& inactiveSize, const size_t& activeSize);
 
 	T* ActivateObj();
-	void DeactivateObj(const T* const node);
+	void DeactivateObj(const T* const obj);
 private:
 	static std::vector<T*> activeObjs;
 	static std::vector<T*> inactiveObjs;
