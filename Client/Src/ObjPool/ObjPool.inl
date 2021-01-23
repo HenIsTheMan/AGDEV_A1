@@ -1,5 +1,3 @@
-#pragma once
-
 template <class T>
 std::vector<T*> ObjPool<T>::activeObjs;
 
